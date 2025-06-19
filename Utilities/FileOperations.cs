@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Diamonds;
+namespace Diamonds.Utilities;
 
 public static class FileOperations
 {

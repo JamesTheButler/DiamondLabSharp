@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace Diamonds;
+namespace Diamonds.Rendering;
 
 public readonly record struct SizeSettings(
     double DiamondWidth,

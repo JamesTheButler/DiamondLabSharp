@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace Diamonds;
+namespace Diamonds.Utilities;
 
 public static class SizeExtensions
 {

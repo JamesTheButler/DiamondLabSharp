@@ -1,4 +1,4 @@
-namespace Diamonds;
+namespace Diamonds.Utilities;
 
 public static class StringExtensions
 {

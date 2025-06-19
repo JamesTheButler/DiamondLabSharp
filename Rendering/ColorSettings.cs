@@ -1,6 +1,6 @@
 using System.Windows.Media;
 
-namespace Diamonds;
+namespace Diamonds.Rendering;
 
 public readonly record struct ColorSettings(
     Color BackgroundColor,

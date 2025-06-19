@@ -1,10 +1,10 @@
 ﻿using System.Globalization;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Diamonds.Rendering;
+using Diamonds.Utilities;
 
 namespace Diamonds;
 
@@ -50,7 +50,11 @@ public partial class MainWindow
         var paintingSizeSettings = _currentSizeSettings;
         var colorSettings = _currentColorSettings;
 
-        var canvasSize = paintingSizeSettings.PaintingSize.Add(_canvasMargin).Add(_paintingMargin).Add(InfoBarThickness);
+        var canvasSize = paintingSizeSettings.PaintingSize
+            .Add(_canvasMargin)
+            .Add(_paintingMargin)
+            .Add(InfoBarThickness);
+        
         MainCanvas.Width = canvasSize.Width;
         MainCanvas.Height = canvasSize.Height;
         MainCanvas.Background = new SolidColorBrush(MyColors.Background);
@@ -60,38 +64,42 @@ public partial class MainWindow
             _canvasMargin.Top + InfoBarThickness + _paintingMargin.Top);
 
         DrawCanvasBackground(paintingOrigin, paintingSizeSettings, colorSettings);
-        DrawInfoBars();
+        DrawScales(paintingOrigin, paintingSizeSettings);
         DrawMountingRim(paintingOrigin, paintingSizeSettings, colorSettings);
         DrawPaintingBackground(paintingOrigin, paintingSizeSettings, colorSettings);
         DrawDiamondPattern(paintingOrigin, paintingSizeSettings, colorSettings);
     }
 
-    private void DrawInfoBars()
+    private void DrawScales(Point paintingOrigin, SizeSettings sizeSettings)
     {
-        // Bar thickness (can be adjusted or made user-configurable)
-        double barThickness = 50;
+        GetDiamondTicks(sizeSettings, 
+            out var horizontalTickPositions, 
+            out var verticalTickPositions);
 
-        // Horizontal bar on top
-        var topBar = new Rectangle
-        {
-            Width = MainCanvas.Width,
-            Height = barThickness,
-            Fill = Brushes.LightGray
-        };
-        Canvas.SetLeft(topBar, 0);
-        Canvas.SetTop(topBar, 0);
-        MainCanvas.Children.Add(topBar);
-
-        // Vertical bar on the left/front
-        var leftBar = new Rectangle
-        {
-            Width = barThickness,
-            Height = MainCanvas.Height,
-            Fill = Brushes.LightGray
-        };
-        Canvas.SetLeft(leftBar, 0);
-        Canvas.SetTop(leftBar, 0);
-        MainCanvas.Children.Add(leftBar);
+        var horizontalTicks = horizontalTickPositions
+            .Select(pos => new AxisScaleTick(pos, $"[D]\n{pos:0.0}"))
+            .Append(new AxisScaleTick(sizeSettings.MountingRimSize, $"[M]\n{sizeSettings.MountingRimSize:0.0}"))
+            .Append(new AxisScaleTick(sizeSettings.MountingRimSize+sizeSettings.CanvasMarginSize, $"[R]\n{sizeSettings.MountingRimSize+sizeSettings.CanvasMarginSize:0.0}"))
+            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Width-sizeSettings.MountingRimSize-sizeSettings.CanvasMarginSize, $"[R]\n{sizeSettings.PaintingSize.Width-sizeSettings.MountingRimSize-sizeSettings.CanvasMarginSize:0.0}"))
+            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Width-sizeSettings.MountingRimSize, $"[M]\n{sizeSettings.PaintingSize.Width-sizeSettings.MountingRimSize:0.0}"))
+            .ToArray();
+        
+        var horizontalBar = new AxisScale(sizeSettings.PaintingSize.Width, Orientation.Horizontal, horizontalTicks);
+        Canvas.SetLeft(horizontalBar, paintingOrigin.X);
+        Canvas.SetTop(horizontalBar, 0);
+        MainCanvas.Children.Add(horizontalBar);
+        
+        var verticalTicks = verticalTickPositions
+            .Select(pos => new AxisScaleTick(pos, $"[D]{pos:0.0}"))
+            .Append(new AxisScaleTick(sizeSettings.MountingRimSize, $"[M]{sizeSettings.MountingRimSize:0.0}"))
+            .Append(new AxisScaleTick(sizeSettings.MountingRimSize+sizeSettings.CanvasMarginSize, $"[R]{sizeSettings.MountingRimSize+sizeSettings.CanvasMarginSize:0.0}"))
+            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Height-sizeSettings.MountingRimSize-sizeSettings.CanvasMarginSize, $"[R]{sizeSettings.PaintingSize.Height-sizeSettings.MountingRimSize-sizeSettings.CanvasMarginSize:0.0}"))
+            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Height-sizeSettings.MountingRimSize, $"[M]{sizeSettings.PaintingSize.Height-sizeSettings.MountingRimSize:0.0}"))
+            .ToArray();
+        var verticalBar = new AxisScale(sizeSettings.PaintingSize.Height, Orientation.Vertical, verticalTicks);
+        Canvas.SetLeft(verticalBar, 0);
+        Canvas.SetTop(verticalBar, paintingOrigin.Y);
+        MainCanvas.Children.Add(verticalBar);
     }
 
     private void ApplyColors()
@@ -192,7 +200,6 @@ public partial class MainWindow
         MainCanvas.Children.Add(mountingRimOutline);
     }
 
-
     private void DrawPaintingBackground(Point origin, SizeSettings size, ColorSettings colors)
     {
         var offset = size.MountingRimSize + size.CanvasMarginSize;
@@ -233,6 +240,23 @@ public partial class MainWindow
         }
     }
 
+    private void GetDiamondTicks(SizeSettings size, out double[] horizontalTicks, out double[] verticalTicks)
+    {
+        verticalTicks = new double[size.GridRows];
+        horizontalTicks = new double[size.GridColumns];
+        
+        var offset = size.MountingRimSize + size.CanvasMarginSize;
+        for (var row = 0; row < size.GridRows; row++)
+        {
+            verticalTicks[row] = offset + size.DiamondHeight * .5 + size.DiamondHeight * row;
+        }
+        for (var col = 0; col < size.GridColumns; col++)
+        {
+            horizontalTicks[col] = offset + size.DiamondWidth * .5 + size.DiamondWidth * col;
+        }
+        
+    }
+    
     #region Event Handlers
 
     private void OnResetColorsButtonClicked(object sender, RoutedEventArgs e)
