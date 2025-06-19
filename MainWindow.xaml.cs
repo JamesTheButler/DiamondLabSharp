@@ -281,17 +281,27 @@ public partial class MainWindow
 
     private void OnPngButtonClicked(object sender, RoutedEventArgs e)
     {
-        FileOperations.SaveCanvasToPng(MainCanvas, @"C:\Users\TomIlle\Desktop\diamonds.png");
+        FileOperations.SaveAsPng(MainCanvas, @"C:\Users\TomIlle\Desktop\diamonds.png");
     }
 
     private void OnSaveButtonClicked(object sender, RoutedEventArgs e)
     {
-        Console.WriteLine("Save TBD");
+        FileOperations.Save(new(_currentSizeSettings, _currentColorSettings), @"C:\Users\TomIlle\Desktop\diamonds.json");
     }
 
     private void OnLoadButtonClicked(object sender, RoutedEventArgs e)
     {
-        Console.WriteLine("Load TBD");
+        var data = FileOperations.Load(@"C:\Users\TomIlle\Desktop\diamonds.json");
+        
+        if(data is null)
+        {
+            Console.WriteLine("Failed to load diamonds.json");
+            return;
+        }
+        
+        _currentSizeSettings = data.Value.SizeSettings;
+        _currentColorSettings = data.Value.ColorSettings;
+        ReDraw();
     }
 
     #endregion
