@@ -29,10 +29,10 @@
                 <TextBox x:Name="DiamondHeightInput" Text="100" Margin="0,0,0,10"/>
 
                 <TextBlock Text="Columns:" />
-                <TextBox x:Name="ColumnsInput" Text="10" Margin="0,0,0,10"/>
+                <xctk:IntegerUpDown x:Name="ColumnsInput" Text="10" Margin="0,0,0,10"/>
 
                 <TextBlock Text="Rows:" />
-                <TextBox x:Name="RowsInput" Text="4" Margin="0,0,0,10"/>
+                <xctk:IntegerUpDown x:Name="RowsInput" Text="4" Margin="0,0,0,10"/>
 
                 <TextBlock Text="Outer Rim Size:" />
                 <TextBox x:Name="OuterRimSizeInput" Text="20" Margin="0,0,0,10"/>

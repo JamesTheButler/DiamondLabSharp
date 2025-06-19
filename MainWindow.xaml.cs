@@ -1,3 +1,4 @@
+﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -27,6 +28,19 @@ public partial class MainWindow
         
         ReDraw();
     }
+    
+    private void ApplySizes()
+    {
+        _currentSizeSettings = new SizeSettings(
+            DiamondWidthInput.Text.ToDouble() ?? SizeSettings.Defaults.DiamondWidth,
+            DiamondHeightInput.Text.ToDouble() ?? SizeSettings.Defaults.DiamondHeight,
+            ColumnsInput.Value ?? SizeSettings.Defaults.GridColumns,
+            RowsInput.Value ?? SizeSettings.Defaults.GridRows,
+            OuterRimSizeInput.Text.ToDouble() ?? SizeSettings.Defaults.CanvasMarginSize,
+            MountingRimSizeInput.Text.ToDouble() ?? SizeSettings.Defaults.MountingRimSize);
+        
+        ReDraw();
+    }
 
     private void ResetColorInputs()
     {
@@ -37,7 +51,12 @@ public partial class MainWindow
     }
     private void ResetSizeInputs()
     {
-        
+        DiamondWidthInput.Text = SizeSettings.Defaults.DiamondWidth.ToString(CultureInfo.CurrentCulture);
+        DiamondHeightInput.Text = SizeSettings.Defaults.DiamondHeight.ToString(CultureInfo.CurrentCulture);
+        ColumnsInput.Text = SizeSettings.Defaults.GridColumns.ToString();
+        RowsInput.Text = SizeSettings.Defaults.GridRows.ToString();
+        OuterRimSizeInput.Text = SizeSettings.Defaults.CanvasMarginSize.ToString(CultureInfo.CurrentCulture);
+        MountingRimSizeInput.Text = SizeSettings.Defaults.MountingRimSize.ToString(CultureInfo.CurrentCulture);
     }
     
     private void SetUpUi()
@@ -49,6 +68,13 @@ public partial class MainWindow
         MountingRimColorInput.SelectedColorChanged += (_, _) => ApplyColors();
         DiamondColorInput.SelectedColorChanged += (_, _) => ApplyColors();
         CanvasRimColorInput.SelectedColorChanged += (_, _) => ApplyColors();
+        
+        DiamondWidthInput.TextChanged += (_, _) => ApplySizes();
+        DiamondHeightInput.TextChanged += (_, _) => ApplySizes();
+        ColumnsInput.ValueChanged += (_, _) => ApplySizes();
+        RowsInput.ValueChanged += (_, _) => ApplySizes();
+        OuterRimSizeInput.TextChanged += (_, _) => ApplySizes();
+        MountingRimSizeInput.TextChanged += (_, _) => ApplySizes();
     }
 
     private void ReDraw()
@@ -59,6 +85,7 @@ public partial class MainWindow
         var canvasSize = size.GetCanvasSize();
         MyCanvas.Width = canvasSize.Width;
         MyCanvas.Height = canvasSize.Height;
+        MyCanvas.Children.Clear();
         MyCanvas.Background = new SolidColorBrush(colors.CanvasRimColor);
         
         DrawCanvasBackground(canvasSize, colors);
@@ -74,7 +101,7 @@ public partial class MainWindow
             Width = canvasSize.Width,
             Height = canvasSize.Height,
             Fill = new SolidColorBrush(colors.CanvasRimColor),
-            Stroke = new SolidColorBrush(colors.DiamondColor)
+            Stroke = new SolidColorBrush(colors.MountingRimColor)
         };
         MyCanvas.Children.Add(canvasBackground);
     }
