@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Diamonds.Rendering;
+using Diamonds.Rendering.AxisScale;
 using Diamonds.Utilities;
 
 namespace Diamonds;
@@ -76,27 +77,37 @@ public partial class MainWindow
             out var horizontalTickPositions, 
             out var verticalTickPositions);
 
-        var horizontalTicks = horizontalTickPositions
-            .Select(pos => new AxisScaleTick(pos, $"[D]\n{pos:0.0}"))
-            .Append(new AxisScaleTick(sizeSettings.MountingRimSize, $"[M]\n{sizeSettings.MountingRimSize:0.0}"))
-            .Append(new AxisScaleTick(sizeSettings.MountingRimSize+sizeSettings.CanvasMarginSize, $"[R]\n{sizeSettings.MountingRimSize+sizeSettings.CanvasMarginSize:0.0}"))
-            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Width-sizeSettings.MountingRimSize-sizeSettings.CanvasMarginSize, $"[R]\n{sizeSettings.PaintingSize.Width-sizeSettings.MountingRimSize-sizeSettings.CanvasMarginSize:0.0}"))
-            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Width-sizeSettings.MountingRimSize, $"[M]\n{sizeSettings.PaintingSize.Width-sizeSettings.MountingRimSize:0.0}"))
-            .ToArray();
+        var rim = sizeSettings.MountingRimSize;
+        var totalMargin = rim + sizeSettings.CanvasMarginSize;
         
-        var horizontalBar = new AxisScale(sizeSettings.PaintingSize.Width, Orientation.Horizontal, horizontalTicks);
+        var horizontalTicks = horizontalTickPositions
+            .Select(pos => new AxisScaleTick(pos, new FormatterLabel(p => $"[D]\n{p:0,#}")))
+            .Append(new AxisScaleTick(rim, new FormatterLabel(p => $"[M]\n{p:0,#}")))
+            .Append(new AxisScaleTick(totalMargin, new FormatterLabel(p => $"[R]\n{p:0,#}")))
+            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Width - totalMargin, new FormatterLabel(p => $"[R]\n{p:0,#}")))
+            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Width - rim, new FormatterLabel(p => $"[M]\n{p:0,#}")))
+            .ToArray();
+
+        var horizontalBar = new AxisScale(sizeSettings.PaintingSize.Width, Orientation.Horizontal)
+        {
+            Ticks = horizontalTicks,
+        };
         Canvas.SetLeft(horizontalBar, paintingOrigin.X);
         Canvas.SetTop(horizontalBar, 0);
         MainCanvas.Children.Add(horizontalBar);
         
         var verticalTicks = verticalTickPositions
-            .Select(pos => new AxisScaleTick(pos, $"[D]{pos:0.0}"))
-            .Append(new AxisScaleTick(sizeSettings.MountingRimSize, $"[M]{sizeSettings.MountingRimSize:0.0}"))
-            .Append(new AxisScaleTick(sizeSettings.MountingRimSize+sizeSettings.CanvasMarginSize, $"[R]{sizeSettings.MountingRimSize+sizeSettings.CanvasMarginSize:0.0}"))
-            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Height-sizeSettings.MountingRimSize-sizeSettings.CanvasMarginSize, $"[R]{sizeSettings.PaintingSize.Height-sizeSettings.MountingRimSize-sizeSettings.CanvasMarginSize:0.0}"))
-            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Height-sizeSettings.MountingRimSize, $"[M]{sizeSettings.PaintingSize.Height-sizeSettings.MountingRimSize:0.0}"))
+            .Select(pos => new AxisScaleTick(pos, new FormatterLabel(p => $"[D]{p:0,#}")))
+            .Append(new AxisScaleTick(rim, new FormatterLabel(p => $"[M]{p:0,#}")))
+            .Append(new AxisScaleTick(totalMargin, new FormatterLabel(p => $"[R]{p:0,#}")))
+            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Height - totalMargin, new FormatterLabel(p => $"[R]{p:0,#}")))
+            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Height - rim, new FormatterLabel(p => $"[M]{p:0,#}")))
             .ToArray();
-        var verticalBar = new AxisScale(sizeSettings.PaintingSize.Height, Orientation.Vertical, verticalTicks);
+        var verticalBar = new AxisScale(sizeSettings.PaintingSize.Height, Orientation.Vertical)
+        {
+            Ticks = verticalTicks,
+        };
+        
         Canvas.SetLeft(verticalBar, 0);
         Canvas.SetTop(verticalBar, paintingOrigin.Y);
         MainCanvas.Children.Add(verticalBar);
@@ -254,7 +265,6 @@ public partial class MainWindow
         {
             horizontalTicks[col] = offset + size.DiamondWidth * .5 + size.DiamondWidth * col;
         }
-        
     }
     
     #region Event Handlers
