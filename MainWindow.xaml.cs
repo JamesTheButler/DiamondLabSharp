@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace Diamonds;
@@ -11,11 +13,85 @@ public partial class MainWindow
     private SizeSettings _currentSizeSettings = SizeSettings.Defaults;
     private ColorSettings _currentColorSettings = ColorSettings.Defaults;
     
+    private const int InfoBarThickness = 50;
+    
+    private readonly Thickness _paintingMargin = new(10);
+    private readonly Thickness _canvasMargin = new(10,10, 0, 0);
+    
     public MainWindow()
     {
         InitializeComponent();
         SetUpUi();
         ReDraw();
+    }
+
+    private void SetUpUi()
+    {
+        ResetColorInputs();
+        ResetSizeInputs();
+        
+        BackgroundColorInput.SelectedColorChanged += (_, _) => ApplyColors();
+        MountingRimColorInput.SelectedColorChanged += (_, _) => ApplyColors();
+        DiamondColorInput.SelectedColorChanged += (_, _) => ApplyColors();
+        CanvasRimColorInput.SelectedColorChanged += (_, _) => ApplyColors();
+        
+        DiamondWidthInput.TextChanged += (_, _) => ApplySizes();
+        DiamondHeightInput.TextChanged += (_, _) => ApplySizes();
+        ColumnsInput.ValueChanged += (_, _) => ApplySizes();
+        RowsInput.ValueChanged += (_, _) => ApplySizes();
+        OuterRimSizeInput.TextChanged += (_, _) => ApplySizes();
+        MountingRimSizeInput.TextChanged += (_, _) => ApplySizes();
+    }
+    
+    private void ReDraw()
+    {
+        MainCanvas.Children.Clear();
+        
+        var paintingSizeSettings = _currentSizeSettings;
+        var colorSettings = _currentColorSettings;
+
+        var canvasSize = paintingSizeSettings.PaintingSize.Add(_canvasMargin).Add(_paintingMargin).Add(InfoBarThickness);
+        MainCanvas.Width = canvasSize.Width;
+        MainCanvas.Height = canvasSize.Height;
+        MainCanvas.Background = new SolidColorBrush(MyColors.Background);
+
+        var paintingOrigin = new Point(
+            _canvasMargin.Left + InfoBarThickness + _paintingMargin.Left, 
+            _canvasMargin.Top + InfoBarThickness + _paintingMargin.Top);
+
+        DrawCanvasBackground(paintingOrigin, paintingSizeSettings, colorSettings);
+        DrawInfoBars();
+        DrawMountingRim(paintingOrigin, paintingSizeSettings, colorSettings);
+        DrawPaintingBackground(paintingOrigin, paintingSizeSettings, colorSettings);
+        DrawDiamondPattern(paintingOrigin, paintingSizeSettings, colorSettings);
+    }
+
+    private void DrawInfoBars()
+    {
+        // Bar thickness (can be adjusted or made user-configurable)
+        double barThickness = 50;
+
+        // Horizontal bar on top
+        var topBar = new Rectangle
+        {
+            Width = MainCanvas.Width,
+            Height = barThickness,
+            Fill = Brushes.LightGray
+        };
+        Canvas.SetLeft(topBar, 0);
+        Canvas.SetTop(topBar, 0);
+        MainCanvas.Children.Add(topBar);
+
+        // Vertical bar on the left/front
+        var leftBar = new Rectangle
+        {
+            Width = barThickness,
+            Height = MainCanvas.Height,
+            Fill = Brushes.LightGray
+        };
+        Canvas.SetLeft(leftBar, 0);
+        Canvas.SetTop(leftBar, 0);
+        MainCanvas.Children.Add(leftBar);
     }
 
     private void ApplyColors()
@@ -38,6 +114,9 @@ public partial class MainWindow
             RowsInput.Value ?? SizeSettings.Defaults.GridRows,
             OuterRimSizeInput.Text.ToDouble() ?? SizeSettings.Defaults.CanvasMarginSize,
             MountingRimSizeInput.Text.ToDouble() ?? SizeSettings.Defaults.MountingRimSize);
+        var totals = _currentSizeSettings.PaintingSize;
+        TotalWidth.Text = totals.Width.ToString(CultureInfo.CurrentCulture);
+        TotalHeight.Text = totals.Height.ToString(CultureInfo.CurrentCulture);
         
         ReDraw();
     }
@@ -58,56 +137,24 @@ public partial class MainWindow
         OuterRimSizeInput.Text = SizeSettings.Defaults.CanvasMarginSize.ToString(CultureInfo.CurrentCulture);
         MountingRimSizeInput.Text = SizeSettings.Defaults.MountingRimSize.ToString(CultureInfo.CurrentCulture);
     }
-    
-    private void SetUpUi()
-    {
-        ResetColorInputs();
-        ResetSizeInputs();
-        
-        BackgroundColorInput.SelectedColorChanged += (_, _) => ApplyColors();
-        MountingRimColorInput.SelectedColorChanged += (_, _) => ApplyColors();
-        DiamondColorInput.SelectedColorChanged += (_, _) => ApplyColors();
-        CanvasRimColorInput.SelectedColorChanged += (_, _) => ApplyColors();
-        
-        DiamondWidthInput.TextChanged += (_, _) => ApplySizes();
-        DiamondHeightInput.TextChanged += (_, _) => ApplySizes();
-        ColumnsInput.ValueChanged += (_, _) => ApplySizes();
-        RowsInput.ValueChanged += (_, _) => ApplySizes();
-        OuterRimSizeInput.TextChanged += (_, _) => ApplySizes();
-        MountingRimSizeInput.TextChanged += (_, _) => ApplySizes();
-    }
 
-    private void ReDraw()
-    {
-        var size = _currentSizeSettings;
-        var colors = _currentColorSettings;
-
-        var canvasSize = size.GetCanvasSize();
-        MyCanvas.Width = canvasSize.Width;
-        MyCanvas.Height = canvasSize.Height;
-        MyCanvas.Children.Clear();
-        MyCanvas.Background = new SolidColorBrush(colors.CanvasRimColor);
-        
-        DrawCanvasBackground(canvasSize, colors);
-        DrawMountingRim(canvasSize, size, colors);
-        DrawPaintedBackground(size, colors);
-        DrawDiamondPattern(size, colors);
-    }
-
-    private void DrawCanvasBackground(Size canvasSize, ColorSettings colors)
+    private void DrawCanvasBackground(Point origin, SizeSettings canvasSize, ColorSettings colors)
     {
         var canvasBackground = new Rectangle
         {
-            Width = canvasSize.Width,
-            Height = canvasSize.Height,
+            Width = canvasSize.PaintingSize.Width,
+            Height = canvasSize.PaintingSize.Height,
             Fill = new SolidColorBrush(colors.CanvasRimColor),
             Stroke = new SolidColorBrush(colors.MountingRimColor)
         };
-        MyCanvas.Children.Add(canvasBackground);
+        Canvas.SetLeft(canvasBackground, origin.X);
+        Canvas.SetTop(canvasBackground, origin.Y);
+        MainCanvas.Children.Add(canvasBackground);
     }
 
-    private void DrawMountingRim(Size canvasSize, SizeSettings size, ColorSettings colors)
+    private void DrawMountingRim(Point origin, SizeSettings size, ColorSettings colors)
     {
+        var paintingSize = size.PaintingSize;
         var actualMountingRimColor = colors.MountingRimColor;
         actualMountingRimColor.A = 128;
         var mountingRim = new Polygon
@@ -115,61 +162,38 @@ public partial class MainWindow
             Points =
             [
                 new Point(0, 0),
-                new Point(0, canvasSize.Height),
-                new Point(canvasSize.Width, canvasSize.Height),
-                new Point(canvasSize.Width, 0),
+                new Point(0, paintingSize.Height),
+                new Point(paintingSize.Width, paintingSize.Height),
+                new Point(paintingSize.Width, 0),
                 new Point(size.MountingRimSize, 0),
                 new Point(size.MountingRimSize, size.MountingRimSize),
-                new Point(canvasSize.Width - size.MountingRimSize, size.MountingRimSize),
-                new Point(canvasSize.Width - size.MountingRimSize, canvasSize.Height - size.MountingRimSize),
-                new Point(size.MountingRimSize, canvasSize.Height - size.MountingRimSize),
+                new Point(paintingSize.Width - size.MountingRimSize, size.MountingRimSize),
+                new Point(paintingSize.Width - size.MountingRimSize, paintingSize.Height - size.MountingRimSize),
+                new Point(size.MountingRimSize, paintingSize.Height - size.MountingRimSize),
                 new Point(size.MountingRimSize, 0),
                 new Point(0, 0),
                 
             ],
             Fill = new SolidColorBrush(actualMountingRimColor),
         };
-        MyCanvas.Children.Add(mountingRim);
+        Canvas.SetLeft(mountingRim, origin.X);
+        Canvas.SetTop(mountingRim, origin.Y);
+        MainCanvas.Children.Add(mountingRim);
         
         var mountingRimOutline = new Rectangle
         {
-            Width = canvasSize.Width - 2 * size.MountingRimSize,
-            Height = canvasSize.Height - 2 * size.MountingRimSize,
+            Width = paintingSize.Width - 2 * size.MountingRimSize,
+            Height = paintingSize.Height - 2 * size.MountingRimSize,
             Stroke = new SolidColorBrush(colors.MountingRimColor),
             StrokeThickness = 1,
         };
-        Canvas.SetLeft(mountingRimOutline, size.MountingRimSize);
-        Canvas.SetTop(mountingRimOutline, size.MountingRimSize);
-        MyCanvas.Children.Add(mountingRimOutline);
+        Canvas.SetLeft(mountingRimOutline, origin.X + size.MountingRimSize);
+        Canvas.SetTop(mountingRimOutline, origin.Y + size.MountingRimSize);
+        MainCanvas.Children.Add(mountingRimOutline);
     }
 
-    private void DrawDiamondPattern(SizeSettings size,  ColorSettings colors)
-    {
-        var offset = size.MountingRimSize + size.CanvasMarginSize;
-        for (var row = 0; row < size.GridRows; row++)
-        {
-            for (var col = 0; col < size.GridColumns; col++)
-            {
-                var cx = offset + col * size.DiamondWidth + size.DiamondWidth / 2;
-                var cy = offset + row * size.DiamondHeight + size.DiamondHeight / 2;
 
-                var diamond = new Polygon
-                {
-                    Points =
-                    [
-                        new Point(cx, cy - size.DiamondHeight / 2),
-                        new Point(cx + size.DiamondWidth / 2, cy),
-                        new Point(cx, cy + size.DiamondHeight / 2),
-                        new Point(cx - size.DiamondWidth / 2, cy)
-                    ],
-                    Fill = new SolidColorBrush(colors.DiamondColor),
-                };
-                MyCanvas.Children.Add(diamond);
-            }
-        }
-    }
-
-    private void DrawPaintedBackground(SizeSettings size, ColorSettings colors)
+    private void DrawPaintingBackground(Point origin, SizeSettings size, ColorSettings colors)
     {
         var offset = size.MountingRimSize + size.CanvasMarginSize;
         var paintedBackground = new Rectangle
@@ -178,10 +202,38 @@ public partial class MainWindow
             Height = size.GridRows * size.DiamondHeight,
             Fill = new SolidColorBrush(colors.BackgroundColor)
         };
-        Canvas.SetLeft(paintedBackground, offset);
-        Canvas.SetTop(paintedBackground, offset);
-        MyCanvas.Children.Add(paintedBackground);
+        Canvas.SetLeft(paintedBackground, origin.X + offset);
+        Canvas.SetTop(paintedBackground, origin.Y + offset);
+        MainCanvas.Children.Add(paintedBackground);
     }
+    
+    private void DrawDiamondPattern(Point origin, SizeSettings size,  ColorSettings colors)
+    {
+        var offset = size.MountingRimSize + size.CanvasMarginSize;
+        for (var row = 0; row < size.GridRows; row++)
+        {
+            for (var col = 0; col < size.GridColumns; col++)
+            {
+                var cx = origin.X  + offset + col * size.DiamondWidth + size.DiamondWidth / 2;
+                var cy = origin.Y  + offset + row * size.DiamondHeight + size.DiamondHeight / 2;
+
+                var diamond = new Polygon
+                {
+                    Points =
+                    [
+                        new Point(cx, cy - size.DiamondHeight / 2) ,
+                        new Point(cx + size.DiamondWidth / 2, cy) ,
+                        new Point(cx, cy + size.DiamondHeight / 2) ,
+                        new Point(cx - size.DiamondWidth / 2, cy) 
+                    ],
+                    Fill = new SolidColorBrush(colors.DiamondColor),
+                };
+                MainCanvas.Children.Add(diamond);
+            }
+        }
+    }
+
+    #region Event Handlers
 
     private void OnResetColorsButtonClicked(object sender, RoutedEventArgs e)
     {
@@ -192,4 +244,21 @@ public partial class MainWindow
     {
         ResetSizeInputs();
     }
+
+    private void OnPngButtonClicked(object sender, RoutedEventArgs e)
+    {
+        FileOperations.SaveCanvasToPng(MainCanvas, @"C:\Users\TomIlle\Desktop\diamonds.png");
+    }
+
+    private void OnSaveButtonClicked(object sender, RoutedEventArgs e)
+    {
+        Console.WriteLine("Save TBD");
+    }
+
+    private void OnLoadButtonClicked(object sender, RoutedEventArgs e)
+    {
+        Console.WriteLine("Load TBD");
+    }
+
+    #endregion
 }

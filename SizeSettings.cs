@@ -10,6 +10,8 @@ public readonly record struct SizeSettings(
     double CanvasMarginSize,
     double MountingRimSize)
 {
+    public Size PaintingSize => GetTotalSize();
+    
     public static SizeSettings Defaults => new(
         DiamondWidth: 60,
         DiamondHeight: 100,
@@ -17,11 +19,12 @@ public readonly record struct SizeSettings(
         GridRows: 4,
         CanvasMarginSize: 20,
         MountingRimSize: 30);
-
-    public Size GetCanvasSize()
+    
+    private Size GetTotalSize()
     {
         var width = GridColumns * DiamondWidth + 2 * (CanvasMarginSize + MountingRimSize);
         var height = GridRows * DiamondHeight + 2 * (CanvasMarginSize + MountingRimSize);
         return new Size(width, height);
     }
+    
 }
