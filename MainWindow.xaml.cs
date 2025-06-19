@@ -57,6 +57,17 @@ public partial class MainWindow : Window
         };
         MyCanvas.Children.Add(mountingRim);
         
+        var mountingRimOutline = new Rectangle
+        {
+            Width = canvasSize.Width - 2 * size.MountingRimSize,
+            Height = canvasSize.Height - 2 * size.MountingRimSize,
+            Stroke = new SolidColorBrush(colors.MountingRimColor),
+            StrokeThickness = 1,
+        };
+        Canvas.SetLeft(mountingRimOutline, size.MountingRimSize);
+        Canvas.SetTop(mountingRimOutline, size.MountingRimSize);
+        MyCanvas.Children.Add(mountingRimOutline);
+        
         // background of painted area
         var offset = size.MountingRimSize + size.CanvasMarginSize;
         var paintedBackground = new Rectangle
