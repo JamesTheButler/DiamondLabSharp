@@ -30,7 +30,7 @@ public static class FileOperations
     {
         if (!filePath.EndsWith(".json"))
         {
-            filePath+=".json";
+            filePath += ".json";
         }
 
         try

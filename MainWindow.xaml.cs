@@ -6,6 +6,7 @@ using System.Windows.Shapes;
 using Diamonds.Rendering;
 using Diamonds.Rendering.AxisScale;
 using Diamonds.Utilities;
+using Path = System.IO.Path;
 
 namespace Diamonds;
 
@@ -35,6 +36,7 @@ public partial class MainWindow
         MountingRimColorInput.SelectedColorChanged += (_, _) => ApplyColors();
         DiamondColorInput.SelectedColorChanged += (_, _) => ApplyColors();
         CanvasRimColorInput.SelectedColorChanged += (_, _) => ApplyColors();
+        ApplyColors();
         
         DiamondWidthInput.TextChanged += (_, _) => ApplySizes();
         DiamondHeightInput.TextChanged += (_, _) => ApplySizes();
@@ -42,6 +44,7 @@ public partial class MainWindow
         RowsInput.ValueChanged += (_, _) => ApplySizes();
         OuterRimSizeInput.TextChanged += (_, _) => ApplySizes();
         MountingRimSizeInput.TextChanged += (_, _) => ApplySizes();
+        ApplySizes();
     }
     
     private void ReDraw()
@@ -281,17 +284,23 @@ public partial class MainWindow
 
     private void OnPngButtonClicked(object sender, RoutedEventArgs e)
     {
-        FileOperations.SaveAsPng(MainCanvas, @"C:\Users\TomIlle\Desktop\diamonds.png");
+        var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        var path = Path.Combine(desktop, "diamonds.png");
+        FileOperations.SaveAsPng(MainCanvas, path);
     }
 
     private void OnSaveButtonClicked(object sender, RoutedEventArgs e)
     {
-        FileOperations.Save(new(_currentSizeSettings, _currentColorSettings), @"C:\Users\TomIlle\Desktop\diamonds.json");
+        var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        var path = Path.Combine(desktop, "diamonds.json");
+        FileOperations.Save(new(_currentSizeSettings, _currentColorSettings), path);
     }
 
     private void OnLoadButtonClicked(object sender, RoutedEventArgs e)
     {
-        var data = FileOperations.Load(@"C:\Users\TomIlle\Desktop\diamonds.json");
+        var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        var path = Path.Combine(desktop, "diamonds.json");
+        var data = FileOperations.Load(path);
         
         if(data is null)
         {
