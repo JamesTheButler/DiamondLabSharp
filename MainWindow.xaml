@@ -37,22 +37,22 @@
                 </StackPanel>
 
                 <TextBlock Text="Diamond Width (mm):" />
-                <xctk:IntegerUpDown x:Name="DiamondWidthInput" Text="60" Margin="0,0,0,10"/>
+                <xctk:IntegerUpDown x:Name="DiamondWidthInput" Text="60" Minimum="1" Margin="0,0,0,10"/>
 
                 <TextBlock Text="Diamond Height (mm):" />
-                <xctk:IntegerUpDown x:Name="DiamondHeightInput" Text="100" Margin="0,0,0,10"/>
+                <xctk:IntegerUpDown x:Name="DiamondHeightInput" Text="100" Minimum="1" Margin="0,0,0,10"/>
 
                 <TextBlock Text="Columns:" />
-                <xctk:IntegerUpDown x:Name="ColumnsInput" Text="10" Margin="0,0,0,10"/>
+                <xctk:IntegerUpDown x:Name="ColumnsInput" Text="10" Minimum="1" Maximum="99" Margin="0,0,0,10"/>
 
                 <TextBlock Text="Rows:" />
-                <xctk:IntegerUpDown x:Name="RowsInput" Text="4" Margin="0,0,0,10"/>
+                <xctk:IntegerUpDown x:Name="RowsInput" Text="4" Minimum="1" Maximum="99" Margin="0,0,0,10"/>
 
                 <TextBlock Text="Painting Margin Width (mm):" />
-                <xctk:IntegerUpDown x:Name="PaintingMarginInput" Text="20" Margin="0,0,0,10"/>
+                <xctk:IntegerUpDown x:Name="PaintingMarginInput" Text="20" Minimum="1" Maximum="99" Margin="0,0,0,10"/>
 
                 <TextBlock Text="Mounting Rim Width (mm):" />
-                <xctk:IntegerUpDown x:Name="MountingRimSizeInput" Text="30" Margin="0,0,0,10"/>
+                <xctk:IntegerUpDown x:Name="MountingRimSizeInput" Text="30" Minimum="1" Margin="0,0,0,10"/>
                 
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                     <TextBlock Text="Colors" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Margin="0 0 10 0"/>
