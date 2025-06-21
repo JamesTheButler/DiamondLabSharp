@@ -9,4 +9,6 @@ public static class FileManagementDefaults
     public static string DefaultLocation => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
         "Diamonds");
+    
+    public const string FileExtension = "DMNDS";
 }

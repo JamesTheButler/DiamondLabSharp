@@ -352,11 +352,13 @@ public partial class MainWindow
     {
         var dialogFileName = _fileManager.GetActiveFileName() ?? FileManagementDefaults.FileName;
         var dialogDirectory = _fileManager.GetActiveFileLocation() ?? FileManagementDefaults.DefaultLocation;
+
+        const string extension = FileManagementDefaults.FileExtension;
         var dialog = new SaveFileDialog
         {
-            Filter = "JSON Files (*.json)|*.json",
-            DefaultExt = ".json",
-            FileName = $"{dialogFileName}.json",
+            Filter = $"{extension} Files (*.{extension})|*.{extension}",
+            DefaultExt = $".{extension}",
+            FileName = $"{dialogFileName}.{extension}",
             DefaultDirectory = dialogDirectory
         };
 
@@ -374,10 +376,12 @@ public partial class MainWindow
     private void OnLoadButtonClicked(object sender, RoutedEventArgs e)
     {
         var dialogDirectory = _fileManager.GetActiveFileLocation() ?? FileManagementDefaults.DefaultLocation;
+        
+        const string extension = FileManagementDefaults.FileExtension;
         var dialog = new OpenFileDialog
         {
-            Filter = "JSON Files (*.json)|*.json",
-            DefaultExt = ".json",
+            Filter = $"{extension} Files (*.{extension})|*.{extension}",
+            DefaultExt = $".{extension}",
             DefaultDirectory = dialogDirectory,
         };
         
@@ -412,12 +416,14 @@ public partial class MainWindow
             FileOperations.Save(new FileFormat(_currentSizeSettings, _currentColorSettings), _fileManager.ActiveFilePath);
             return;
         }
+
+        const string extension = FileManagementDefaults.FileExtension;
         
         var dialog = new SaveFileDialog
         {
-            Filter = "JSON Files (*.json)|*.json",
-            DefaultExt = ".json",
-            FileName = $"{FileManagementDefaults.FileName}.json",
+            Filter = $"{extension} Files (*.{extension})|*.{extension}",
+            DefaultExt = $".{extension}",
+            FileName = $"{FileManagementDefaults.FileName}.{extension}",
             DefaultDirectory = FileManagementDefaults.DefaultLocation
         };
 
