@@ -73,10 +73,6 @@ public partial class MainWindow
 
         LoadFile(dialog.FileName);
 
-        UnbindInputs();
-        RefreshColorInputs();
-        RefreshDimensionInputs();
-        BindInputs();
         ReDraw();
     }
 
@@ -92,6 +88,11 @@ public partial class MainWindow
         _fileManager.ActiveFilePath = filePath;
         _currentSizeSettings = data.Value.SizeSettings;
         _currentColorSettings = data.Value.ColorSettings;
+        
+        UnbindInputs();
+        RefreshColorInputs();
+        RefreshDimensionInputs();
+        BindInputs();
     }
 
     private void SaveToPng()

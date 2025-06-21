@@ -28,9 +28,10 @@ public static class FileOperations
 
     public static bool Save(SerializedData data, string filePath)
     {
-        if (!filePath.EndsWith(".json"))
+        const string extension = FileManagementDefaults.FileExtension;
+        if (!filePath.EndsWith($".{extension}"))
         {
-            filePath += ".json";
+            filePath += $".{extension}";
         }
 
         try
