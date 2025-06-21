@@ -26,7 +26,7 @@ public static class FileOperations
         pngEncoder.Save(fileStream);
     }
 
-    public static bool Save(FileFormat data, string filePath)
+    public static bool Save(SerializedData data, string filePath)
     {
         if (!filePath.EndsWith(".json"))
         {
@@ -46,7 +46,7 @@ public static class FileOperations
         }
     }
     
-    public static FileFormat? Load(string filePath)
+    public static SerializedData? Load(string filePath)
     {
         if (!File.Exists(filePath))
         {
@@ -57,7 +57,7 @@ public static class FileOperations
         var fileContent = File.ReadAllText(filePath);
         try
         {
-            return JsonSerializer.Deserialize<FileFormat>(fileContent);
+            return JsonSerializer.Deserialize<SerializedData>(fileContent);
         }
         catch (Exception exception)
         {
