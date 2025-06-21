@@ -1,21 +1,24 @@
 ﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Diamonds.Rendering;
 using Diamonds.Rendering.AxisScale;
 using Diamonds.Utilities;
-using Path = System.IO.Path;
+using Microsoft.Win32;
 
 namespace Diamonds;
 
 public partial class MainWindow
 {
+    private const int InfoBarThickness = 50;
+    
+    private readonly FileManager _fileManager = FileManager.Instance;
+    
     private SizeSettings _currentSizeSettings = SizeSettings.Defaults;
     private ColorSettings _currentColorSettings = ColorSettings.Defaults;
-    
-    private const int InfoBarThickness = 50;
     
     private readonly Thickness _paintingMargin = new(10);
     private readonly Thickness _canvasMargin = new(10,10, 0, 0);
@@ -31,22 +34,51 @@ public partial class MainWindow
     {
         ResetColorInputs();
         ResetSizeInputs();
+        BindInputs();
+        ApplyColorInputs();
+        ApplyDimensionInputs();
+    }
+
+    private void BindInputs()
+    {
+        BackgroundColorInput.SelectedColorChanged += OnAnyColorInputChanged;
+        MountingRimColorInput.SelectedColorChanged += OnAnyColorInputChanged;
+        DiamondColorInput.SelectedColorChanged += OnAnyColorInputChanged;
+        CanvasRimColorInput.SelectedColorChanged += OnAnyColorInputChanged;
         
-        BackgroundColorInput.SelectedColorChanged += (_, _) => ApplyColors();
-        MountingRimColorInput.SelectedColorChanged += (_, _) => ApplyColors();
-        DiamondColorInput.SelectedColorChanged += (_, _) => ApplyColors();
-        CanvasRimColorInput.SelectedColorChanged += (_, _) => ApplyColors();
-        ApplyColors();
-        
-        DiamondWidthInput.TextChanged += (_, _) => ApplySizes();
-        DiamondHeightInput.TextChanged += (_, _) => ApplySizes();
-        ColumnsInput.ValueChanged += (_, _) => ApplySizes();
-        RowsInput.ValueChanged += (_, _) => ApplySizes();
-        OuterRimSizeInput.TextChanged += (_, _) => ApplySizes();
-        MountingRimSizeInput.TextChanged += (_, _) => ApplySizes();
-        ApplySizes();
+        DiamondWidthInput.ValueChanged += OnAnyDimensionInputChanged;
+        DiamondHeightInput.ValueChanged += OnAnyDimensionInputChanged;
+        ColumnsInput.ValueChanged += OnAnyDimensionInputChanged;
+        RowsInput.ValueChanged += OnAnyDimensionInputChanged;
+        PaintingMarginInput.ValueChanged += OnAnyDimensionInputChanged;
+        MountingRimSizeInput.ValueChanged += OnAnyDimensionInputChanged;
     }
     
+    private void UnbindInputs()
+    {
+        BackgroundColorInput.SelectedColorChanged -= OnAnyColorInputChanged;
+        MountingRimColorInput.SelectedColorChanged -= OnAnyColorInputChanged;
+        DiamondColorInput.SelectedColorChanged -= OnAnyColorInputChanged;
+        CanvasRimColorInput.SelectedColorChanged -= OnAnyColorInputChanged;
+        
+        DiamondWidthInput.ValueChanged -= OnAnyDimensionInputChanged;
+        DiamondHeightInput.ValueChanged -= OnAnyDimensionInputChanged;
+        ColumnsInput.ValueChanged -= OnAnyDimensionInputChanged;
+        RowsInput.ValueChanged -= OnAnyDimensionInputChanged;
+        PaintingMarginInput.ValueChanged -= OnAnyDimensionInputChanged;
+        MountingRimSizeInput.ValueChanged -= OnAnyDimensionInputChanged;
+    }
+
+    private void OnAnyColorInputChanged(object _, RoutedPropertyChangedEventArgs<Color?> __)
+    {
+        ApplyColorInputs();
+    }
+    
+    private void OnAnyDimensionInputChanged(object _, RoutedPropertyChangedEventArgs<object> __)
+    {
+        ApplyDimensionInputs();
+    }
+
     private void ReDraw()
     {
         MainCanvas.Children.Clear();
@@ -81,7 +113,7 @@ public partial class MainWindow
             out var verticalTickPositions);
 
         var rim = sizeSettings.MountingRimSize;
-        var totalMargin = rim + sizeSettings.CanvasMarginSize;
+        var totalMargin = rim + sizeSettings.PaintingMargin;
         
         var horizontalTicks = horizontalTickPositions
             .Select(pos => new AxisScaleTick(pos, new FormatterLabel(p => $"[D]\n{p:0,#}")))
@@ -116,7 +148,7 @@ public partial class MainWindow
         MainCanvas.Children.Add(verticalBar);
     }
 
-    private void ApplyColors()
+    private void ApplyColorInputs()
     {
         _currentColorSettings = new ColorSettings(
             BackgroundColorInput.SelectedColor ?? ColorSettings.Defaults.BackgroundColor,
@@ -127,22 +159,37 @@ public partial class MainWindow
         ReDraw();
     }
     
-    private void ApplySizes()
+    private void ApplyDimensionInputs()
     {
         _currentSizeSettings = new SizeSettings(
-            DiamondWidthInput.Text.ToDouble() ?? SizeSettings.Defaults.DiamondWidth,
-            DiamondHeightInput.Text.ToDouble() ?? SizeSettings.Defaults.DiamondHeight,
+            DiamondWidthInput.Value ?? SizeSettings.Defaults.DiamondWidth,
+            DiamondHeightInput.Value ?? SizeSettings.Defaults.DiamondHeight,
             ColumnsInput.Value ?? SizeSettings.Defaults.GridColumns,
             RowsInput.Value ?? SizeSettings.Defaults.GridRows,
-            OuterRimSizeInput.Text.ToDouble() ?? SizeSettings.Defaults.CanvasMarginSize,
-            MountingRimSizeInput.Text.ToDouble() ?? SizeSettings.Defaults.MountingRimSize);
-        var totals = _currentSizeSettings.PaintingSize;
-        TotalWidth.Text = totals.Width.ToString(CultureInfo.CurrentCulture);
-        TotalHeight.Text = totals.Height.ToString(CultureInfo.CurrentCulture);
+            PaintingMarginInput.Value ?? SizeSettings.Defaults.PaintingMargin,
+            MountingRimSizeInput.Value ?? SizeSettings.Defaults.MountingRimSize);
         
         ReDraw();
     }
 
+    private void RefreshColorInputs()
+    {
+        BackgroundColorInput.SelectedColor = _currentColorSettings.BackgroundColor;
+        DiamondColorInput.SelectedColor = _currentColorSettings.DiamondColor;
+        CanvasRimColorInput.SelectedColor = _currentColorSettings.CanvasRimColor;
+        MountingRimColorInput.SelectedColor = _currentColorSettings.MountingRimColor;
+    }
+    
+    private void RefreshDimensionInputs()
+    {
+        DiamondWidthInput.Value = _currentSizeSettings.DiamondWidth;
+        DiamondHeightInput.Value = _currentSizeSettings.DiamondHeight;
+        ColumnsInput.Value = _currentSizeSettings.GridColumns;
+        RowsInput.Value = _currentSizeSettings.GridRows;
+        PaintingMarginInput.Value = _currentSizeSettings.PaintingMargin;
+        MountingRimSizeInput.Value = _currentSizeSettings.MountingRimSize;
+    }
+    
     private void ResetColorInputs()
     {
         BackgroundColorInput.SelectedColor = ColorSettings.Defaults.BackgroundColor;
@@ -156,7 +203,7 @@ public partial class MainWindow
         DiamondHeightInput.Text = SizeSettings.Defaults.DiamondHeight.ToString(CultureInfo.CurrentCulture);
         ColumnsInput.Text = SizeSettings.Defaults.GridColumns.ToString();
         RowsInput.Text = SizeSettings.Defaults.GridRows.ToString();
-        OuterRimSizeInput.Text = SizeSettings.Defaults.CanvasMarginSize.ToString(CultureInfo.CurrentCulture);
+        PaintingMarginInput.Text = SizeSettings.Defaults.PaintingMargin.ToString(CultureInfo.CurrentCulture);
         MountingRimSizeInput.Text = SizeSettings.Defaults.MountingRimSize.ToString(CultureInfo.CurrentCulture);
     }
 
@@ -216,7 +263,7 @@ public partial class MainWindow
 
     private void DrawPaintingBackground(Point origin, SizeSettings size, ColorSettings colors)
     {
-        var offset = size.MountingRimSize + size.CanvasMarginSize;
+        var offset = size.MountingRimSize + size.PaintingMargin;
         var paintedBackground = new Rectangle
         {
             Width = size.GridColumns * size.DiamondWidth,
@@ -230,22 +277,22 @@ public partial class MainWindow
     
     private void DrawDiamondPattern(Point origin, SizeSettings size,  ColorSettings colors)
     {
-        var offset = size.MountingRimSize + size.CanvasMarginSize;
+        var offset = size.MountingRimSize + size.PaintingMargin;
         for (var row = 0; row < size.GridRows; row++)
         {
             for (var col = 0; col < size.GridColumns; col++)
             {
-                var cx = origin.X  + offset + col * size.DiamondWidth + size.DiamondWidth / 2;
-                var cy = origin.Y  + offset + row * size.DiamondHeight + size.DiamondHeight / 2;
+                var cx = origin.X  + offset + col * size.DiamondWidth + size.DiamondWidth * .5;
+                var cy = origin.Y  + offset + row * size.DiamondHeight + size.DiamondHeight * .5;
 
                 var diamond = new Polygon
                 {
                     Points =
                     [
-                        new Point(cx, cy - size.DiamondHeight / 2) ,
-                        new Point(cx + size.DiamondWidth / 2, cy) ,
-                        new Point(cx, cy + size.DiamondHeight / 2) ,
-                        new Point(cx - size.DiamondWidth / 2, cy) 
+                        new Point(cx, cy - size.DiamondHeight * .5) ,
+                        new Point(cx + size.DiamondWidth * .5, cy) ,
+                        new Point(cx, cy + size.DiamondHeight * .5) ,
+                        new Point(cx - size.DiamondWidth * .5, cy) 
                     ],
                     Fill = new SolidColorBrush(colors.DiamondColor),
                 };
@@ -259,7 +306,7 @@ public partial class MainWindow
         verticalTicks = new double[size.GridRows];
         horizontalTicks = new double[size.GridColumns];
         
-        var offset = size.MountingRimSize + size.CanvasMarginSize;
+        var offset = size.MountingRimSize + size.PaintingMargin;
         for (var row = 0; row < size.GridRows; row++)
         {
             verticalTicks[row] = offset + size.DiamondHeight * .5 + size.DiamondHeight * row;
@@ -284,34 +331,104 @@ public partial class MainWindow
 
     private void OnPngButtonClicked(object sender, RoutedEventArgs e)
     {
-        var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        var path = Path.Combine(desktop, "diamonds.png");
-        FileOperations.SaveAsPng(MainCanvas, path);
+        var dialogFileName = _fileManager.GetActiveFileName() ?? FileManagementDefaults.FileName;
+        var dialogDirectory = _fileManager.GetActiveFileLocation() ?? FileManagementDefaults.DefaultLocation;
+        
+        var dialog = new SaveFileDialog
+        {
+            Filter = "PNG Files (*.png)|*.png",
+            DefaultExt = ".png",
+            FileName = $"{dialogFileName}.png",
+            DefaultDirectory = dialogDirectory
+        };
+
+        if (dialog.ShowDialog() != true)
+            return;
+        
+        FileOperations.SaveAsPng(MainCanvas, dialog.FileName);
     }
 
     private void OnSaveButtonClicked(object sender, RoutedEventArgs e)
     {
-        var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        var path = Path.Combine(desktop, "diamonds.json");
-        FileOperations.Save(new(_currentSizeSettings, _currentColorSettings), path);
+        var dialogFileName = _fileManager.GetActiveFileName() ?? FileManagementDefaults.FileName;
+        var dialogDirectory = _fileManager.GetActiveFileLocation() ?? FileManagementDefaults.DefaultLocation;
+        var dialog = new SaveFileDialog
+        {
+            Filter = "JSON Files (*.json)|*.json",
+            DefaultExt = ".json",
+            FileName = $"{dialogFileName}.json",
+            DefaultDirectory = dialogDirectory
+        };
+
+        if (dialog.ShowDialog() != true)
+            return;
+
+        var isSaveSuccess = FileOperations.Save(new FileFormat(_currentSizeSettings, _currentColorSettings), dialog.FileName);
+
+        if (isSaveSuccess)
+        {
+            _fileManager.ActiveFilePath = dialog.FileName;
+        }
     }
 
     private void OnLoadButtonClicked(object sender, RoutedEventArgs e)
     {
-        var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        var path = Path.Combine(desktop, "diamonds.json");
-        var data = FileOperations.Load(path);
-        
-        if(data is null)
+        var dialogDirectory = _fileManager.GetActiveFileLocation() ?? FileManagementDefaults.DefaultLocation;
+        var dialog = new OpenFileDialog
         {
-            Console.WriteLine("Failed to load diamonds.json");
+            Filter = "JSON Files (*.json)|*.json",
+            DefaultExt = ".json",
+            DefaultDirectory = dialogDirectory,
+        };
+        
+        if (dialog.ShowDialog() != true)
+            return;
+
+        var data = FileOperations.Load(dialog.FileName);
+        
+        if (data is null)
+        {
+            Console.WriteLine($"Failed to load {dialog.FileName}");
             return;
         }
         
+        _fileManager.ActiveFilePath = dialog.FileName;
         _currentSizeSettings = data.Value.SizeSettings;
         _currentColorSettings = data.Value.ColorSettings;
+        
+        UnbindInputs();
+        RefreshColorInputs();
+        RefreshDimensionInputs();
+        BindInputs();
         ReDraw();
     }
 
     #endregion
+
+    private void OnShortcutSave(object sender, ExecutedRoutedEventArgs e)
+    {
+        if (_fileManager.ActiveFilePath is not null)
+        {
+            FileOperations.Save(new FileFormat(_currentSizeSettings, _currentColorSettings), _fileManager.ActiveFilePath);
+            return;
+        }
+        
+        var dialog = new SaveFileDialog
+        {
+            Filter = "JSON Files (*.json)|*.json",
+            DefaultExt = ".json",
+            FileName = $"{FileManagementDefaults.FileName}.json",
+            DefaultDirectory = FileManagementDefaults.DefaultLocation
+        };
+
+        if (dialog.ShowDialog() != true)
+            return;
+
+        var isSaveSuccess = FileOperations.Save(new FileFormat(_currentSizeSettings, _currentColorSettings), dialog.FileName);
+
+        if (isSaveSuccess)
+        {
+            _fileManager.ActiveFilePath = dialog.FileName;
+        }
+    }
 }
