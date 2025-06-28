@@ -185,16 +185,20 @@ public partial class MainWindow
     {
         verticalTicks = new double[size.GridRows];
         horizontalTicks = new double[size.GridColumns];
-
-        var offset = size.MountingRimSize + size.PaintingMargin;
-        for (var row = 0; row < size.GridRows; row++)
-        {
-            verticalTicks[row] = offset + size.DiamondHeight * .5 + size.DiamondHeight * row;
-        }
-
+        
+        var offset = new Point(
+            size.MountingRimSize + size.PaintingMargin + size.OffsetX,
+            size.MountingRimSize + size.PaintingMargin + size.OffsetY);
+        
         for (var col = 0; col < size.GridColumns; col++)
         {
-            horizontalTicks[col] = offset + size.DiamondWidth * .5 + size.DiamondWidth * col;
+            horizontalTicks[col] = offset.X + size.DiamondWidth * .5 + size.DiamondWidth * col;
         }
+
+        for (var row = 0; row < size.GridRows; row++)
+        {
+            verticalTicks[row] = offset.Y + size.DiamondHeight * .5 + size.DiamondHeight * row;
+        }
+
     }
 }
