@@ -47,23 +47,24 @@ public partial class MainWindow
         MountingRimSizeInput.ValueChanged -= OnAnyDimensionInputChanged;
     }
 
-    private void OnAnyColorInputChanged(object _, RoutedPropertyChangedEventArgs<Color?> __)
+    private void OnAnyColorInputChanged(object sender, RoutedPropertyChangedEventArgs<Color?> changeArgs)
     {
         ApplyColorInputs();
     }
 
-    private void OnAnyDimensionInputChanged(object _, RoutedPropertyChangedEventArgs<object> __)
+    private void OnAnyDimensionInputChanged(object sender, RoutedPropertyChangedEventArgs<object> changeArgs)
     {
         ApplyDimensionInputs();
     }
 
     private void ApplyColorInputs()
     {
+        var defaults = ColorSettings.Defaults;
         _currentColorSettings = new ColorSettings(
-            BackgroundColorInput.SelectedColor ?? ColorSettings.Defaults.BackgroundColor,
-            DiamondColorInput.SelectedColor ?? ColorSettings.Defaults.DiamondColor,
-            CanvasRimColorInput.SelectedColor ?? ColorSettings.Defaults.CanvasRimColor,
-            MountingRimColorInput.SelectedColor ?? ColorSettings.Defaults.MountingRimColor);
+            BackgroundColorInput.SelectedColor ?? defaults.BackgroundColor,
+            DiamondColorInput.SelectedColor ?? defaults.DiamondColor,
+            CanvasRimColorInput.SelectedColor ?? defaults.CanvasRimColor,
+            MountingRimColorInput.SelectedColor ?? defaults.MountingRimColor);
 
         ReDraw();
     }
@@ -71,12 +72,15 @@ public partial class MainWindow
     private void ApplyDimensionInputs()
     {
         _currentSizeSettings = new SizeSettings(
-            DiamondWidthInput.Value ?? SizeSettings.Defaults.DiamondWidth,
-            DiamondHeightInput.Value ?? SizeSettings.Defaults.DiamondHeight,
-            ColumnsInput.Value ?? SizeSettings.Defaults.GridColumns,
-            RowsInput.Value ?? SizeSettings.Defaults.GridRows,
-            PaintingMarginInput.Value ?? SizeSettings.Defaults.PaintingMargin,
-            MountingRimSizeInput.Value ?? SizeSettings.Defaults.MountingRimSize);
+            DiamondWidthInput.Value ?? defaults.DiamondWidth,
+            DiamondHeightInput.Value ?? defaults.DiamondHeight,
+            ColumnsInput.Value ?? defaults.GridColumns,
+            RowsInput.Value ?? defaults.GridRows,
+            PaintingMarginInput.Value ?? defaults.PaintingMargin,
+            MountingRimSizeInput.Value ?? defaults.MountingRimSize);
+
+        ReDraw();
+    }
 
         ReDraw();
     }

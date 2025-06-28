@@ -29,5 +29,4 @@ public readonly record struct SizeSettings(
         var height = GridRows * DiamondHeight + 2 * (PaintingMargin + MountingRimSize);
         return new Size(width, height);
     }
-    
 }
