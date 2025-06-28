@@ -25,9 +25,12 @@ public partial class MainWindow
     {
         InitializeComponent();
         SetUpUi();
-
+        InitializeNotificationTimer();
+        
         if (startupFilePath != null)
+        {
             LoadFile(startupFilePath);
+        }
 
         ReDraw();
     }
