@@ -1,0 +1,76 @@
+{
+  "SizeSettings": {
+    "DiamondWidth": 80,
+    "DiamondHeight": 110,
+    "GridColumns": 7,
+    "GridRows": 7,
+    "PaintingMargin": 21,
+    "MountingRimSize": 7,
+    "OffsetX": 40,
+    "OffsetY": 0,
+    "MarginSize": {
+      "IsEmpty": false,
+      "Width": 56,
+      "Height": 56
+    },
+    "PaintingSize": {
+      "IsEmpty": false,
+      "Width": 616,
+      "Height": 826
+    },
+    "PatternSize": {
+      "IsEmpty": false,
+      "Width": 560,
+      "Height": 770
+    }
+  },
+  "ColorSettings": {
+    "BackgroundColor": {
+      "ColorContext": null,
+      "A": 255,
+      "R": 30,
+      "G": 51,
+      "B": 102,
+      "ScA": 1,
+      "ScR": 0.0129830325,
+      "ScG": 0.033104766,
+      "ScB": 0.13286832
+    },
+    "DiamondColor": {
+      "ColorContext": null,
+      "A": 255,
+      "R": 73,
+      "G": 183,
+      "B": 222,
+      "ScA": 1,
+      "ScR": 0.066625945,
+      "ScG": 0.4735315,
+      "ScB": 0.73046076
+    },
+    "CanvasRimColor": {
+      "ColorContext": null,
+      "A": 255,
+      "R": 255,
+      "G": 255,
+      "B": 255,
+      "ScA": 1,
+      "ScR": 1,
+      "ScG": 1,
+      "ScB": 1
+    },
+    "MountingRimColor": {
+      "ColorContext": null,
+      "A": 255,
+      "R": 128,
+      "G": 128,
+      "B": 128,
+      "ScA": 1,
+      "ScR": 0.21586053,
+      "ScG": 0.21586053,
+      "ScB": 0.21586053
+    }
+  },
+  "DisplaySettings": {
+    "ShowScales": true
+  }
+}
