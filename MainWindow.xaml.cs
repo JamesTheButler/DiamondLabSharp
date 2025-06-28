@@ -12,6 +12,7 @@ public partial class MainWindow
 
     private SizeSettings _currentSizeSettings = SizeSettings.Defaults;
     private ColorSettings _currentColorSettings = ColorSettings.Defaults;
+    private DisplaySettings _currentDisplaySettings = DisplaySettings.Defaults;
 
     private readonly Thickness _paintingMargin = new(10);
     private readonly Thickness _canvasMargin = new(10, 10, 0, 0);

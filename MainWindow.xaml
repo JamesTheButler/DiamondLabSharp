@@ -69,7 +69,17 @@
                 <toolkit:ColorPicker x:Name="CanvasRimColorInput" />
 
                 <TextBlock Text="Mounting Rim Color:" />
-                <xctk:ColorPicker x:Name="MountingRimColorInput" />
+                <toolkit:ColorPicker x:Name="MountingRimColorInput" />
+                
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBlock Text="Display" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Margin="0 0 10 0"/>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="Mounting Rim Color:" Margin="0,0,10,0"/>
+                        <CheckBox x:Name="ShowScalesInput" IsChecked="True"/>
+                </StackPanel>
+
 
             </StackPanel>
         </Border>

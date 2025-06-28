@@ -31,7 +31,10 @@ public partial class MainWindow
             _canvasMargin.Top + InfoBarThickness + _paintingMargin.Top);
 
         DrawCanvasBackground(paintingOrigin, paintingSizeSettings, colorSettings);
-        DrawScales(paintingOrigin, paintingSizeSettings);
+        if(_currentDisplaySettings.ShowScales)
+        {
+            DrawScales(paintingOrigin, paintingSizeSettings);
+        }
         DrawMountingRim(paintingOrigin, paintingSizeSettings, colorSettings);
         DrawPaintingBackground(paintingOrigin, paintingSizeSettings, colorSettings);
         DrawDiamondPattern(paintingOrigin, paintingSizeSettings, colorSettings);

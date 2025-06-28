@@ -7,10 +7,11 @@ public partial class MainWindow
 {
     private void QuickSave()
     {
+        var saveData = GetSerializedData();
+        
         if (_fileManager.ActiveFilePath is not null)
         {
-            FileOperations.Save(new SerializedData(_currentSizeSettings, _currentColorSettings),
-                _fileManager.ActiveFilePath);
+            FileOperations.Save(saveData, _fileManager.ActiveFilePath);
             return;
         }
 
@@ -18,13 +19,18 @@ public partial class MainWindow
         if (dialog.ShowDialog() != true)
             return;
 
-        var isSaveSuccess = FileOperations.Save(new SerializedData(_currentSizeSettings, _currentColorSettings),
-            dialog.FileName);
+        
+        var isSaveSuccess = FileOperations.Save(saveData, dialog.FileName);
 
         if (isSaveSuccess)
             _fileManager.ActiveFilePath = dialog.FileName;
     }
 
+    private SerializedData GetSerializedData()
+    {
+        return new SerializedData(_currentSizeSettings, _currentColorSettings, _currentDisplaySettings);
+    }
+    
     private static SaveFileDialog OpenSaveFileDialog(string fileName, string filePath)
     {
         const string extension = FileManagementDefaults.FileExtension;
@@ -49,8 +55,8 @@ public partial class MainWindow
         if (dialog.ShowDialog() != true)
             return;
 
-        var isSaveSuccess = FileOperations.Save(new SerializedData(_currentSizeSettings, _currentColorSettings),
-            dialog.FileName);
+        var saveData = GetSerializedData();
+        var isSaveSuccess = FileOperations.Save(saveData, dialog.FileName);
 
         if (isSaveSuccess)
             _fileManager.ActiveFilePath = dialog.FileName;
@@ -88,10 +94,12 @@ public partial class MainWindow
         _fileManager.ActiveFilePath = filePath;
         _currentSizeSettings = data.Value.SizeSettings;
         _currentColorSettings = data.Value.ColorSettings;
+        _currentDisplaySettings = data.Value.DisplaySettings;
         
         UnbindInputs();
         RefreshColorInputs();
         RefreshDimensionInputs();
+        RefreshDisplayInputs();
         BindInputs();
     }
 

@@ -12,9 +12,13 @@ public partial class MainWindow
     {
         ResetColorInputs();
         ResetSizeInputs();
+        ResetDisplayInputs();
+
         BindInputs();
+
         ApplyColorInputs();
         ApplyDimensionInputs();
+        ApplyDisplayInputs();
     }
 
     private void BindInputs()
@@ -30,6 +34,9 @@ public partial class MainWindow
         RowsInput.ValueChanged += OnAnyDimensionInputChanged;
         PaintingMarginInput.ValueChanged += OnAnyDimensionInputChanged;
         MountingRimSizeInput.ValueChanged += OnAnyDimensionInputChanged;
+
+        ShowScalesInput.Checked += OnAnyDisplayInputChanged;
+        ShowScalesInput.Unchecked += OnAnyDisplayInputChanged;
     }
 
     private void UnbindInputs()
@@ -45,6 +52,9 @@ public partial class MainWindow
         RowsInput.ValueChanged -= OnAnyDimensionInputChanged;
         PaintingMarginInput.ValueChanged -= OnAnyDimensionInputChanged;
         MountingRimSizeInput.ValueChanged -= OnAnyDimensionInputChanged;
+        
+        ShowScalesInput.Checked -= OnAnyDisplayInputChanged;
+        ShowScalesInput.Unchecked -= OnAnyDisplayInputChanged;
     }
 
     private void OnAnyColorInputChanged(object sender, RoutedPropertyChangedEventArgs<Color?> changeArgs)
@@ -55,6 +65,11 @@ public partial class MainWindow
     private void OnAnyDimensionInputChanged(object sender, RoutedPropertyChangedEventArgs<object> changeArgs)
     {
         ApplyDimensionInputs();
+    }
+    
+    private void OnAnyDisplayInputChanged(object sender, RoutedEventArgs eventArgs)
+    {
+        ApplyDisplayInputs();
     }
 
     private void ApplyColorInputs()
@@ -71,6 +86,7 @@ public partial class MainWindow
 
     private void ApplyDimensionInputs()
     {
+        var defaults = SizeSettings.Defaults;
         _currentSizeSettings = new SizeSettings(
             DiamondWidthInput.Value ?? defaults.DiamondWidth,
             DiamondHeightInput.Value ?? defaults.DiamondHeight,
@@ -81,6 +97,11 @@ public partial class MainWindow
 
         ReDraw();
     }
+    
+    private void ApplyDisplayInputs()
+    {
+        var defaults = DisplaySettings.Defaults;
+        _currentDisplaySettings = new DisplaySettings(ShowScalesInput.IsChecked ?? defaults.ShowScales);
 
         ReDraw();
     }
@@ -103,6 +124,11 @@ public partial class MainWindow
         MountingRimSizeInput.Value = _currentSizeSettings.MountingRimSize;
     }
 
+    private void RefreshDisplayInputs()
+    {
+        ShowScalesInput.IsChecked = _currentDisplaySettings.ShowScales;
+    }
+
     private void ResetColorInputs()
     {
         BackgroundColorInput.SelectedColor = ColorSettings.Defaults.BackgroundColor;
@@ -119,6 +145,11 @@ public partial class MainWindow
         RowsInput.Text = SizeSettings.Defaults.GridRows.ToString();
         PaintingMarginInput.Text = SizeSettings.Defaults.PaintingMargin.ToString(CultureInfo.CurrentCulture);
         MountingRimSizeInput.Text = SizeSettings.Defaults.MountingRimSize.ToString(CultureInfo.CurrentCulture);
+    }
+
+    private void ResetDisplayInputs()
+    {
+        ShowScalesInput.IsChecked = DisplaySettings.Defaults.ShowScales;
     }
 
     private void OnResetColorsButtonClicked(object sender, RoutedEventArgs e)
