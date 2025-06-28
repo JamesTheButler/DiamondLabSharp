@@ -152,15 +152,17 @@ public partial class MainWindow
         MainCanvas.Children.Add(paintedBackground);
     }
 
-    private void DrawDiamondPattern(Point origin, SizeSettings size, ColorSettings colors)
+    private void DrawDiamondPattern(Point paintingOrigin, SizeSettings size, ColorSettings colors)
     {
         var offset = size.MountingRimSize + size.PaintingMargin;
-        for (var row = 0; row < size.GridRows; row++)
+        var patternOrigin = new Point(paintingOrigin.X + offset, paintingOrigin.Y + offset); 
+        
+        for (var row = -1; row <= size.GridRows; row++)
         {
-            for (var col = 0; col < size.GridColumns; col++)
+            for (var col = -1; col <= size.GridColumns; col++)
             {
-                var cx = origin.X + offset + col * size.DiamondWidth + size.DiamondWidth * .5;
-                var cy = origin.Y + offset + row * size.DiamondHeight + size.DiamondHeight * .5;
+                var cx = patternOrigin.X + size.OffsetX + col * size.DiamondWidth + size.DiamondWidth * .5;
+                var cy = patternOrigin.Y + size.OffsetY + row * size.DiamondHeight + size.DiamondHeight * .5;
 
                 var diamond = new Polygon
                 {
@@ -171,7 +173,8 @@ public partial class MainWindow
                         new Point(cx, cy + size.DiamondHeight * .5),
                         new Point(cx - size.DiamondWidth * .5, cy)
                     ],
-                    Fill = new SolidColorBrush(colors.DiamondColor)
+                    Fill = new SolidColorBrush(colors.DiamondColor),
+                    Clip = new RectangleGeometry(new Rect(patternOrigin, size.PatternSize))
                 };
                 MainCanvas.Children.Add(diamond);
             }

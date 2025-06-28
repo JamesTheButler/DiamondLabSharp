@@ -53,10 +53,16 @@
 
                 <TextBlock Text="Mounting Rim Width (mm):" />
                 <toolkit:IntegerUpDown x:Name="MountingRimSizeInput" Text="30" Minimum="1" Margin="0,0,0,10"/>
-                
+
+                <TextBlock Text="Offset X (mm):" />
+                <toolkit:IntegerUpDown x:Name="OffsetXInput" Text="0" Margin="0,0,0,10"/>
+
+                <TextBlock Text="Offset Y (mm):" />
+                <toolkit:IntegerUpDown x:Name="OffsetYInput" Text="0" Margin="0,0,0,10"/>
+
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                     <TextBlock Text="Colors" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                    <Button Content="↩" Margin="0,10,0,0" Click="OnResetColorsButtonClicked" Padding="8 4"  VerticalAlignment="Center"/>
+                    <Button Content="↩" Margin="0,0,0,0" Click="OnResetColorsButtonClicked" Padding="8 4"  VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <TextBlock Text="Background Color:" />
@@ -71,12 +77,12 @@
                 <TextBlock Text="Mounting Rim Color:" />
                 <toolkit:ColorPicker x:Name="MountingRimColorInput" />
                 
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
                     <TextBlock Text="Display" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Margin="0 0 10 0"/>
                 </StackPanel>
                 
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <TextBlock Text="Mounting Rim Color:" Margin="0,0,10,0"/>
+                        <TextBlock Text="Show Scales" Margin="0,0,10,0"/>
                         <CheckBox x:Name="ShowScalesInput" IsChecked="True"/>
                 </StackPanel>
 

@@ -34,6 +34,8 @@ public partial class MainWindow
         RowsInput.ValueChanged += OnAnyDimensionInputChanged;
         PaintingMarginInput.ValueChanged += OnAnyDimensionInputChanged;
         MountingRimSizeInput.ValueChanged += OnAnyDimensionInputChanged;
+        OffsetXInput.ValueChanged += OnOffsetXChanged;
+        OffsetYInput.ValueChanged += OnOffsetYChanged;
 
         ShowScalesInput.Checked += OnAnyDisplayInputChanged;
         ShowScalesInput.Unchecked += OnAnyDisplayInputChanged;
@@ -52,9 +54,45 @@ public partial class MainWindow
         RowsInput.ValueChanged -= OnAnyDimensionInputChanged;
         PaintingMarginInput.ValueChanged -= OnAnyDimensionInputChanged;
         MountingRimSizeInput.ValueChanged -= OnAnyDimensionInputChanged;
-        
+        OffsetXInput.ValueChanged -= OnOffsetXChanged;
+        OffsetYInput.ValueChanged -= OnOffsetYChanged;
+
         ShowScalesInput.Checked -= OnAnyDisplayInputChanged;
         ShowScalesInput.Unchecked -= OnAnyDisplayInputChanged;
+    }
+
+    private void OnOffsetXChanged(object sender, RoutedPropertyChangedEventArgs<object> changeArgs)
+    {
+        var value = changeArgs.NewValue as int?;
+        if (value >= _currentSizeSettings.DiamondWidth)
+        {
+            OffsetXInput.Value = 0;
+            return;
+        }
+        if (value <= -_currentSizeSettings.DiamondWidth)
+        {
+            OffsetXInput.Value = 0;
+            return;
+        }
+
+        OnAnyDimensionInputChanged(sender, changeArgs);
+    }
+
+    private void OnOffsetYChanged(object sender, RoutedPropertyChangedEventArgs<object> changeArgs)
+    {
+        var value = changeArgs.NewValue as int?;
+        if (value >= _currentSizeSettings.DiamondHeight)
+        {
+            OffsetXInput.Value = 0;
+            return;
+        }
+        if (value <= -_currentSizeSettings.DiamondHeight)
+        {
+            OffsetXInput.Value = 0;
+            return;
+        }
+
+        OnAnyDimensionInputChanged(sender, changeArgs);
     }
 
     private void OnAnyColorInputChanged(object sender, RoutedPropertyChangedEventArgs<Color?> changeArgs)
@@ -93,7 +131,9 @@ public partial class MainWindow
             ColumnsInput.Value ?? defaults.GridColumns,
             RowsInput.Value ?? defaults.GridRows,
             PaintingMarginInput.Value ?? defaults.PaintingMargin,
-            MountingRimSizeInput.Value ?? defaults.MountingRimSize);
+            MountingRimSizeInput.Value ?? defaults.MountingRimSize,
+            OffsetXInput.Value ?? defaults.OffsetX,
+            OffsetYInput.Value ?? defaults.OffsetY);
 
         ReDraw();
     }
@@ -122,6 +162,8 @@ public partial class MainWindow
         RowsInput.Value = _currentSizeSettings.GridRows;
         PaintingMarginInput.Value = _currentSizeSettings.PaintingMargin;
         MountingRimSizeInput.Value = _currentSizeSettings.MountingRimSize;
+        OffsetXInput.Value = _currentSizeSettings.OffsetX;
+        OffsetYInput.Value = _currentSizeSettings.OffsetY;
     }
 
     private void RefreshDisplayInputs()
@@ -139,12 +181,15 @@ public partial class MainWindow
 
     private void ResetSizeInputs()
     {
+        // settings the text instead of the value to not re-trigger change event
         DiamondWidthInput.Text = SizeSettings.Defaults.DiamondWidth.ToString(CultureInfo.CurrentCulture);
         DiamondHeightInput.Text = SizeSettings.Defaults.DiamondHeight.ToString(CultureInfo.CurrentCulture);
         ColumnsInput.Text = SizeSettings.Defaults.GridColumns.ToString();
         RowsInput.Text = SizeSettings.Defaults.GridRows.ToString();
         PaintingMarginInput.Text = SizeSettings.Defaults.PaintingMargin.ToString(CultureInfo.CurrentCulture);
         MountingRimSizeInput.Text = SizeSettings.Defaults.MountingRimSize.ToString(CultureInfo.CurrentCulture);
+        OffsetXInput.Text = SizeSettings.Defaults.OffsetX.ToString(CultureInfo.CurrentCulture);
+        OffsetYInput.Text = SizeSettings.Defaults.OffsetY.ToString(CultureInfo.CurrentCulture);
     }
 
     private void ResetDisplayInputs()
