@@ -173,14 +173,22 @@ public partial class MainWindow
                     color = _colorSettings.DiamondColor;
 
                 var centerX =
-                    patternOrigin.X + _sizeSettings.OffsetX + col * _sizeSettings.DiamondWidth +
+                    patternOrigin.X +
+                    _sizeSettings.OffsetX +
+                    col * _sizeSettings.DiamondWidth +
                     _sizeSettings.DiamondWidth * .5;
-                var centerY = patternOrigin.Y + _sizeSettings.OffsetY + row * _sizeSettings.DiamondHeight +
-                              _sizeSettings.DiamondHeight * .5;
+
+                var centerY =
+                    patternOrigin.Y +
+                    _sizeSettings.OffsetY +
+                    row * _sizeSettings.DiamondHeight +
+                    _sizeSettings.DiamondHeight * .5;
+
                 var diamond = new Diamond(new Point(centerX, centerY), _sizeSettings.DiamondSize, color)
                 {
                     Clip = new RectangleGeometry(new Rect(patternOrigin, _sizeSettings.PatternSize))
                 };
+
                 var row1 = row;
                 var col1 = col;
                 diamond.Clicked += () => { OpenColorPicker(row1, col1, color); };
@@ -226,7 +234,7 @@ public partial class MainWindow
         {
             SelectedColor = initialColor,
             Width = 200,
-            Height = 50
+            Height = 30
         };
 
         var button = new Button
