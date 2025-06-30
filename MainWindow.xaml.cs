@@ -1,24 +1,21 @@
 ﻿using System.Windows;
 using Diamonds.Model;
-using Diamonds.Utilities;
+using Diamonds.Operation;
+using Diamonds.Operation.File;
+using Diamonds.Operation.Notification;
 
 namespace Diamonds;
 
 public partial class MainWindow
 {
     private const int InfoBarThickness = 50;
+
+    private readonly ApplicationModel _model = Dependencies.Model;
+    private readonly IFileManager _fileManager = Dependencies.FileManager;
+    private readonly INotificationManager _notificationManager = Dependencies.NotificationManager;
+
     private readonly Thickness _canvasMargin = new(10, 10, 0, 0);
-
-    private readonly FileManager _fileManager = FileManager.Instance;
-
     private readonly Thickness _paintingMargin = new(10);
-    private ColorSettings _colorSettings = ColorSettings.Defaults;
-    private DisplaySettings _displaySettings = DisplaySettings.Defaults;
-    private HighlightSettings _highlightSettings = new([]);
-
-    private SizeSettings _sizeSettings = SizeSettings.Defaults;
-
-    private Point PaintingOrigin;
 
     public MainWindow() : this(null)
     {
@@ -28,11 +25,13 @@ public partial class MainWindow
     {
         InitializeComponent();
         SetUpUi();
+
         InitializeNotificationTimer();
+        _notificationManager.NotificationPosted += PostNotification;
 
         DataContext = this;
         if (startupFilePath != null)
-            LoadFile(startupFilePath);
+            _fileManager.Load(startupFilePath);
 
         ReDraw();
     }

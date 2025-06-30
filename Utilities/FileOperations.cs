@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Diamonds.Model;
+using Diamonds.Operation.File;
 
 namespace Diamonds.Utilities;
 
@@ -31,9 +32,7 @@ public static class FileOperations
     {
         const string extension = FileManagementDefaults.FileExtension;
         if (!filePath.EndsWith($".{extension}"))
-        {
             filePath += $".{extension}";
-        }
 
         try
         {
@@ -47,7 +46,7 @@ public static class FileOperations
             return false;
         }
     }
-    
+
     public static SerializedData? Load(string filePath)
     {
         if (!File.Exists(filePath))
@@ -55,7 +54,7 @@ public static class FileOperations
             Console.WriteLine($"File '{filePath}' doesn't exist.");
             return null;
         }
-        
+
         var fileContent = File.ReadAllText(filePath);
         try
         {

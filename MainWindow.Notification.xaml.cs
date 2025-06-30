@@ -1,5 +1,5 @@
 ﻿using System.Windows.Threading;
-using Diamonds.Notification;
+using Diamonds.Operation.Notification;
 
 namespace Diamonds;
 
@@ -17,7 +17,7 @@ public partial class MainWindow
             _notificationTimer.Stop();
         };
     }
-    
+
     private void PostNotification(INotification notification)
     {
         NotificationBox.Content = notification.Message;

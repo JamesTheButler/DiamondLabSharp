@@ -10,17 +10,11 @@ public partial class MainWindow
 {
     private void SetUpUi()
     {
-        ResetColorInputs();
-        ResetSizeInputs();
-        ResetDisplayInputs();
-        ResetHighlights();
-
         BindInputs();
 
         ApplyColorInputs();
         ApplyDimensionInputs();
         ApplyDisplayInputs();
-        ApplyHighlights();
     }
 
     private void BindInputs()
@@ -70,13 +64,13 @@ public partial class MainWindow
     private void OnOffsetXChanged(object sender, RoutedPropertyChangedEventArgs<object> changeArgs)
     {
         var value = changeArgs.NewValue as int?;
-        if (value >= _sizeSettings.DiamondWidth)
+        if (value >= _model.SizeSettings.DiamondWidth)
         {
             OffsetXInput.Value = 0;
             return;
         }
 
-        if (value <= -_sizeSettings.DiamondWidth)
+        if (value <= -_model.SizeSettings.DiamondWidth)
         {
             OffsetXInput.Value = 0;
             return;
@@ -88,13 +82,13 @@ public partial class MainWindow
     private void OnOffsetYChanged(object sender, RoutedPropertyChangedEventArgs<object> changeArgs)
     {
         var value = changeArgs.NewValue as int?;
-        if (value >= _sizeSettings.DiamondHeight)
+        if (value >= _model.SizeSettings.DiamondHeight)
         {
             OffsetXInput.Value = 0;
             return;
         }
 
-        if (value <= -_sizeSettings.DiamondHeight)
+        if (value <= -_model.SizeSettings.DiamondHeight)
         {
             OffsetXInput.Value = 0;
             return;
@@ -121,7 +115,7 @@ public partial class MainWindow
     private void ApplyColorInputs()
     {
         var defaults = ColorSettings.Defaults;
-        _colorSettings = new ColorSettings(
+        _model.ColorSettings = new ColorSettings(
             BackgroundColorInput.SelectedColor ?? defaults.BackgroundColor,
             DiamondColorInput.SelectedColor ?? defaults.DiamondColor,
             CanvasRimColorInput.SelectedColor ?? defaults.CanvasRimColor,
@@ -133,7 +127,7 @@ public partial class MainWindow
     private void ApplyDimensionInputs()
     {
         var defaults = SizeSettings.Defaults;
-        _sizeSettings = new SizeSettings(
+        _model.SizeSettings = new SizeSettings(
             DiamondWidthInput.Value ?? defaults.DiamondWidth,
             DiamondHeightInput.Value ?? defaults.DiamondHeight,
             ColumnsInput.Value ?? defaults.GridColumns,
@@ -149,7 +143,7 @@ public partial class MainWindow
     private void ApplyDisplayInputs()
     {
         var defaults = DisplaySettings.Defaults;
-        _displaySettings = new DisplaySettings(
+        _model.DisplaySettings = new DisplaySettings(
             ShowScalesInput.IsChecked ?? defaults.ShowScales,
             OnlyPaintingInput.IsChecked ?? defaults.OnlyPattern
         );
@@ -157,67 +151,56 @@ public partial class MainWindow
         ReDraw();
     }
 
-    private void ApplyHighlights()
-    {
-        ReDraw();
-    }
-
     private void RefreshColorInputs()
     {
-        BackgroundColorInput.SelectedColor = _colorSettings.BackgroundColor;
-        DiamondColorInput.SelectedColor = _colorSettings.DiamondColor;
-        CanvasRimColorInput.SelectedColor = _colorSettings.CanvasRimColor;
-        MountingRimColorInput.SelectedColor = _colorSettings.MountingRimColor;
+        var colorSettings = _model.ColorSettings;
+        BackgroundColorInput.SelectedColor = colorSettings.BackgroundColor;
+        DiamondColorInput.SelectedColor = colorSettings.DiamondColor;
+        CanvasRimColorInput.SelectedColor = colorSettings.CanvasRimColor;
+        MountingRimColorInput.SelectedColor = colorSettings.MountingRimColor;
     }
 
     private void RefreshDimensionInputs()
     {
-        DiamondWidthInput.Value = _sizeSettings.DiamondWidth;
-        DiamondHeightInput.Value = _sizeSettings.DiamondHeight;
-        ColumnsInput.Value = _sizeSettings.GridColumns;
-        RowsInput.Value = _sizeSettings.GridRows;
-        PaintingMarginInput.Value = _sizeSettings.PaintingMargin;
-        MountingRimSizeInput.Value = _sizeSettings.MountingRimSize;
-        OffsetXInput.Value = _sizeSettings.OffsetX;
-        OffsetYInput.Value = _sizeSettings.OffsetY;
+        var sizeSettings = _model.SizeSettings;
+        DiamondWidthInput.Value = sizeSettings.DiamondWidth;
+        DiamondHeightInput.Value = sizeSettings.DiamondHeight;
+        ColumnsInput.Value = sizeSettings.GridColumns;
+        RowsInput.Value = sizeSettings.GridRows;
+        PaintingMarginInput.Value = sizeSettings.PaintingMargin;
+        MountingRimSizeInput.Value = sizeSettings.MountingRimSize;
+        OffsetXInput.Value = sizeSettings.OffsetX;
+        OffsetYInput.Value = sizeSettings.OffsetY;
     }
 
     private void RefreshDisplayInputs()
     {
-        ShowScalesInput.IsChecked = _displaySettings.ShowScales;
-        OnlyPaintingInput.IsChecked = _displaySettings.OnlyPattern;
+        var displaySettings = _model.DisplaySettings;
+        ShowScalesInput.IsChecked = displaySettings.ShowScales;
+        OnlyPaintingInput.IsChecked = displaySettings.OnlyPattern;
     }
 
     private void ResetColorInputs()
     {
-        BackgroundColorInput.SelectedColor = ColorSettings.Defaults.BackgroundColor;
-        MountingRimColorInput.SelectedColor = ColorSettings.Defaults.MountingRimColor;
-        DiamondColorInput.SelectedColor = ColorSettings.Defaults.DiamondColor;
-        CanvasRimColorInput.SelectedColor = ColorSettings.Defaults.CanvasRimColor;
+        _model.ResetColors();
+        _model.ResetHighlights();
+
+        RefreshColorInputs();
     }
 
     private void ResetSizeInputs()
     {
-        // settings the text instead of the value to not re-trigger change event
-        DiamondWidthInput.Text = SizeSettings.Defaults.DiamondWidth.ToString(CultureInfo.CurrentCulture);
-        DiamondHeightInput.Text = SizeSettings.Defaults.DiamondHeight.ToString(CultureInfo.CurrentCulture);
-        ColumnsInput.Text = SizeSettings.Defaults.GridColumns.ToString();
-        RowsInput.Text = SizeSettings.Defaults.GridRows.ToString();
-        PaintingMarginInput.Text = SizeSettings.Defaults.PaintingMargin.ToString(CultureInfo.CurrentCulture);
-        MountingRimSizeInput.Text = SizeSettings.Defaults.MountingRimSize.ToString(CultureInfo.CurrentCulture);
-        OffsetXInput.Text = SizeSettings.Defaults.OffsetX.ToString(CultureInfo.CurrentCulture);
-        OffsetYInput.Text = SizeSettings.Defaults.OffsetY.ToString(CultureInfo.CurrentCulture);
-    }
+        _model.ResetSizes();
+        var sizeSettings = _model.SizeSettings;
 
-    private void ResetDisplayInputs()
-    {
-        ShowScalesInput.IsChecked = DisplaySettings.Defaults.ShowScales;
-        OnlyPaintingInput.IsChecked = DisplaySettings.Defaults.OnlyPattern;
-    }
-
-    private void ResetHighlights()
-    {
-        _highlightSettings.Highlights.Clear();
+        DiamondWidthInput.Text = sizeSettings.DiamondWidth.ToString(CultureInfo.CurrentCulture);
+        DiamondHeightInput.Text = sizeSettings.DiamondHeight.ToString(CultureInfo.CurrentCulture);
+        ColumnsInput.Text = sizeSettings.GridColumns.ToString();
+        RowsInput.Text = sizeSettings.GridRows.ToString();
+        PaintingMarginInput.Text = sizeSettings.PaintingMargin.ToString(CultureInfo.CurrentCulture);
+        MountingRimSizeInput.Text = sizeSettings.MountingRimSize.ToString(CultureInfo.CurrentCulture);
+        OffsetXInput.Text = sizeSettings.OffsetX.ToString(CultureInfo.CurrentCulture);
+        OffsetYInput.Text = sizeSettings.OffsetY.ToString(CultureInfo.CurrentCulture);
     }
 
     private void OnResetColorsButtonClicked(object sender, RoutedEventArgs e)
@@ -232,21 +215,31 @@ public partial class MainWindow
 
     private void OnPngButtonClicked(object sender, RoutedEventArgs e)
     {
-        SaveToPng();
+        _fileManager.SaveToPng(MainCanvas);
     }
 
     private void OnSaveButtonClicked(object sender, RoutedEventArgs e)
     {
-        SaveToFile();
+        _fileManager.Save();
     }
 
     private void OnLoadButtonClicked(object sender, RoutedEventArgs e)
     {
-        LoadFromFile();
+        var loadResult = _fileManager.Load();
+
+        if (!loadResult)
+            return;
+
+        UnbindInputs();
+        RefreshColorInputs();
+        RefreshDimensionInputs();
+        RefreshDisplayInputs();
+        BindInputs();
+        ReDraw();
     }
 
     private void OnShortcutSave(object sender, ExecutedRoutedEventArgs e)
     {
-        QuickSave();
+        _fileManager.QuickSave();
     }
 }
