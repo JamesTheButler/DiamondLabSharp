@@ -1,9 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Windows.Threading;
 using Diamonds.Model;
 using Diamonds.Rendering;
 using Diamonds.Rendering.AxisScale;
@@ -35,50 +33,48 @@ public partial class MainWindow
             _canvasMargin.Left + InfoBarThickness + _paintingMargin.Left,
             _canvasMargin.Top + InfoBarThickness + _paintingMargin.Top);
 
-        DrawCanvasBackground(paintingOrigin, paintingSizeSettings, colorSettings);
+        DrawCanvasBackground(paintingOrigin);
         if (_displaySettings.ShowScales)
-        {
-            DrawScales(paintingOrigin, paintingSizeSettings);
-        }
+            DrawScales(paintingOrigin);
 
-        DrawMountingRim(paintingOrigin, paintingSizeSettings, colorSettings);
-        DrawPaintingBackground(paintingOrigin, paintingSizeSettings, colorSettings);
-        DrawDiamondPattern(paintingOrigin, paintingSizeSettings, colorSettings);
+        DrawMountingRim(paintingOrigin);
+        DrawPaintingBackground(paintingOrigin);
+        DrawDiamondPattern(paintingOrigin);
     }
 
-    private void DrawCanvasBackground(Point origin, SizeSettings canvasSize, ColorSettings colors)
+    private void DrawCanvasBackground(Point origin)
     {
         var canvasBackground = new Rectangle
         {
-            Width = canvasSize.PaintingSize.Width,
-            Height = canvasSize.PaintingSize.Height,
-            Fill = new SolidColorBrush(colors.CanvasRimColor),
-            Stroke = new SolidColorBrush(colors.MountingRimColor)
+            Width = _sizeSettings.PaintingSize.Width,
+            Height = _sizeSettings.PaintingSize.Height,
+            Fill = new SolidColorBrush(_colorSettings.CanvasRimColor),
+            Stroke = new SolidColorBrush(_colorSettings.MountingRimColor)
         };
         Canvas.SetLeft(canvasBackground, origin.X);
         Canvas.SetTop(canvasBackground, origin.Y);
         MainCanvas.Children.Add(canvasBackground);
     }
 
-    private void DrawScales(Point paintingOrigin, SizeSettings sizeSettings)
+    private void DrawScales(Point paintingOrigin)
     {
-        GetDiamondTicks(sizeSettings,
+        GetDiamondTicks(_sizeSettings,
             out var horizontalTickPositions,
             out var verticalTickPositions);
 
-        var rim = sizeSettings.MountingRimSize;
-        var totalMargin = rim + sizeSettings.PaintingMargin;
+        var rim = _sizeSettings.MountingRimSize;
+        var totalMargin = rim + _sizeSettings.PaintingMargin;
 
         var horizontalTicks = horizontalTickPositions
             .Select(pos => new AxisScaleTick(pos, new FormatterLabel(p => $"[D]\n{p:0,#}")))
             .Append(new AxisScaleTick(rim, new FormatterLabel(p => $"[M]\n{p:0,#}")))
             .Append(new AxisScaleTick(totalMargin, new FormatterLabel(p => $"[R]\n{p:0,#}")))
-            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Width - totalMargin,
+            .Append(new AxisScaleTick(_sizeSettings.PaintingSize.Width - totalMargin,
                 new FormatterLabel(p => $"[R]\n{p:0,#}")))
-            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Width - rim, new FormatterLabel(p => $"[M]\n{p:0,#}")))
+            .Append(new AxisScaleTick(_sizeSettings.PaintingSize.Width - rim, new FormatterLabel(p => $"[M]\n{p:0,#}")))
             .ToArray();
 
-        var horizontalBar = new AxisScale(sizeSettings.PaintingSize.Width, Orientation.Horizontal)
+        var horizontalBar = new AxisScale(_sizeSettings.PaintingSize.Width, Orientation.Horizontal)
         {
             Ticks = horizontalTicks
         };
@@ -90,11 +86,11 @@ public partial class MainWindow
             .Select(pos => new AxisScaleTick(pos, new FormatterLabel(p => $"[D]{p:0,#}")))
             .Append(new AxisScaleTick(rim, new FormatterLabel(p => $"[M]{p:0,#}")))
             .Append(new AxisScaleTick(totalMargin, new FormatterLabel(p => $"[R]{p:0,#}")))
-            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Height - totalMargin,
+            .Append(new AxisScaleTick(_sizeSettings.PaintingSize.Height - totalMargin,
                 new FormatterLabel(p => $"[R]{p:0,#}")))
-            .Append(new AxisScaleTick(sizeSettings.PaintingSize.Height - rim, new FormatterLabel(p => $"[M]{p:0,#}")))
+            .Append(new AxisScaleTick(_sizeSettings.PaintingSize.Height - rim, new FormatterLabel(p => $"[M]{p:0,#}")))
             .ToArray();
-        var verticalBar = new AxisScale(sizeSettings.PaintingSize.Height, Orientation.Vertical)
+        var verticalBar = new AxisScale(_sizeSettings.PaintingSize.Height, Orientation.Vertical)
         {
             Ticks = verticalTicks
         };
@@ -104,12 +100,13 @@ public partial class MainWindow
         MainCanvas.Children.Add(verticalBar);
     }
 
-
-    private void DrawMountingRim(Point origin, SizeSettings size, ColorSettings colors)
+    private void DrawMountingRim(Point origin)
     {
-        var paintingSize = size.PaintingSize;
-        var actualMountingRimColor = colors.MountingRimColor;
+        var paintingSize = _sizeSettings.PaintingSize;
+        var actualMountingRimColor = _colorSettings.MountingRimColor;
         actualMountingRimColor.A = 128;
+
+        var rim = _sizeSettings.MountingRimSize;
         var mountingRim = new Polygon
         {
             Points =
@@ -118,12 +115,12 @@ public partial class MainWindow
                 new Point(0, paintingSize.Height),
                 new Point(paintingSize.Width, paintingSize.Height),
                 new Point(paintingSize.Width, 0),
-                new Point(size.MountingRimSize, 0),
-                new Point(size.MountingRimSize, size.MountingRimSize),
-                new Point(paintingSize.Width - size.MountingRimSize, size.MountingRimSize),
-                new Point(paintingSize.Width - size.MountingRimSize, paintingSize.Height - size.MountingRimSize),
-                new Point(size.MountingRimSize, paintingSize.Height - size.MountingRimSize),
-                new Point(size.MountingRimSize, 0),
+                new Point(rim, 0),
+                new Point(rim, rim),
+                new Point(paintingSize.Width - rim, rim),
+                new Point(paintingSize.Width - rim, paintingSize.Height - rim),
+                new Point(rim, paintingSize.Height - rim),
+                new Point(rim, 0),
                 new Point(0, 0)
             ],
             Fill = new SolidColorBrush(actualMountingRimColor)
@@ -134,54 +131,55 @@ public partial class MainWindow
 
         var mountingRimOutline = new Rectangle
         {
-            Width = paintingSize.Width - 2 * size.MountingRimSize,
-            Height = paintingSize.Height - 2 * size.MountingRimSize,
-            Stroke = new SolidColorBrush(colors.MountingRimColor),
+            Width = paintingSize.Width - 2 * rim,
+            Height = paintingSize.Height - 2 * rim,
+            Stroke = new SolidColorBrush(_colorSettings.MountingRimColor),
             StrokeThickness = 1
         };
-        Canvas.SetLeft(mountingRimOutline, origin.X + size.MountingRimSize);
-        Canvas.SetTop(mountingRimOutline, origin.Y + size.MountingRimSize);
+        Canvas.SetLeft(mountingRimOutline, origin.X + rim);
+        Canvas.SetTop(mountingRimOutline, origin.Y + rim);
         MainCanvas.Children.Add(mountingRimOutline);
     }
 
-    private void DrawPaintingBackground(Point origin, SizeSettings size, ColorSettings colors)
+    private void DrawPaintingBackground(Point origin)
     {
-        var offset = size.MountingRimSize + size.PaintingMargin;
+        var offset = _sizeSettings.MountingRimSize + _sizeSettings.PaintingMargin;
         var paintedBackground = new Rectangle
         {
-            Width = size.GridColumns * size.DiamondWidth,
-            Height = size.GridRows * size.DiamondHeight,
-            Fill = new SolidColorBrush(colors.BackgroundColor)
+            Width = _sizeSettings.GridColumns * _sizeSettings.DiamondWidth,
+            Height = _sizeSettings.GridRows * _sizeSettings.DiamondHeight,
+            Fill = new SolidColorBrush(_colorSettings.BackgroundColor)
         };
         Canvas.SetLeft(paintedBackground, origin.X + offset);
         Canvas.SetTop(paintedBackground, origin.Y + offset);
         MainCanvas.Children.Add(paintedBackground);
     }
 
-    private void DrawDiamondPattern(Point paintingOrigin, SizeSettings size, ColorSettings colors)
+    private void DrawDiamondPattern(Point paintingOrigin)
     {
-        var offset = size.MountingRimSize + size.PaintingMargin;
+        var offset = _sizeSettings.MountingRimSize + _sizeSettings.PaintingMargin;
         var patternOrigin = new Point(paintingOrigin.X + offset, paintingOrigin.Y + offset);
-        
+
         var highlights =
             _highlightSettings.Highlights
                 .GroupBy(highlight => highlight.Position)
                 .ToDictionary(group => group.Key, g => g.Last().Color);
 
-        for (var row = -1; row <= size.GridRows; row++)
+        for (var row = -1; row <= _sizeSettings.GridRows; row++)
         {
-            for (var col = -1; col <= size.GridColumns; col++)
+            for (var col = -1; col <= _sizeSettings.GridColumns; col++)
             {
                 if (!highlights.TryGetValue(new Point(row, col), out var color))
-                {
-                    color = colors.DiamondColor;
-                }
+                    color = _colorSettings.DiamondColor;
 
-                var cx = patternOrigin.X + size.OffsetX + col * size.DiamondWidth + size.DiamondWidth * .5;
-                var cy = patternOrigin.Y + size.OffsetY + row * size.DiamondHeight + size.DiamondHeight * .5;
-                var diamond = new Diamond(new Point(cx, cy), size.DiamondSize, color)
+                var centerX =
+                    patternOrigin.X + _sizeSettings.OffsetX + col * _sizeSettings.DiamondWidth +
+                    _sizeSettings.DiamondWidth * .5;
+                var centerY = patternOrigin.Y + _sizeSettings.OffsetY + row * _sizeSettings.DiamondHeight +
+                              _sizeSettings.DiamondHeight * .5;
+                var diamond = new Diamond(new Point(centerX, centerY), _sizeSettings.DiamondSize, color)
                 {
-                    Clip = new RectangleGeometry(new Rect(patternOrigin, size.PatternSize))
+                    Clip = new RectangleGeometry(new Rect(patternOrigin, _sizeSettings.PatternSize))
                 };
                 var row1 = row;
                 var col1 = col;
@@ -197,16 +195,10 @@ public partial class MainWindow
         }
     }
 
-    private void AddHighlight(int row, int col)
-    {
-        _highlightSettings.Highlights.Add(new Highlight(new(row, col), MyColors.Lightest, false));
-    }
-
     private void RemoveHighlight(int row, int col)
     {
         _highlightSettings.Highlights.RemoveAll(highlight => highlight.Position == new Point(row, col));
     }
-
 
     private void GetDiamondTicks(SizeSettings size, out double[] horizontalTicks, out double[] verticalTicks)
     {
@@ -227,7 +219,7 @@ public partial class MainWindow
             verticalTicks[row] = offset.Y + size.DiamondHeight * .5 + size.DiamondHeight * row;
         }
     }
-    
+
     private void OpenColorPicker(int highlightRow, int highlightCol, Color initialColor)
     {
         var picker = new ColorPicker
@@ -236,10 +228,10 @@ public partial class MainWindow
             Width = 200,
             Height = 50
         };
-        
+
         var button = new Button
         {
-            Content=  "Select Highlight Color"
+            Content = "Select Highlight Color"
         };
         var dialogPanel = new StackPanel();
         dialogPanel.Children.Add(picker);
@@ -259,15 +251,12 @@ public partial class MainWindow
         {
             var position = new Point(highlightRow, highlightCol);
             _highlightSettings.Highlights.RemoveAll(highlight => highlight.Position == position);
-            var newHighlight = new Highlight(position, picker.SelectedColor?? initialColor, false);
+            var newHighlight = new Highlight(position, picker.SelectedColor ?? initialColor, false);
             _highlightSettings.Highlights.Add(newHighlight);
             ReDraw();
         };
-        
-        button.Click += (_, _) =>
-        {
-            dialog.Close();
-        };
+
+        button.Click += (_, _) => { dialog.Close(); };
 
         dialog.Show();
     }
