@@ -15,9 +15,9 @@ public partial class MainWindow
 
     private readonly FileManager _fileManager = FileManager.Instance;
 
-    private SizeSettings _currentSizeSettings = SizeSettings.Defaults;
-    private ColorSettings _currentColorSettings = ColorSettings.Defaults;
-    private DisplaySettings _currentDisplaySettings = DisplaySettings.Defaults;
+    private SizeSettings _sizeSettings = SizeSettings.Defaults;
+    private ColorSettings _colorSettings = ColorSettings.Defaults;
+    private DisplaySettings _displaySettings = DisplaySettings.Defaults;
     private HighlightSettings _highlightSettings = new([]);
 
     private readonly Thickness _paintingMargin = new(10);
@@ -26,14 +26,13 @@ public partial class MainWindow
     public MainWindow() : this(null)
     {
     }
-    
-    
+
     public MainWindow(string? startupFilePath)
     {
         InitializeComponent();
         SetUpUi();
         InitializeNotificationTimer();
-        
+
         DataContext = this;
         if (startupFilePath != null)
         {

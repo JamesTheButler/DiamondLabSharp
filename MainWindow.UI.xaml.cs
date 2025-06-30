@@ -67,12 +67,12 @@ public partial class MainWindow
     private void OnOffsetXChanged(object sender, RoutedPropertyChangedEventArgs<object> changeArgs)
     {
         var value = changeArgs.NewValue as int?;
-        if (value >= _currentSizeSettings.DiamondWidth)
+        if (value >= _sizeSettings.DiamondWidth)
         {
             OffsetXInput.Value = 0;
             return;
         }
-        if (value <= -_currentSizeSettings.DiamondWidth)
+        if (value <= -_sizeSettings.DiamondWidth)
         {
             OffsetXInput.Value = 0;
             return;
@@ -84,12 +84,12 @@ public partial class MainWindow
     private void OnOffsetYChanged(object sender, RoutedPropertyChangedEventArgs<object> changeArgs)
     {
         var value = changeArgs.NewValue as int?;
-        if (value >= _currentSizeSettings.DiamondHeight)
+        if (value >= _sizeSettings.DiamondHeight)
         {
             OffsetXInput.Value = 0;
             return;
         }
-        if (value <= -_currentSizeSettings.DiamondHeight)
+        if (value <= -_sizeSettings.DiamondHeight)
         {
             OffsetXInput.Value = 0;
             return;
@@ -116,7 +116,7 @@ public partial class MainWindow
     private void ApplyColorInputs()
     {
         var defaults = ColorSettings.Defaults;
-        _currentColorSettings = new ColorSettings(
+        _colorSettings = new ColorSettings(
             BackgroundColorInput.SelectedColor ?? defaults.BackgroundColor,
             DiamondColorInput.SelectedColor ?? defaults.DiamondColor,
             CanvasRimColorInput.SelectedColor ?? defaults.CanvasRimColor,
@@ -128,7 +128,7 @@ public partial class MainWindow
     private void ApplyDimensionInputs()
     {
         var defaults = SizeSettings.Defaults;
-        _currentSizeSettings = new SizeSettings(
+        _sizeSettings = new SizeSettings(
             DiamondWidthInput.Value ?? defaults.DiamondWidth,
             DiamondHeightInput.Value ?? defaults.DiamondHeight,
             ColumnsInput.Value ?? defaults.GridColumns,
@@ -144,7 +144,7 @@ public partial class MainWindow
     private void ApplyDisplayInputs()
     {
         var defaults = DisplaySettings.Defaults;
-        _currentDisplaySettings = new DisplaySettings(ShowScalesInput.IsChecked ?? defaults.ShowScales);
+        _displaySettings = new DisplaySettings(ShowScalesInput.IsChecked ?? defaults.ShowScales);
 
         ReDraw();
     }
@@ -156,27 +156,27 @@ public partial class MainWindow
 
     private void RefreshColorInputs()
     {
-        BackgroundColorInput.SelectedColor = _currentColorSettings.BackgroundColor;
-        DiamondColorInput.SelectedColor = _currentColorSettings.DiamondColor;
-        CanvasRimColorInput.SelectedColor = _currentColorSettings.CanvasRimColor;
-        MountingRimColorInput.SelectedColor = _currentColorSettings.MountingRimColor;
+        BackgroundColorInput.SelectedColor = _colorSettings.BackgroundColor;
+        DiamondColorInput.SelectedColor = _colorSettings.DiamondColor;
+        CanvasRimColorInput.SelectedColor = _colorSettings.CanvasRimColor;
+        MountingRimColorInput.SelectedColor = _colorSettings.MountingRimColor;
     }
 
     private void RefreshDimensionInputs()
     {
-        DiamondWidthInput.Value = _currentSizeSettings.DiamondWidth;
-        DiamondHeightInput.Value = _currentSizeSettings.DiamondHeight;
-        ColumnsInput.Value = _currentSizeSettings.GridColumns;
-        RowsInput.Value = _currentSizeSettings.GridRows;
-        PaintingMarginInput.Value = _currentSizeSettings.PaintingMargin;
-        MountingRimSizeInput.Value = _currentSizeSettings.MountingRimSize;
-        OffsetXInput.Value = _currentSizeSettings.OffsetX;
-        OffsetYInput.Value = _currentSizeSettings.OffsetY;
+        DiamondWidthInput.Value = _sizeSettings.DiamondWidth;
+        DiamondHeightInput.Value = _sizeSettings.DiamondHeight;
+        ColumnsInput.Value = _sizeSettings.GridColumns;
+        RowsInput.Value = _sizeSettings.GridRows;
+        PaintingMarginInput.Value = _sizeSettings.PaintingMargin;
+        MountingRimSizeInput.Value = _sizeSettings.MountingRimSize;
+        OffsetXInput.Value = _sizeSettings.OffsetX;
+        OffsetYInput.Value = _sizeSettings.OffsetY;
     }
 
     private void RefreshDisplayInputs()
     {
-        ShowScalesInput.IsChecked = _currentDisplaySettings.ShowScales;
+        ShowScalesInput.IsChecked = _displaySettings.ShowScales;
     }
 
     private void ResetColorInputs()

@@ -15,8 +15,8 @@ public partial class MainWindow
     {
         MainCanvas.Children.Clear();
 
-        var paintingSizeSettings = _currentSizeSettings;
-        var colorSettings = _currentColorSettings;
+        var paintingSizeSettings = _sizeSettings;
+        var colorSettings = _colorSettings;
 
         var canvasSize = paintingSizeSettings.PaintingSize
             .Add(_canvasMargin)
@@ -32,7 +32,7 @@ public partial class MainWindow
             _canvasMargin.Top + InfoBarThickness + _paintingMargin.Top);
 
         DrawCanvasBackground(paintingOrigin, paintingSizeSettings, colorSettings);
-        if(_currentDisplaySettings.ShowScales)
+        if(_displaySettings.ShowScales)
         {
             DrawScales(paintingOrigin, paintingSizeSettings);
         }

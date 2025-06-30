@@ -15,7 +15,7 @@ public sealed class Diamond
     public event Action? Clicked;
     public event Action? RightClicked;
     public event Action? WheelClicked;
-    
+
     private readonly Polygon _shape;
     public Shape Shape => _shape;
 
@@ -33,29 +33,28 @@ public sealed class Diamond
 
         var halfWidth = Size.Width / 2;
         var halfHeight = Size.Height / 2;
-        
-        _shape = new Polygon
-            { Points= [
-            Center with { Y = Center.Y - halfHeight },
-            Center with { X = Center.X + halfWidth },
-            Center with { Y = Center.Y + halfHeight },
-            Center with { X = Center.X - halfWidth }
-            ],
-        
 
-        Fill = new SolidColorBrush(color),
-            };
-        
+        _shape = new Polygon
+        {
+            Points =
+            [
+                Center with { Y = Center.Y - halfHeight },
+                Center with { X = Center.X + halfWidth },
+                Center with { Y = Center.Y + halfHeight },
+                Center with { X = Center.X - halfWidth }
+            ],
+
+
+            Fill = new SolidColorBrush(color),
+        };
+
         _shape.MouseEnter += (_, _) =>
         {
             _shape.Stroke = new SolidColorBrush(MyColors.Darkest);
             _shape.StrokeThickness = 3;
         };
-        _shape.MouseLeave += (_, _) =>
-        {
-            _shape.StrokeThickness = 0;
-        };
-        
+        _shape.MouseLeave += (_, _) => { _shape.StrokeThickness = 0; };
+
         _shape.MouseUp += (_, clickEvent) =>
         {
             switch (clickEvent.ChangedButton)

@@ -43,7 +43,7 @@ public partial class MainWindow
 
     private SerializedData GetSerializedData()
     {
-        return new SerializedData(_currentSizeSettings, _currentColorSettings, _currentDisplaySettings, _highlightSettings);
+        return new SerializedData(_sizeSettings, _colorSettings, _displaySettings, _highlightSettings);
     }
 
     private static SaveFileDialog OpenSaveFileDialog(string fileName, string filePath)
@@ -123,9 +123,9 @@ public partial class MainWindow
         }
 
         _fileManager.ActiveFilePath = filePath;
-        _currentSizeSettings = data.Value.SizeSettings;
-        _currentColorSettings = data.Value.ColorSettings;
-        _currentDisplaySettings = data.Value.DisplaySettings;
+        _sizeSettings = data.Value.SizeSettings;
+        _colorSettings = data.Value.ColorSettings;
+        _displaySettings = data.Value.DisplaySettings;
         _highlightSettings = data.Value.HighlightSettings;
 
         UnbindInputs();
