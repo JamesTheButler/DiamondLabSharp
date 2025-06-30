@@ -8,20 +8,32 @@
     "MountingRimSize": 7,
     "OffsetX": 40,
     "OffsetY": 0,
-    "MarginSize": {
+    "DiamondSize": {
       "IsEmpty": false,
-      "Width": 56,
-      "Height": 56
+      "Width": 80,
+      "Height": 110
     },
-    "PaintingSize": {
-      "IsEmpty": false,
-      "Width": 616,
-      "Height": 826
+    "Offset": {
+      "X": 40,
+      "Y": 0,
+      "Length": 40,
+      "LengthSquared": 1600
+    },
+    "TotalMargin": {
+      "Left": 28,
+      "Top": 28,
+      "Right": 28,
+      "Bottom": 28
     },
     "PatternSize": {
       "IsEmpty": false,
       "Width": 560,
       "Height": 770
+    },
+    "PaintingSize": {
+      "IsEmpty": false,
+      "Width": 616,
+      "Height": 826
     }
   },
   "ColorSettings": {
@@ -72,5 +84,63 @@
   },
   "DisplaySettings": {
     "ShowScales": true
+  },
+  "HighlightSettings": {
+    "Highlights": [
+      {
+        "Position": {
+          "X": 1,
+          "Y": 1
+        },
+        "Color": {
+          "ColorContext": null,
+          "A": 255,
+          "R": 209,
+          "G": 77,
+          "B": 115,
+          "ScA": 1,
+          "ScR": 0.6375969,
+          "ScG": 0.07421357,
+          "ScB": 0.17144111
+        },
+        "IsBackground": false
+      },
+      {
+        "Position": {
+          "X": 5,
+          "Y": 1
+        },
+        "Color": {
+          "ColorContext": null,
+          "A": 255,
+          "R": 240,
+          "G": 38,
+          "B": 76,
+          "ScA": 1,
+          "ScR": 0.8713671,
+          "ScG": 0.019382363,
+          "ScB": 0.07227185
+        },
+        "IsBackground": false
+      },
+      {
+        "Position": {
+          "X": 3,
+          "Y": 4
+        },
+        "Color": {
+          "ColorContext": null,
+          "A": 255,
+          "R": 240,
+          "G": 255,
+          "B": 255,
+          "ScA": 1,
+          "ScR": 0.8713671,
+          "ScG": 1,
+          "ScB": 1
+        },
+        "IsBackground": false
+      }
+    ]
   }
 }
