@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Diamonds.Model;
-using Diamonds.Rendering;
 
 namespace Diamonds;
 
@@ -42,6 +41,8 @@ public partial class MainWindow
 
         ShowScalesInput.Checked += OnAnyDisplayInputChanged;
         ShowScalesInput.Unchecked += OnAnyDisplayInputChanged;
+        OnlyPaintingInput.Checked += OnAnyDisplayInputChanged;
+        OnlyPaintingInput.Unchecked += OnAnyDisplayInputChanged;
     }
 
     private void UnbindInputs()
@@ -62,6 +63,8 @@ public partial class MainWindow
 
         ShowScalesInput.Checked -= OnAnyDisplayInputChanged;
         ShowScalesInput.Unchecked -= OnAnyDisplayInputChanged;
+        OnlyPaintingInput.Checked -= OnAnyDisplayInputChanged;
+        OnlyPaintingInput.Unchecked -= OnAnyDisplayInputChanged;
     }
 
     private void OnOffsetXChanged(object sender, RoutedPropertyChangedEventArgs<object> changeArgs)
@@ -72,6 +75,7 @@ public partial class MainWindow
             OffsetXInput.Value = 0;
             return;
         }
+
         if (value <= -_sizeSettings.DiamondWidth)
         {
             OffsetXInput.Value = 0;
@@ -89,6 +93,7 @@ public partial class MainWindow
             OffsetXInput.Value = 0;
             return;
         }
+
         if (value <= -_sizeSettings.DiamondHeight)
         {
             OffsetXInput.Value = 0;
@@ -107,7 +112,7 @@ public partial class MainWindow
     {
         ApplyDimensionInputs();
     }
-    
+
     private void OnAnyDisplayInputChanged(object sender, RoutedEventArgs eventArgs)
     {
         ApplyDisplayInputs();
@@ -140,15 +145,18 @@ public partial class MainWindow
 
         ReDraw();
     }
-    
+
     private void ApplyDisplayInputs()
     {
         var defaults = DisplaySettings.Defaults;
-        _displaySettings = new DisplaySettings(ShowScalesInput.IsChecked ?? defaults.ShowScales);
+        _displaySettings = new DisplaySettings(
+            ShowScalesInput.IsChecked ?? defaults.ShowScales,
+            OnlyPaintingInput.IsChecked ?? defaults.OnlyPattern
+        );
 
         ReDraw();
     }
-    
+
     private void ApplyHighlights()
     {
         ReDraw();
@@ -177,6 +185,7 @@ public partial class MainWindow
     private void RefreshDisplayInputs()
     {
         ShowScalesInput.IsChecked = _displaySettings.ShowScales;
+        OnlyPaintingInput.IsChecked = _displaySettings.OnlyPattern;
     }
 
     private void ResetColorInputs()
@@ -203,8 +212,9 @@ public partial class MainWindow
     private void ResetDisplayInputs()
     {
         ShowScalesInput.IsChecked = DisplaySettings.Defaults.ShowScales;
+        OnlyPaintingInput.IsChecked = DisplaySettings.Defaults.OnlyPattern;
     }
-    
+
     private void ResetHighlights()
     {
         _highlightSettings.Highlights.Clear();

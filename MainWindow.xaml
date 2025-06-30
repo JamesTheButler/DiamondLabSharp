@@ -8,7 +8,7 @@
         WindowState="Maximized"
         WindowStyle="None"
         ResizeMode="NoResize"
-        Title="MainWindow"  Background="#ECDFCC">
+        Title="MainWindow" Background="#ECDFCC">
     <Window.InputBindings>
         <KeyBinding Modifiers="Control"
                     Key="S"
@@ -18,7 +18,7 @@
     <Window.CommandBindings>
         <CommandBinding Command="Save" Executed="OnShortcutSave" />
     </Window.CommandBindings>
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -27,42 +27,47 @@
         </Grid.ColumnDefinitions>
 
         <!-- Left Side Menu Panel -->
-        <Border Grid.Column="0" x:Name="SettingsMenu" Background="#DDDDDD" Width="250" Padding="10" 
-                BorderBrush="Gray" BorderThickness="1" 
+        <Border Grid.Column="0" x:Name="SettingsMenu" Background="#DDDDDD" Width="250" Padding="10"
+                BorderBrush="Gray" BorderThickness="1"
                 Margin="5" CornerRadius="5">
             <StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                    <TextBlock Text="Dimensions" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                    <Button Content="↩" Margin="0,10,0,0" Click="OnResetSizesButtonClicked" Padding="8 4"  VerticalAlignment="Center"/>
+                    <TextBlock Text="Dimensions" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"
+                               Margin="0 0 10 0" />
+                    <Button Content="↩" Margin="0,10,0,0" Click="OnResetSizesButtonClicked" Padding="8 4"
+                            VerticalAlignment="Center" />
                 </StackPanel>
 
                 <TextBlock Text="Diamond Width (mm):" />
-                <toolkit:IntegerUpDown x:Name="DiamondWidthInput" Text="60" Minimum="1" Margin="0,0,0,10"/>
+                <toolkit:IntegerUpDown x:Name="DiamondWidthInput" Text="60" Minimum="1" Margin="0,0,0,10" />
 
                 <TextBlock Text="Diamond Height (mm):" />
-                <toolkit:IntegerUpDown x:Name="DiamondHeightInput" Text="100" Minimum="1" Margin="0,0,0,10"/>
+                <toolkit:IntegerUpDown x:Name="DiamondHeightInput" Text="100" Minimum="1" Margin="0,0,0,10" />
 
                 <TextBlock Text="Columns:" />
-                <toolkit:IntegerUpDown x:Name="ColumnsInput" Text="10" Minimum="1" Maximum="99" Margin="0,0,0,10"/>
+                <toolkit:IntegerUpDown x:Name="ColumnsInput" Text="10" Minimum="1" Maximum="99" Margin="0,0,0,10" />
 
                 <TextBlock Text="Rows:" />
-                <toolkit:IntegerUpDown x:Name="RowsInput" Text="4" Minimum="1" Maximum="99" Margin="0,0,0,10"/>
+                <toolkit:IntegerUpDown x:Name="RowsInput" Text="4" Minimum="1" Maximum="99" Margin="0,0,0,10" />
 
                 <TextBlock Text="Painting Margin Width (mm):" />
-                <toolkit:IntegerUpDown x:Name="PaintingMarginInput" Text="20" Minimum="0" Maximum="99" Margin="0,0,0,10"/>
+                <toolkit:IntegerUpDown x:Name="PaintingMarginInput" Text="20" Minimum="0" Maximum="99"
+                                       Margin="0,0,0,10" />
 
                 <TextBlock Text="Mounting Rim Width (mm):" />
-                <toolkit:IntegerUpDown x:Name="MountingRimSizeInput" Text="30" Minimum="0" Margin="0,0,0,10"/>
+                <toolkit:IntegerUpDown x:Name="MountingRimSizeInput" Text="30" Minimum="0" Margin="0,0,0,10" />
 
                 <TextBlock Text="Offset X (mm):" />
-                <toolkit:IntegerUpDown x:Name="OffsetXInput" Text="0" Margin="0,0,0,10"/>
+                <toolkit:IntegerUpDown x:Name="OffsetXInput" Text="0" Margin="0,0,0,10" />
 
                 <TextBlock Text="Offset Y (mm):" />
-                <toolkit:IntegerUpDown x:Name="OffsetYInput" Text="0" Margin="0,0,0,10"/>
+                <toolkit:IntegerUpDown x:Name="OffsetYInput" Text="0" Margin="0,0,0,10" />
 
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                    <TextBlock Text="Colors" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                    <Button Content="↩" Margin="0,0,0,0" Click="OnResetColorsButtonClicked" Padding="8 4"  VerticalAlignment="Center"/>
+                    <TextBlock Text="Colors" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"
+                               Margin="0 0 10 0" />
+                    <Button Content="↩" Margin="0,0,0,0" Click="OnResetColorsButtonClicked" Padding="8 4"
+                            VerticalAlignment="Center" />
                 </StackPanel>
 
                 <TextBlock Text="Background Color:" />
@@ -76,14 +81,20 @@
 
                 <TextBlock Text="Mounting Rim Color:" />
                 <toolkit:ColorPicker x:Name="MountingRimColorInput" />
-                
+
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
-                    <TextBlock Text="Display" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Margin="0 0 10 0"/>
+                    <TextBlock Text="Display" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"
+                               Margin="0 0 10 0" />
                 </StackPanel>
-                
+
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <TextBlock Text="Show Scales" Margin="0,0,10,0"/>
-                        <CheckBox x:Name="ShowScalesInput" IsChecked="True"/>
+                    <TextBlock Text="Show Scales" Margin="0,0,10,0" />
+                    <CheckBox x:Name="ShowScalesInput" IsChecked="True" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBlock Text="Measure Only Painting" Margin="0,0,10,0" />
+                    <CheckBox x:Name="OnlyPaintingInput" IsChecked="False" />
                 </StackPanel>
 
             </StackPanel>
@@ -93,29 +104,29 @@
         <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Canvas Name="MainCanvas" Background="LightGray" Width="700" Height="400" />
         </ScrollViewer>
-        
+
         <Border Grid.Column="2" Background="#DDDDDD" Width="250" Padding="10"
-                BorderBrush="Gray" BorderThickness="1" 
+                BorderBrush="Gray" BorderThickness="1"
                 Margin="5" CornerRadius="5">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/> <!-- Header -->
-                    <RowDefinition Height="Auto"/> <!-- Buttons -->
-                    <RowDefinition Height="*"/>    <!-- Spacer -->
-                    <RowDefinition Height="Auto"/> <!-- Notification Label -->
+                    <RowDefinition Height="Auto" /> <!-- Header -->
+                    <RowDefinition Height="Auto" /> <!-- Buttons -->
+                    <RowDefinition Height="*" />    <!-- Spacer -->
+                    <RowDefinition Height="Auto" /> <!-- Notification Label -->
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="File Operations" FontWeight="Bold" FontSize="16" 
-                           VerticalAlignment="Center" Margin="0 0 0 10"/>
+                <TextBlock Text="File Operations" FontWeight="Bold" FontSize="16"
+                           VerticalAlignment="Center" Margin="0 0 0 10" />
 
                 <StackPanel Grid.Row="1">
-                    <Button Content="Save" Margin="0,10,0,0" Click="OnSaveButtonClicked" Padding="8 4"/>
-                    <Button Content="PNG" Margin="0,10,0,0" Click="OnPngButtonClicked" Padding="8 4"/>
-                    <Button Content="Load" Margin="0,10,0,0" Click="OnLoadButtonClicked" Padding="8 4"/>
+                    <Button Content="Save" Margin="0,10,0,0" Click="OnSaveButtonClicked" Padding="8 4" />
+                    <Button Content="PNG" Margin="0,10,0,0" Click="OnPngButtonClicked" Padding="8 4" />
+                    <Button Content="Load" Margin="0,10,0,0" Click="OnLoadButtonClicked" Padding="8 4" />
                 </StackPanel>
 
-                <Label Grid.Row="3" x:Name="NotificationBox" FontWeight="Bold" FontSize="12"/>
-                
+                <Label Grid.Row="3" x:Name="NotificationBox" FontWeight="Bold" FontSize="12" />
+
             </Grid>
         </Border>
     </Grid>

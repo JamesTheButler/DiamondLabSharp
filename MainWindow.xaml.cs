@@ -1,10 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
+﻿using System.Windows;
 using Diamonds.Model;
-using Diamonds.Rendering;
 using Diamonds.Utilities;
 
 namespace Diamonds;
@@ -12,16 +7,18 @@ namespace Diamonds;
 public partial class MainWindow
 {
     private const int InfoBarThickness = 50;
+    private readonly Thickness _canvasMargin = new(10, 10, 0, 0);
 
     private readonly FileManager _fileManager = FileManager.Instance;
 
-    private SizeSettings _sizeSettings = SizeSettings.Defaults;
+    private readonly Thickness _paintingMargin = new(10);
     private ColorSettings _colorSettings = ColorSettings.Defaults;
     private DisplaySettings _displaySettings = DisplaySettings.Defaults;
     private HighlightSettings _highlightSettings = new([]);
 
-    private readonly Thickness _paintingMargin = new(10);
-    private readonly Thickness _canvasMargin = new(10, 10, 0, 0);
+    private SizeSettings _sizeSettings = SizeSettings.Defaults;
+
+    private Point PaintingOrigin;
 
     public MainWindow() : this(null)
     {
@@ -35,9 +32,7 @@ public partial class MainWindow
 
         DataContext = this;
         if (startupFilePath != null)
-        {
             LoadFile(startupFilePath);
-        }
 
         ReDraw();
     }

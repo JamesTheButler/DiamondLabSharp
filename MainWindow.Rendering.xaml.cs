@@ -17,10 +17,7 @@ public partial class MainWindow
     {
         MainCanvas.Children.Clear();
 
-        var paintingSizeSettings = _sizeSettings;
-        var colorSettings = _colorSettings;
-
-        var canvasSize = paintingSizeSettings.PaintingSize
+        var canvasSize = _sizeSettings.PaintingSize
             .Add(_canvasMargin)
             .Add(_paintingMargin)
             .Add(InfoBarThickness);
@@ -65,38 +62,62 @@ public partial class MainWindow
         var rim = _sizeSettings.MountingRimSize;
         var totalMargin = rim + _sizeSettings.PaintingMargin;
 
-        var horizontalTicks = horizontalTickPositions
-            .Select(pos => new AxisScaleTick(pos, new FormatterLabel(p => $"[D]\n{p:0,#}")))
-            .Append(new AxisScaleTick(rim, new FormatterLabel(p => $"[M]\n{p:0,#}")))
-            .Append(new AxisScaleTick(totalMargin, new FormatterLabel(p => $"[R]\n{p:0,#}")))
-            .Append(new AxisScaleTick(_sizeSettings.PaintingSize.Width - totalMargin,
-                new FormatterLabel(p => $"[R]\n{p:0,#}")))
-            .Append(new AxisScaleTick(_sizeSettings.PaintingSize.Width - rim, new FormatterLabel(p => $"[M]\n{p:0,#}")))
-            .ToArray();
+        var scaleTargetOrigin = _displaySettings.OnlyPattern
+            ? paintingOrigin + new Vector(totalMargin, totalMargin)
+            : paintingOrigin;
 
-        var horizontalBar = new AxisScale(_sizeSettings.PaintingSize.Width, Orientation.Horizontal)
+        var scaleTargetSize = _displaySettings.OnlyPattern
+            ? _sizeSettings.PatternSize
+            : _sizeSettings.PaintingSize;
+
+        var horizontalTicks = horizontalTickPositions
+            .Select(pos => new AxisScaleTick(pos, new FormatterLabel(p => $"[D]\n{p:0,#}")));
+
+        if (!_displaySettings.OnlyPattern)
         {
-            Ticks = horizontalTicks
+            horizontalTicks = horizontalTicks
+                .Append(new AxisScaleTick(rim, new FormatterLabel(p => $"[M]\n{p:0,#}")))
+                .Append(new AxisScaleTick(totalMargin, new FormatterLabel(p => $"[R]\n{p:0,#}")))
+                .Append(new AxisScaleTick(_sizeSettings.PaintingSize.Width - totalMargin,
+                    new FormatterLabel(p => $"[R]\n{p:0,#}")))
+                .Append(new AxisScaleTick(_sizeSettings.PaintingSize.Width - rim,
+                    new FormatterLabel(p => $"[M]\n{p:0,#}")));
+        }
+
+
+        var horizontalBar = new AxisScale(scaleTargetSize.Width, Orientation.Horizontal)
+        {
+            Ticks = horizontalTicks.ToArray()
         };
-        Canvas.SetLeft(horizontalBar, paintingOrigin.X);
+
+        Canvas.SetLeft(horizontalBar, scaleTargetOrigin.X);
         Canvas.SetTop(horizontalBar, 0);
+
         MainCanvas.Children.Add(horizontalBar);
 
         var verticalTicks = verticalTickPositions
-            .Select(pos => new AxisScaleTick(pos, new FormatterLabel(p => $"[D]{p:0,#}")))
-            .Append(new AxisScaleTick(rim, new FormatterLabel(p => $"[M]{p:0,#}")))
-            .Append(new AxisScaleTick(totalMargin, new FormatterLabel(p => $"[R]{p:0,#}")))
-            .Append(new AxisScaleTick(_sizeSettings.PaintingSize.Height - totalMargin,
-                new FormatterLabel(p => $"[R]{p:0,#}")))
-            .Append(new AxisScaleTick(_sizeSettings.PaintingSize.Height - rim, new FormatterLabel(p => $"[M]{p:0,#}")))
-            .ToArray();
-        var verticalBar = new AxisScale(_sizeSettings.PaintingSize.Height, Orientation.Vertical)
+            .Select(pos => new AxisScaleTick(pos, new FormatterLabel(p => $"[D]{p:0,#}")));
+
+        if (!_displaySettings.OnlyPattern)
         {
-            Ticks = verticalTicks
+            verticalTicks = verticalTicks
+                .Append(new AxisScaleTick(rim, new FormatterLabel(p => $"[M]{p:0,#}")))
+                .Append(new AxisScaleTick(totalMargin, new FormatterLabel(p => $"[R]{p:0,#}")))
+                .Append(new AxisScaleTick(_sizeSettings.PaintingSize.Height - totalMargin,
+                    new FormatterLabel(p => $"[R]{p:0,#}")))
+                .Append(new AxisScaleTick(_sizeSettings.PaintingSize.Height - rim,
+                    new FormatterLabel(p => $"[M]{p:0,#}")));
+        }
+
+        var verticalBar = new AxisScale(scaleTargetSize.Height, Orientation.Vertical)
+        {
+            Ticks = verticalTicks.ToArray()
         };
 
+
         Canvas.SetLeft(verticalBar, 0);
-        Canvas.SetTop(verticalBar, paintingOrigin.Y);
+        Canvas.SetTop(verticalBar, scaleTargetOrigin.Y);
+
         MainCanvas.Children.Add(verticalBar);
     }
 
@@ -213,9 +234,11 @@ public partial class MainWindow
         verticalTicks = new double[size.GridRows];
         horizontalTicks = new double[size.GridColumns];
 
-        var offset = new Point(
-            size.MountingRimSize + size.PaintingMargin + size.OffsetX,
-            size.MountingRimSize + size.PaintingMargin + size.OffsetY);
+        var offset = _displaySettings.OnlyPattern
+            ? (Point)size.Offset
+            : new Point(
+                size.MountingRimSize + size.PaintingMargin + size.OffsetX,
+                size.MountingRimSize + size.PaintingMargin + size.OffsetY);
 
         for (var col = 0; col < size.GridColumns; col++)
         {
