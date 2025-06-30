@@ -1,3 +1,4 @@
+using Diamonds.Model;
 using Diamonds.Rendering;
 
 namespace Diamonds.Utilities;

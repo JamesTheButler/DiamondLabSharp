@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Diamonds.Model;
 using Diamonds.Rendering;
 using Diamonds.Rendering.AxisScale;
 using Diamonds.Utilities;
@@ -155,12 +156,21 @@ public partial class MainWindow
     private void DrawDiamondPattern(Point paintingOrigin, SizeSettings size, ColorSettings colors)
     {
         var offset = size.MountingRimSize + size.PaintingMargin;
-        var patternOrigin = new Point(paintingOrigin.X + offset, paintingOrigin.Y + offset); 
+        var patternOrigin = new Point(paintingOrigin.X + offset, paintingOrigin.Y + offset);
+        
+        var highlights = 
+            Highlights
+                .GroupBy(vm => vm.Highlight.Position)
+                .ToDictionary(group => group.Key, g => g.Last().Color);
         
         for (var row = -1; row <= size.GridRows; row++)
         {
             for (var col = -1; col <= size.GridColumns; col++)
             {
+                if (!highlights.TryGetValue(new Point(row, col), out var color))
+                {
+                    color = colors.DiamondColor;
+                }
                 var cx = patternOrigin.X + size.OffsetX + col * size.DiamondWidth + size.DiamondWidth * .5;
                 var cy = patternOrigin.Y + size.OffsetY + row * size.DiamondHeight + size.DiamondHeight * .5;
 
@@ -173,7 +183,7 @@ public partial class MainWindow
                         new Point(cx, cy + size.DiamondHeight * .5),
                         new Point(cx - size.DiamondWidth * .5, cy)
                     ],
-                    Fill = new SolidColorBrush(colors.DiamondColor),
+                    Fill = new SolidColorBrush(color),
                     Clip = new RectangleGeometry(new Rect(patternOrigin, size.PatternSize))
                 };
                 MainCanvas.Children.Add(diamond);

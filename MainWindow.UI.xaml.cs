@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using Diamonds.Model;
 using Diamonds.Rendering;
 
 namespace Diamonds;
@@ -13,12 +14,14 @@ public partial class MainWindow
         ResetColorInputs();
         ResetSizeInputs();
         ResetDisplayInputs();
+        ResetHighlights();
 
         BindInputs();
 
         ApplyColorInputs();
         ApplyDimensionInputs();
         ApplyDisplayInputs();
+        ApplyHighlights();
     }
 
     private void BindInputs()
@@ -145,6 +148,11 @@ public partial class MainWindow
 
         ReDraw();
     }
+    
+    private void ApplyHighlights()
+    {
+        ReDraw();
+    }
 
     private void RefreshColorInputs()
     {
@@ -195,6 +203,11 @@ public partial class MainWindow
     private void ResetDisplayInputs()
     {
         ShowScalesInput.IsChecked = DisplaySettings.Defaults.ShowScales;
+    }
+    
+    private void ResetHighlights()
+    {
+        _highlightSettings.Highlights.Clear();
     }
 
     private void OnResetColorsButtonClicked(object sender, RoutedEventArgs e)
