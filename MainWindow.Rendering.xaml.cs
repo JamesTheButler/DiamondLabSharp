@@ -159,8 +159,8 @@ public partial class MainWindow
         var patternOrigin = new Point(paintingOrigin.X + offset, paintingOrigin.Y + offset);
         
         var highlights = 
-            Highlights
-                .GroupBy(vm => vm.Highlight.Position)
+            _highlightSettings.Highlights
+                .GroupBy(highlight => highlight.Position)
                 .ToDictionary(group => group.Key, g => g.Last().Color);
         
         for (var row = -1; row <= size.GridRows; row++)
@@ -171,26 +171,35 @@ public partial class MainWindow
                 {
                     color = colors.DiamondColor;
                 }
+                
                 var cx = patternOrigin.X + size.OffsetX + col * size.DiamondWidth + size.DiamondWidth * .5;
                 var cy = patternOrigin.Y + size.OffsetY + row * size.DiamondHeight + size.DiamondHeight * .5;
-
-                var diamond = new Polygon
-                {
-                    Points =
-                    [
-                        new Point(cx, cy - size.DiamondHeight * .5),
-                        new Point(cx + size.DiamondWidth * .5, cy),
-                        new Point(cx, cy + size.DiamondHeight * .5),
-                        new Point(cx - size.DiamondWidth * .5, cy)
-                    ],
-                    Fill = new SolidColorBrush(color),
+                var diamond = new Diamond(new Point(cx, cy), size.DiamondSize, color)
+                { 
                     Clip = new RectangleGeometry(new Rect(patternOrigin, size.PatternSize))
                 };
-                MainCanvas.Children.Add(diamond);
+                var row1 = row;
+                var col1 = col;
+                diamond.Clicked += () => { AddHighlight(row1, col1); ReDraw(); };
+                diamond.WheelClicked += () => { Console.WriteLine("open color picker"); };
+                diamond.RightClicked += () => { RemoveHighlight(row1, col1); ReDraw(); };
+
+                MainCanvas.Children.Add(diamond.Shape);
             }
         }
     }
 
+    private void AddHighlight(int row, int col)
+    {
+        _highlightSettings.Highlights.Add(new Highlight(new(row, col), MyColors.Lightest, false));
+    }
+
+    private void RemoveHighlight(int row, int col)
+    {
+        _highlightSettings.Highlights.RemoveAll(highlight => highlight.Position == new Point(row, col));
+    }
+
+    
     private void GetDiamondTicks(SizeSettings size, out double[] horizontalTicks, out double[] verticalTicks)
     {
         verticalTicks = new double[size.GridRows];

@@ -86,30 +86,6 @@
                         <CheckBox x:Name="ShowScalesInput" IsChecked="True"/>
                 </StackPanel>
 
-                <ItemsControl ItemsSource="{Binding Highlights}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <DockPanel Margin="0 5 0 5">
-                                <Button Content="✕" Click="RemoveHighlight_Click" Tag="{Binding}" />
-
-                                <StackPanel Orientation="Horizontal">
-                                    <toolkit:IntegerUpDown 
-                                        Value="{Binding X}"
-                                        Minimum="{Binding Min}" Maximum="{Binding Max}"
-                                        Margin="0 0 5 0"/>
-                                    <toolkit:IntegerUpDown
-                                        Value="{Binding Y}"
-                                        Minimum="{Binding Min}" Maximum="{Binding Max}"
-                                        Margin="0 0 5 0"/>
-                                    <toolkit:ColorPicker Width="100" SelectedColor="{Binding Color}" />
-                                </StackPanel>
-                            </DockPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
-                <Button Content="Add Highlight" Click="AddHighlight_Click" Margin="0,10,0,0"/>
-
             </StackPanel>
         </Border>
 

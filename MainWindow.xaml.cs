@@ -23,20 +23,10 @@ public partial class MainWindow
     private readonly Thickness _paintingMargin = new(10);
     private readonly Thickness _canvasMargin = new(10, 10, 0, 0);
 
-    public ObservableCollection<HighlightViewModel> Highlights { get; } = [];
-    
     public MainWindow() : this(null)
     {
     }
     
-    private void RemoveHighlight_Click(object sender, RoutedEventArgs e)
-    {
-        if (sender is Button { Tag: HighlightViewModel vm })
-            Highlights.Remove(vm);
-    }
-
-    private void AddHighlight_Click(object sender, RoutedEventArgs e) => AddHighlight();
-
     
     public MainWindow(string? startupFilePath)
     {
@@ -45,24 +35,11 @@ public partial class MainWindow
         InitializeNotificationTimer();
         
         DataContext = this;
-        Highlights.CollectionChanged += (_,_) => ReDraw();
         if (startupFilePath != null)
         {
             LoadFile(startupFilePath);
         }
 
         ReDraw();
-    }
-
-    private void AddHighlight()
-    {
-        var vm = new HighlightViewModel { Color = MyColors.Lightest };
-        Highlights.Add(vm);
-        vm.PropertyChanged += (_,_) => ReDraw();
-    }
-
-    private void RemoveHighlight(HighlightViewModel vm)
-    {
-        Highlights.Remove(vm);
     }
 }

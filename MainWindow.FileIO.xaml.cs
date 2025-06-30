@@ -1,4 +1,5 @@
-﻿using Diamonds.Notification;
+﻿using Diamonds.Model;
+using Diamonds.Notification;
 using Diamonds.Utilities;
 using Microsoft.Win32;
 
@@ -42,7 +43,7 @@ public partial class MainWindow
 
     private SerializedData GetSerializedData()
     {
-        return new SerializedData(_currentSizeSettings, _currentColorSettings, _currentDisplaySettings);
+        return new SerializedData(_currentSizeSettings, _currentColorSettings, _currentDisplaySettings, _highlightSettings);
     }
 
     private static SaveFileDialog OpenSaveFileDialog(string fileName, string filePath)
@@ -125,6 +126,7 @@ public partial class MainWindow
         _currentSizeSettings = data.Value.SizeSettings;
         _currentColorSettings = data.Value.ColorSettings;
         _currentDisplaySettings = data.Value.DisplaySettings;
+        _highlightSettings = data.Value.HighlightSettings;
 
         UnbindInputs();
         RefreshColorInputs();
