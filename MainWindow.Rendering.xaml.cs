@@ -1,11 +1,15 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using Diamonds.Model;
 using Diamonds.Rendering;
 using Diamonds.Rendering.AxisScale;
 using Diamonds.Utilities;
+using Xceed.Wpf.Toolkit;
+using WindowStartupLocation = System.Windows.WindowStartupLocation;
 
 namespace Diamonds;
 
@@ -32,10 +36,11 @@ public partial class MainWindow
             _canvasMargin.Top + InfoBarThickness + _paintingMargin.Top);
 
         DrawCanvasBackground(paintingOrigin, paintingSizeSettings, colorSettings);
-        if(_displaySettings.ShowScales)
+        if (_displaySettings.ShowScales)
         {
             DrawScales(paintingOrigin, paintingSizeSettings);
         }
+
         DrawMountingRim(paintingOrigin, paintingSizeSettings, colorSettings);
         DrawPaintingBackground(paintingOrigin, paintingSizeSettings, colorSettings);
         DrawDiamondPattern(paintingOrigin, paintingSizeSettings, colorSettings);
@@ -158,11 +163,11 @@ public partial class MainWindow
         var offset = size.MountingRimSize + size.PaintingMargin;
         var patternOrigin = new Point(paintingOrigin.X + offset, paintingOrigin.Y + offset);
         
-        var highlights = 
+        var highlights =
             _highlightSettings.Highlights
                 .GroupBy(highlight => highlight.Position)
                 .ToDictionary(group => group.Key, g => g.Last().Color);
-        
+
         for (var row = -1; row <= size.GridRows; row++)
         {
             for (var col = -1; col <= size.GridColumns; col++)
@@ -171,18 +176,21 @@ public partial class MainWindow
                 {
                     color = colors.DiamondColor;
                 }
-                
+
                 var cx = patternOrigin.X + size.OffsetX + col * size.DiamondWidth + size.DiamondWidth * .5;
                 var cy = patternOrigin.Y + size.OffsetY + row * size.DiamondHeight + size.DiamondHeight * .5;
                 var diamond = new Diamond(new Point(cx, cy), size.DiamondSize, color)
-                { 
+                {
                     Clip = new RectangleGeometry(new Rect(patternOrigin, size.PatternSize))
                 };
                 var row1 = row;
                 var col1 = col;
-                diamond.Clicked += () => { AddHighlight(row1, col1); ReDraw(); };
-                diamond.WheelClicked += () => { Console.WriteLine("open color picker"); };
-                diamond.RightClicked += () => { RemoveHighlight(row1, col1); ReDraw(); };
+                diamond.Clicked += () => { OpenColorPicker(row1, col1, color); };
+                diamond.RightClicked += () =>
+                {
+                    RemoveHighlight(row1, col1);
+                    ReDraw();
+                };
 
                 MainCanvas.Children.Add(diamond.Shape);
             }
@@ -199,16 +207,16 @@ public partial class MainWindow
         _highlightSettings.Highlights.RemoveAll(highlight => highlight.Position == new Point(row, col));
     }
 
-    
+
     private void GetDiamondTicks(SizeSettings size, out double[] horizontalTicks, out double[] verticalTicks)
     {
         verticalTicks = new double[size.GridRows];
         horizontalTicks = new double[size.GridColumns];
-        
+
         var offset = new Point(
             size.MountingRimSize + size.PaintingMargin + size.OffsetX,
             size.MountingRimSize + size.PaintingMargin + size.OffsetY);
-        
+
         for (var col = 0; col < size.GridColumns; col++)
         {
             horizontalTicks[col] = offset.X + size.DiamondWidth * .5 + size.DiamondWidth * col;
@@ -218,6 +226,49 @@ public partial class MainWindow
         {
             verticalTicks[row] = offset.Y + size.DiamondHeight * .5 + size.DiamondHeight * row;
         }
+    }
+    
+    private void OpenColorPicker(int highlightRow, int highlightCol, Color initialColor)
+    {
+        var picker = new ColorPicker
+        {
+            SelectedColor = initialColor,
+            Width = 200,
+            Height = 50
+        };
+        
+        var button = new Button
+        {
+            Content=  "Select Highlight Color"
+        };
+        var dialogPanel = new StackPanel();
+        dialogPanel.Children.Add(picker);
+        dialogPanel.Children.Add(button);
 
+        var dialog = new Window
+        {
+            Title = "Select Highlight Color",
+            Content = dialogPanel,
+            SizeToContent = SizeToContent.WidthAndHeight,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Owner = this,
+            ResizeMode = ResizeMode.NoResize
+        };
+
+        picker.SelectedColorChanged += (_, _) =>
+        {
+            var position = new Point(highlightRow, highlightCol);
+            _highlightSettings.Highlights.RemoveAll(highlight => highlight.Position == position);
+            var newHighlight = new Highlight(position, picker.SelectedColor?? initialColor, false);
+            _highlightSettings.Highlights.Add(newHighlight);
+            ReDraw();
+        };
+        
+        button.Click += (_, _) =>
+        {
+            dialog.Close();
+        };
+
+        dialog.Show();
     }
 }

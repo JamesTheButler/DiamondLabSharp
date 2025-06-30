@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -14,7 +13,6 @@ public sealed class Diamond
 
     public event Action? Clicked;
     public event Action? RightClicked;
-    public event Action? WheelClicked;
 
     private readonly Polygon _shape;
     public Shape Shape => _shape;
@@ -60,7 +58,6 @@ public sealed class Diamond
             switch (clickEvent.ChangedButton)
             {
                 case MouseButton.Right: RightClicked?.Invoke(); break;
-                case MouseButton.Middle: WheelClicked?.Invoke(); break;
                 case MouseButton.Left: Clicked?.Invoke(); break;
             }
         };
