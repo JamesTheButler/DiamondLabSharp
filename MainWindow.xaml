@@ -37,18 +37,27 @@
                     ButtonContent="↩"
                     ButtonClick="OnResetSizesButtonClicked" />
 
-                <TextBlock Text="Diamond Width (mm):" />
-                <toolkit:IntegerUpDown x:Name="DiamondWidthInput" Text="60" Minimum="1" Margin="0,0,0,10" />
-
-                <TextBlock Text="Diamond Height (mm):" />
-                <toolkit:IntegerUpDown x:Name="DiamondHeightInput" Text="100" Minimum="1" Margin="0,0,0,10" />
-
-                <TextBlock Text="Columns:" />
-                <toolkit:IntegerUpDown x:Name="ColumnsInput" Text="10" Minimum="1" Maximum="99" Margin="0,0,0,10" />
-
-                <TextBlock Text="Rows:" />
-                <toolkit:IntegerUpDown x:Name="RowsInput" Text="4" Minimum="1" Maximum="99" Margin="0,0,0,10" />
-
+                <ui:IntPairPicker
+                    x:Name="DiamondSizeInput"
+                    Header="Diamond Size"
+                    XLabel="Width"
+                    YLabel="Height"
+                    WidthMin="1" WidthMax="500"
+                    HeightMin="1" HeightMax="400"
+                    Unit="mm"
+                    ValueChanged="OnSizePickerInputChanged"/>
+                
+                <ui:IntPairPicker
+                    x:Name="GridSizeInput"
+                    Header="Grid"
+                    XLabel="Columns"
+                    YLabel="Rows"
+                    WidthMin="1" WidthMax="99"
+                    HeightMin="1" HeightMax="99"
+                    Unit=""
+                    ValueChanged="OnSizePickerInputChanged"/>
+                
+                
                 <TextBlock Text="Painting Margin Width (mm):" />
                 <toolkit:IntegerUpDown x:Name="PaintingMarginInput" Text="20" Minimum="0" Maximum="99" Margin="0,0,0,10" />
 

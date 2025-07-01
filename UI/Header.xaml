@@ -3,8 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ui="clr-namespace:Diamonds.UI"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance ui:Header}">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </UserControl.Resources>
@@ -15,16 +16,20 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Text="{Binding HeaderText}"
-                   FontWeight="Bold" FontSize="16" VerticalAlignment="Center" />
+        <TextBlock
+            Text="{Binding HeaderText}"
+            FontWeight="Bold" FontSize="16" VerticalAlignment="Center" />
 
-        <Button Content="{Binding ButtonContent}"
-                Click="Button_Click"
-                Visibility="{Binding IsButtonVisible, Converter={StaticResource BoolToVisibilityConverter}}"
-                VerticalAlignment="Center"
-                Padding="8 4"
-                Margin="10,0,0,0"
-                Height="30"
-                Grid.Column="1" />
+        <Button 
+            Content="{Binding ButtonContent}"
+            Click="Button_Click"
+            Visibility="{Binding IsButtonVisible, Converter={StaticResource BoolToVisibilityConverter}}"
+            VerticalAlignment="Center"
+            Padding="8 4"
+            Margin="10,0,0,0"
+            Height="30"
+            Width="30"
+            Grid.Column="1" />
     </Grid>
+
 </UserControl>

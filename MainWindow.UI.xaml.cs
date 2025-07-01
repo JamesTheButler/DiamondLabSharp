@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using System.Windows.Media;
 using Diamonds.Model;
+using Diamonds.Operation;
 
 namespace Diamonds;
 
@@ -25,10 +26,6 @@ public partial class MainWindow
         DiamondColorInput.SelectedColorChanged += OnAnyColorInputChanged;
         CanvasRimColorInput.SelectedColorChanged += OnAnyColorInputChanged;
 
-        DiamondWidthInput.ValueChanged += OnAnyDimensionInputChanged;
-        DiamondHeightInput.ValueChanged += OnAnyDimensionInputChanged;
-        ColumnsInput.ValueChanged += OnAnyDimensionInputChanged;
-        RowsInput.ValueChanged += OnAnyDimensionInputChanged;
         PaintingMarginInput.ValueChanged += OnAnyDimensionInputChanged;
         MountingRimSizeInput.ValueChanged += OnAnyDimensionInputChanged;
         OffsetXInput.ValueChanged += OnOffsetXChanged;
@@ -49,10 +46,6 @@ public partial class MainWindow
         DiamondColorInput.SelectedColorChanged -= OnAnyColorInputChanged;
         CanvasRimColorInput.SelectedColorChanged -= OnAnyColorInputChanged;
 
-        DiamondWidthInput.ValueChanged -= OnAnyDimensionInputChanged;
-        DiamondHeightInput.ValueChanged -= OnAnyDimensionInputChanged;
-        ColumnsInput.ValueChanged -= OnAnyDimensionInputChanged;
-        RowsInput.ValueChanged -= OnAnyDimensionInputChanged;
         PaintingMarginInput.ValueChanged -= OnAnyDimensionInputChanged;
         MountingRimSizeInput.ValueChanged -= OnAnyDimensionInputChanged;
         OffsetXInput.ValueChanged -= OnOffsetXChanged;
@@ -65,6 +58,7 @@ public partial class MainWindow
         ShowDebugLinesInput.Checked -= OnAnyDisplayInputChanged;
         ShowDebugLinesInput.Unchecked -= OnAnyDisplayInputChanged;
     }
+
 
     private void OnOffsetXChanged(object sender, RoutedPropertyChangedEventArgs<object> changeArgs)
     {
@@ -133,10 +127,10 @@ public partial class MainWindow
     {
         var defaults = SizeSettings.Defaults;
         _model.SizeSettings = new SizeSettings(
-            DiamondWidthInput.Value ?? defaults.DiamondWidth,
-            DiamondHeightInput.Value ?? defaults.DiamondHeight,
-            ColumnsInput.Value ?? defaults.GridColumns,
-            RowsInput.Value ?? defaults.GridRows,
+            DiamondSizeInput.Value.X,
+            DiamondSizeInput.Value.Y,
+            GridSizeInput.Value.X,
+            GridSizeInput.Value.Y,
             PaintingMarginInput.Value ?? defaults.PaintingMargin,
             MountingRimSizeInput.Value ?? defaults.MountingRimSize,
             OffsetXInput.Value ?? defaults.OffsetX,
@@ -169,10 +163,8 @@ public partial class MainWindow
     private void RefreshSizeInputs()
     {
         var sizeSettings = _model.SizeSettings;
-        DiamondWidthInput.Value = sizeSettings.DiamondWidth;
-        DiamondHeightInput.Value = sizeSettings.DiamondHeight;
-        ColumnsInput.Value = sizeSettings.GridColumns;
-        RowsInput.Value = sizeSettings.GridRows;
+        DiamondSizeInput.Value = new IntPair(sizeSettings.DiamondWidth, sizeSettings.DiamondHeight);
+        GridSizeInput.Value = new IntPair(sizeSettings.GridColumns, sizeSettings.GridRows);
         PaintingMarginInput.Value = sizeSettings.PaintingMargin;
         MountingRimSizeInput.Value = sizeSettings.MountingRimSize;
         OffsetXInput.Value = sizeSettings.OffsetX;
@@ -235,5 +227,10 @@ public partial class MainWindow
     private void OnExitButtonClicked(object sender, RoutedEventArgs e)
     {
         Application.Current.Shutdown();
+    }
+
+    private void OnSizePickerInputChanged(object sender, RoutedPropertyChangedEventArgs<IntPair> changeEvent)
+    {
+        ApplyDimensionInputs();
     }
 }
