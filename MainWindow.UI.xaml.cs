@@ -37,6 +37,8 @@ public partial class MainWindow
         ShowScalesInput.Unchecked += OnAnyDisplayInputChanged;
         OnlyPaintingInput.Checked += OnAnyDisplayInputChanged;
         OnlyPaintingInput.Unchecked += OnAnyDisplayInputChanged;
+        ShowDebugLinesInput.Checked += OnAnyDisplayInputChanged;
+        ShowDebugLinesInput.Unchecked += OnAnyDisplayInputChanged;
     }
 
     private void UnbindInputs()
@@ -59,6 +61,8 @@ public partial class MainWindow
         ShowScalesInput.Unchecked -= OnAnyDisplayInputChanged;
         OnlyPaintingInput.Checked -= OnAnyDisplayInputChanged;
         OnlyPaintingInput.Unchecked -= OnAnyDisplayInputChanged;
+        ShowDebugLinesInput.Checked -= OnAnyDisplayInputChanged;
+        ShowDebugLinesInput.Unchecked -= OnAnyDisplayInputChanged;
     }
 
     private void OnOffsetXChanged(object sender, RoutedPropertyChangedEventArgs<object> changeArgs)
@@ -145,7 +149,8 @@ public partial class MainWindow
         var defaults = DisplaySettings.Defaults;
         _model.DisplaySettings = new DisplaySettings(
             ShowScalesInput.IsChecked ?? defaults.ShowScales,
-            OnlyPaintingInput.IsChecked ?? defaults.OnlyPattern
+            OnlyPaintingInput.IsChecked ?? defaults.OnlyPattern,
+            ShowDebugLinesInput.IsChecked ?? defaults.ShowDebugLines
         );
 
         ReDraw();
@@ -178,6 +183,7 @@ public partial class MainWindow
         var displaySettings = _model.DisplaySettings;
         ShowScalesInput.IsChecked = displaySettings.ShowScales;
         OnlyPaintingInput.IsChecked = displaySettings.OnlyPattern;
+        ShowDebugLinesInput.IsChecked = displaySettings.ShowDebugLines;
     }
 
     private void ResetColorInputs()

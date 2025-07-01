@@ -26,6 +26,18 @@ public partial class MainWindow
         MainCanvas.Height = canvasSize.Height;
         MainCanvas.Background = new SolidColorBrush(MyColors.Background);
 
+        if (_model.DisplaySettings.ShowDebugLines)
+        {
+            var canvasOutline = new Rectangle
+            {
+                Width = canvasSize.Width,
+                Height = canvasSize.Height,
+                Stroke = new SolidColorBrush(MyColors.Debug)
+            };
+            Canvas.SetLeft(canvasOutline, 0);
+            Canvas.SetTop(canvasOutline, 0);
+            MainCanvas.Children.Add(canvasOutline);
+        }
         var paintingOrigin = new Point(
             _canvasMargin.Left + InfoBarThickness + _paintingMargin.Left,
             _canvasMargin.Top + InfoBarThickness + _paintingMargin.Top);
@@ -90,14 +102,26 @@ public partial class MainWindow
                     new FormatterLabel(p => $"[M]\n{p:0,#}")));
         }
 
-
         var horizontalBar = new AxisScale(scaleTargetSize.Width, Orientation.Horizontal)
         {
             Ticks = horizontalTicks.ToArray()
         };
 
         Canvas.SetLeft(horizontalBar, scaleTargetOrigin.X);
-        Canvas.SetTop(horizontalBar, 0);
+        Canvas.SetTop(horizontalBar, scaleTargetOrigin.Y - InfoBarThickness - _paintingMargin.Top);
+
+        if (_model.DisplaySettings.ShowDebugLines)
+        {
+            var horizontalOutline = new Rectangle
+            {
+                Width = scaleTargetSize.Width,
+                Height = InfoBarThickness,
+                Stroke = new SolidColorBrush(MyColors.Debug)
+            };
+            Canvas.SetLeft(horizontalOutline, scaleTargetOrigin.X);
+            Canvas.SetTop(horizontalOutline, scaleTargetOrigin.Y - InfoBarThickness - _paintingMargin.Top);
+            MainCanvas.Children.Add(horizontalOutline);
+        }
 
         MainCanvas.Children.Add(horizontalBar);
 
@@ -120,9 +144,21 @@ public partial class MainWindow
             Ticks = verticalTicks.ToArray()
         };
 
-
-        Canvas.SetLeft(verticalBar, 0);
+        Canvas.SetLeft(verticalBar, scaleTargetOrigin.X - InfoBarThickness - _paintingMargin.Left);
         Canvas.SetTop(verticalBar, scaleTargetOrigin.Y);
+
+        if (_model.DisplaySettings.ShowDebugLines)
+        {
+            var verticalOutline = new Rectangle
+            {
+                Width = InfoBarThickness,
+                Height = scaleTargetSize.Height,
+                Stroke = new SolidColorBrush(MyColors.Debug)
+            };
+            Canvas.SetLeft(verticalOutline, scaleTargetOrigin.X - InfoBarThickness - _paintingMargin.Left);
+            Canvas.SetTop(verticalOutline, scaleTargetOrigin.Y);
+            MainCanvas.Children.Add(verticalOutline);
+        }
 
         MainCanvas.Children.Add(verticalBar);
     }

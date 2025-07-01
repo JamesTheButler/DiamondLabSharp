@@ -97,6 +97,11 @@
                     <CheckBox x:Name="OnlyPaintingInput" IsChecked="False" />
                 </StackPanel>
 
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBlock Text="Show Debug Lines" Margin="0,0,10,0" />
+                    <CheckBox x:Name="ShowDebugLinesInput" IsChecked="False" />
+                </StackPanel>
+
             </StackPanel>
         </Border>
 
