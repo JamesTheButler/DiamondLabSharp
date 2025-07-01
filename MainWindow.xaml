@@ -4,10 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:ui="clr-namespace:Diamonds.UI"
         mc:Ignorable="d"
         WindowState="Maximized"
         WindowStyle="None"
         ResizeMode="NoResize"
+        d:DesignHeight="700" d:DesignWidth="1000"
         Title="MainWindow" Background="#ECDFCC">
     <Window.InputBindings>
         <KeyBinding Modifiers="Control"
@@ -31,12 +33,9 @@
                 BorderBrush="Gray" BorderThickness="1"
                 Margin="5" CornerRadius="5">
             <StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                    <TextBlock Text="Dimensions" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"
-                               Margin="0 0 10 0" />
-                    <Button Content="↩" Margin="0,10,0,0" Click="OnResetSizesButtonClicked" Padding="8 4"
-                            VerticalAlignment="Center" />
-                </StackPanel>
+                <ui:Header HeaderText="Dimensions"
+                           ButtonContent="↩"
+                           ButtonClick="OnResetSizesButtonClicked" />
 
                 <TextBlock Text="Diamond Width (mm):" />
                 <toolkit:IntegerUpDown x:Name="DiamondWidthInput" Text="60" Minimum="1" Margin="0,0,0,10" />
@@ -63,12 +62,9 @@
                 <TextBlock Text="Offset Y (mm):" />
                 <toolkit:IntegerUpDown x:Name="OffsetYInput" Text="0" Margin="0,0,0,10" />
 
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                    <TextBlock Text="Colors" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"
-                               Margin="0 0 10 0" />
-                    <Button Content="↩" Margin="0,0,0,0" Click="OnResetColorsButtonClicked" Padding="8 4"
-                            VerticalAlignment="Center" />
-                </StackPanel>
+                <ui:Header HeaderText="Colors"
+                           ButtonContent="↩"
+                           ButtonClick="OnResetColorsButtonClicked" />
 
                 <TextBlock Text="Background Color:" />
                 <toolkit:ColorPicker x:Name="BackgroundColorInput" />
@@ -82,10 +78,8 @@
                 <TextBlock Text="Mounting Rim Color:" />
                 <toolkit:ColorPicker x:Name="MountingRimColorInput" />
 
-                <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
-                    <TextBlock Text="Display" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"
-                               Margin="0 0 10 0" />
-                </StackPanel>
+                <ui:Header HeaderText="Dimensions"
+                           IsButtonVisible="False" />
 
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                     <TextBlock Text="Show Scales" Margin="0,0,10,0" />
@@ -126,7 +120,7 @@
 
                 <StackPanel Grid.Row="1">
                     <Button Content="Save" Margin="0,10,0,0" Click="OnSaveButtonClicked" Padding="8 4" />
-                    <Button Content="PNG" Margin="0,10,0,0" Click="OnPngButtonClicked" Padding="8 4" />
+                    <Button Content="Export as .png" Margin="0,10,0,0" Click="OnPngButtonClicked" Padding="8 4" />
                     <Button Content="Load" Margin="0,10,0,0" Click="OnLoadButtonClicked" Padding="8 4" />
                 </StackPanel>
 

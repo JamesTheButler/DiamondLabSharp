@@ -14,7 +14,7 @@ public partial class MainWindow
         RefreshColorInputs();
         RefreshSizeInputs();
         RefreshDisplayInputs();
-        
+
         MainCanvas.Loaded += (_, _) => { ReDraw(); };
     }
 
@@ -230,5 +230,10 @@ public partial class MainWindow
     private void OnShortcutSave(object sender, ExecutedRoutedEventArgs e)
     {
         _fileManager.QuickSave();
+    }
+
+    private void OnExitButtonClicked(object sender, RoutedEventArgs e)
+    {
+        Application.Current.Shutdown();
     }
 }
