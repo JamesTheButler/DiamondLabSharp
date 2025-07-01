@@ -12,9 +12,8 @@
         d:DesignHeight="700" d:DesignWidth="1000"
         Title="MainWindow" Background="#ECDFCC">
     <Window.InputBindings>
-        <KeyBinding Modifiers="Control"
-                    Key="S"
-                    Command="{x:Static ApplicationCommands.Save}" />
+        <KeyBinding Modifiers="Control" Key="S"
+            Command="{x:Static ApplicationCommands.Save}" />
     </Window.InputBindings>
 
     <Window.CommandBindings>
@@ -33,9 +32,10 @@
                 BorderBrush="Gray" BorderThickness="1"
                 Margin="5" CornerRadius="5">
             <StackPanel>
-                <ui:Header HeaderText="Dimensions"
-                           ButtonContent="↩"
-                           ButtonClick="OnResetSizesButtonClicked" />
+                <ui:Header 
+                    HeaderText="Dimensions"
+                    ButtonContent="↩"
+                    ButtonClick="OnResetSizesButtonClicked" />
 
                 <TextBlock Text="Diamond Width (mm):" />
                 <toolkit:IntegerUpDown x:Name="DiamondWidthInput" Text="60" Minimum="1" Margin="0,0,0,10" />
@@ -50,8 +50,7 @@
                 <toolkit:IntegerUpDown x:Name="RowsInput" Text="4" Minimum="1" Maximum="99" Margin="0,0,0,10" />
 
                 <TextBlock Text="Painting Margin Width (mm):" />
-                <toolkit:IntegerUpDown x:Name="PaintingMarginInput" Text="20" Minimum="0" Maximum="99"
-                                       Margin="0,0,0,10" />
+                <toolkit:IntegerUpDown x:Name="PaintingMarginInput" Text="20" Minimum="0" Maximum="99" Margin="0,0,0,10" />
 
                 <TextBlock Text="Mounting Rim Width (mm):" />
                 <toolkit:IntegerUpDown x:Name="MountingRimSizeInput" Text="30" Minimum="0" Margin="0,0,0,10" />
@@ -115,8 +114,9 @@
                     <RowDefinition Height="Auto" /> <!-- Notification Label -->
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="File Operations" FontWeight="Bold" FontSize="16"
-                           VerticalAlignment="Center" Margin="0 0 0 10" />
+                <ui:Header HeaderText="File Operations"
+                           ButtonContent="❌"
+                           ButtonClick="OnExitButtonClicked" />
 
                 <StackPanel Grid.Row="1">
                     <Button Content="Save" Margin="0,10,0,0" Click="OnSaveButtonClicked" Padding="8 4" />
