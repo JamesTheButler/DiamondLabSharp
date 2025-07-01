@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Diamonds.Model;
@@ -12,9 +11,11 @@ public partial class MainWindow
     {
         BindInputs();
 
-        ApplyColorInputs();
-        ApplyDimensionInputs();
-        ApplyDisplayInputs();
+        RefreshColorInputs();
+        RefreshSizeInputs();
+        RefreshDisplayInputs();
+        
+        MainCanvas.Loaded += (_, _) => { ReDraw(); };
     }
 
     private void BindInputs()
@@ -165,7 +166,7 @@ public partial class MainWindow
         MountingRimColorInput.SelectedColor = colorSettings.MountingRimColor;
     }
 
-    private void RefreshDimensionInputs()
+    private void RefreshSizeInputs()
     {
         var sizeSettings = _model.SizeSettings;
         DiamondWidthInput.Value = sizeSettings.DiamondWidth;
@@ -186,7 +187,7 @@ public partial class MainWindow
         ShowDebugLinesInput.IsChecked = displaySettings.ShowDebugLines;
     }
 
-    private void ResetColorInputs()
+    private void OnResetColorsButtonClicked(object sender, RoutedEventArgs e)
     {
         _model.ResetColors();
         _model.ResetHighlights();
@@ -194,29 +195,11 @@ public partial class MainWindow
         RefreshColorInputs();
     }
 
-    private void ResetSizeInputs()
-    {
-        _model.ResetSizes();
-        var sizeSettings = _model.SizeSettings;
-
-        DiamondWidthInput.Text = sizeSettings.DiamondWidth.ToString(CultureInfo.CurrentCulture);
-        DiamondHeightInput.Text = sizeSettings.DiamondHeight.ToString(CultureInfo.CurrentCulture);
-        ColumnsInput.Text = sizeSettings.GridColumns.ToString();
-        RowsInput.Text = sizeSettings.GridRows.ToString();
-        PaintingMarginInput.Text = sizeSettings.PaintingMargin.ToString(CultureInfo.CurrentCulture);
-        MountingRimSizeInput.Text = sizeSettings.MountingRimSize.ToString(CultureInfo.CurrentCulture);
-        OffsetXInput.Text = sizeSettings.OffsetX.ToString(CultureInfo.CurrentCulture);
-        OffsetYInput.Text = sizeSettings.OffsetY.ToString(CultureInfo.CurrentCulture);
-    }
-
-    private void OnResetColorsButtonClicked(object sender, RoutedEventArgs e)
-    {
-        ResetColorInputs();
-    }
-
     private void OnResetSizesButtonClicked(object sender, RoutedEventArgs e)
     {
-        ResetSizeInputs();
+        _model.ResetSizes();
+
+        RefreshSizeInputs();
     }
 
     private void OnPngButtonClicked(object sender, RoutedEventArgs e)
@@ -238,7 +221,7 @@ public partial class MainWindow
 
         UnbindInputs();
         RefreshColorInputs();
-        RefreshDimensionInputs();
+        RefreshSizeInputs();
         RefreshDisplayInputs();
         BindInputs();
         ReDraw();

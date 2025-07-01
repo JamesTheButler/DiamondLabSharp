@@ -11,10 +11,10 @@ namespace Diamonds.Utilities;
 
 public static class FileOperations
 {
+    // TODO: if scales are rendered, take painting+margin+scales rect, otherwise painting+margin rect
     public static void SaveAsPng(Canvas canvas, string filePath)
     {
         var size = new Size(canvas.ActualWidth, canvas.ActualHeight);
-        canvas.Measure(size);
         canvas.Arrange(new Rect(size));
 
         var bitmap = new RenderTargetBitmap(

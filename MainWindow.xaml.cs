@@ -14,7 +14,6 @@ public partial class MainWindow
     private readonly IFileManager _fileManager = Dependencies.FileManager;
     private readonly INotificationManager _notificationManager = Dependencies.NotificationManager;
 
-    private readonly Thickness _canvasMargin = new(10, 10, 0, 0);
     private readonly Thickness _paintingMargin = new(10);
 
     public MainWindow() : this(null)
@@ -32,7 +31,5 @@ public partial class MainWindow
         DataContext = this;
         if (startupFilePath != null)
             _fileManager.Load(startupFilePath);
-
-        ReDraw();
     }
 }

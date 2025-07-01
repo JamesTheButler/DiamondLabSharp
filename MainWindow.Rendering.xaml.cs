@@ -5,7 +5,6 @@ using System.Windows.Shapes;
 using Diamonds.Model;
 using Diamonds.Rendering;
 using Diamonds.Rendering.AxisScale;
-using Diamonds.Utilities;
 using Xceed.Wpf.Toolkit;
 using WindowStartupLocation = System.Windows.WindowStartupLocation;
 
@@ -17,30 +16,28 @@ public partial class MainWindow
     {
         MainCanvas.Children.Clear();
 
-        var canvasSize = _model.SizeSettings.PaintingSize
-            .Add(_canvasMargin)
-            .Add(_paintingMargin)
-            .Add(InfoBarThickness);
+        var sizeSettings = _model.SizeSettings;
 
-        MainCanvas.Width = canvasSize.Width;
-        MainCanvas.Height = canvasSize.Height;
         MainCanvas.Background = new SolidColorBrush(MyColors.Background);
 
         if (_model.DisplaySettings.ShowDebugLines)
         {
             var canvasOutline = new Rectangle
             {
-                Width = canvasSize.Width,
-                Height = canvasSize.Height,
+                Width = MainCanvas.ActualWidth,
+                Height = MainCanvas.ActualHeight,
                 Stroke = new SolidColorBrush(MyColors.Debug)
             };
             Canvas.SetLeft(canvasOutline, 0);
             Canvas.SetTop(canvasOutline, 0);
             MainCanvas.Children.Add(canvasOutline);
         }
+
+        var canvasCenter = new Point(MainCanvas.ActualWidth / 2f, MainCanvas.ActualHeight / 2f);
+
         var paintingOrigin = new Point(
-            _canvasMargin.Left + InfoBarThickness + _paintingMargin.Left,
-            _canvasMargin.Top + InfoBarThickness + _paintingMargin.Top);
+            canvasCenter.X - sizeSettings.PaintingSize.Width / 2,
+            canvasCenter.Y - sizeSettings.PaintingSize.Height / 2);
 
         DrawCanvasBackground(paintingOrigin);
         if (_model.DisplaySettings.ShowScales)

@@ -105,9 +105,9 @@
             </StackPanel>
         </Border>
 
-        <!-- Canvas for Drawing -->
+        <!-- Canvas -->
         <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Canvas Name="MainCanvas" Background="LightGray" Width="700" Height="400" />
+            <Canvas Name="MainCanvas" Background="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         </ScrollViewer>
 
         <Border Grid.Column="2" Background="#DDDDDD" Width="250" Padding="10"
