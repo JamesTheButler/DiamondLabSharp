@@ -14,7 +14,7 @@ public partial class MainWindow
     private readonly IFileManager _fileManager = Dependencies.FileManager;
     private readonly INotificationManager _notificationManager = Dependencies.NotificationManager;
 
-    private readonly Thickness _paintingMargin = new(10);
+    private readonly Thickness _paintingMargin = new(40);
 
     public MainWindow() : this(null)
     {

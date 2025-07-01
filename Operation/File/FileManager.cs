@@ -112,6 +112,8 @@ public sealed class FileManager(ApplicationModel model, INotificationManager not
         model.ColorSettings = data.Value.ColorSettings;
         model.DisplaySettings = data.Value.DisplaySettings;
         model.HighlightSettings = data.Value.HighlightSettings;
+        model.FrameSizeSettings = data.Value.FrameSizeSettings;
+        model.FrameColorSettings = data.Value.FrameColorSettings;
 
         notificationManager.PostNotification(new LoadSuccessNotification(filePath));
         return true;
@@ -143,6 +145,8 @@ public sealed class FileManager(ApplicationModel model, INotificationManager not
             model.SizeSettings,
             model.ColorSettings,
             model.DisplaySettings,
-            model.HighlightSettings);
+            model.HighlightSettings,
+            model.FrameSizeSettings,
+            model.FrameColorSettings);
     }
 }

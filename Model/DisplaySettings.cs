@@ -1,6 +1,16 @@
 namespace Diamonds.Model;
 
-public readonly record struct DisplaySettings(bool ShowScales, bool OnlyPattern, bool ShowDebugLines)
+public readonly record struct DisplaySettings(
+    bool ShowScales,
+    bool OnlyPattern,
+    bool ShowDebugLines,
+    bool ShowFrame,
+    bool ShowExplodedFrame)
 {
-    public static DisplaySettings Defaults => new(true, false, false);
+    public static DisplaySettings Defaults => new(
+        true,
+        false,
+        false,
+        true,
+        false);
 }

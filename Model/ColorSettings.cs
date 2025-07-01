@@ -10,9 +10,9 @@ public readonly record struct ColorSettings(
     Color MountingRimColor)
 {
     public static ColorSettings Defaults => new(
-        BackgroundColor: MyColors.Light,
-        DiamondColor: MyColors.Dark,
-        CanvasRimColor: Colors.White, 
-        MountingRimColor: MyColors.Darkest
+        MyColors.Light,
+        MyColors.Dark,
+        Colors.White,
+        MyColors.Darkest
     );
 }

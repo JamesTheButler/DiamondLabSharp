@@ -11,6 +11,8 @@ public sealed class ApplicationModel
     public DisplaySettings DisplaySettings { get; set; }
     public HighlightSettings HighlightSettings { get; set; }
     public SizeSettings SizeSettings { get; set; }
+    public FrameSizeSettings FrameSizeSettings { get; set; }
+    public FrameColorSettings FrameColorSettings { get; set; }
 
     public ApplicationModel()
     {
@@ -18,6 +20,8 @@ public sealed class ApplicationModel
         ResetColors();
         ResetDisplaySettings();
         ResetHighlights();
+        ResetFrameDimensions();
+        ResetFrameColors();
     }
 
     public void ResetSizes()
@@ -38,5 +42,15 @@ public sealed class ApplicationModel
     public void ResetHighlights()
     {
         HighlightSettings = new HighlightSettings([]);
+    }
+
+    public void ResetFrameDimensions()
+    {
+        FrameSizeSettings = FrameSizeSettings.Defaults;
+    }
+
+    public void ResetFrameColors()
+    {
+        FrameColorSettings = FrameColorSettings.Defaults;
     }
 }

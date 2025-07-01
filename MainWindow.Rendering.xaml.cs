@@ -46,6 +46,9 @@ public partial class MainWindow
         DrawMountingRim(paintingOrigin);
         DrawPaintingBackground(paintingOrigin);
         DrawDiamondPattern(paintingOrigin);
+
+        if (_model.DisplaySettings.ShowFrame)
+            DrawFrame(paintingOrigin);
     }
 
     private void DrawCanvasBackground(Point origin)
@@ -345,5 +348,77 @@ public partial class MainWindow
         button.Click += (_, _) => { dialog.Close(); };
 
         dialog.Show();
+    }
+
+    private void DrawFrame(Point paintingOrigin)
+    {
+        if (_model.DisplaySettings.ShowExplodedFrame)
+            DrawExplodedFrame(paintingOrigin);
+        else
+            DrawCompleteFrame(paintingOrigin);
+    }
+
+    private void DrawExplodedFrame(Point paintingOrigin)
+    {
+        MainCanvas.Children.Add(new Ellipse { Width = 50, Height = 50, Fill = new SolidColorBrush(Colors.Aqua) });
+    }
+
+    private void DrawCompleteFrame(Point paintingOrigin)
+    {
+        var structureWidth = _model.FrameSizeSettings.StructuralLayerWidth;
+        var paintingSize = _model.SizeSettings.PaintingSize;
+        var wiggleRoom = _model.FrameSizeSettings.WiggleRoom;
+
+        var horizontalStructureTop = CreateStructuralHorizontalPiece();
+        var horizontalStructureBottom = CreateStructuralHorizontalPiece();
+
+        Canvas.SetLeft(horizontalStructureTop, paintingOrigin.X - (structureWidth + wiggleRoom));
+        Canvas.SetTop(horizontalStructureTop, paintingOrigin.Y - (structureWidth + wiggleRoom));
+        MainCanvas.Children.Add(horizontalStructureTop);
+
+        Canvas.SetLeft(horizontalStructureBottom, paintingOrigin.X - (structureWidth + wiggleRoom));
+        Canvas.SetTop(horizontalStructureBottom, paintingOrigin.Y + paintingSize.Height + wiggleRoom);
+        MainCanvas.Children.Add(horizontalStructureBottom);
+
+        var verticalStructureLeft = CreateStructuralVerticalPiece();
+        var verticalStructureRight = CreateStructuralVerticalPiece();
+
+        Canvas.SetLeft(verticalStructureLeft, paintingOrigin.X - (structureWidth + wiggleRoom));
+        Canvas.SetTop(verticalStructureLeft, paintingOrigin.Y - wiggleRoom);
+        MainCanvas.Children.Add(verticalStructureLeft);
+
+        Canvas.SetLeft(verticalStructureRight, paintingOrigin.X + wiggleRoom + paintingSize.Width);
+        Canvas.SetTop(verticalStructureRight, paintingOrigin.Y - wiggleRoom);
+        MainCanvas.Children.Add(verticalStructureRight);
+    }
+
+    private Shape CreateStructuralHorizontalPiece()
+    {
+        var dimensions = _model.FrameSizeSettings;
+        var colors = _model.FrameColorSettings;
+
+        return new Rectangle
+        {
+            Height = dimensions.StructuralLayerWidth,
+            Width = _model.SizeSettings.PaintingSize.Width +
+                    2 * dimensions.StructuralLayerWidth +
+                    2 * dimensions.WiggleRoom,
+            Stroke = new SolidColorBrush(colors.StructuralLayerColor),
+            StrokeThickness = 3
+        };
+    }
+
+    private Shape CreateStructuralVerticalPiece()
+    {
+        var dimensions = _model.FrameSizeSettings;
+        var colors = _model.FrameColorSettings;
+
+        return new Rectangle
+        {
+            Height = _model.SizeSettings.PaintingSize.Height + 2 * dimensions.WiggleRoom,
+            Width = dimensions.StructuralLayerWidth,
+            Stroke = new SolidColorBrush(colors.StructuralLayerColor),
+            StrokeThickness = 3
+        };
     }
 }

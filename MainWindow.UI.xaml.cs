@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using Diamonds.Model;
 using Diamonds.Operation;
 
@@ -12,11 +13,18 @@ public partial class MainWindow
     {
         BindInputs();
 
+        RefreshAllInputs();
+
+        MainCanvas.Loaded += (_, _) => { ReDraw(); };
+    }
+
+    private void RefreshAllInputs()
+    {
         RefreshColorInputs();
         RefreshSizeInputs();
         RefreshDisplayInputs();
-
-        MainCanvas.Loaded += (_, _) => { ReDraw(); };
+        RefreshFrameSizeInputs();
+        RefreshFrameColorInputs();
     }
 
     private void BindInputs()
@@ -37,6 +45,10 @@ public partial class MainWindow
         OnlyPaintingInput.Unchecked += OnAnyDisplayInputChanged;
         ShowDebugLinesInput.Checked += OnAnyDisplayInputChanged;
         ShowDebugLinesInput.Unchecked += OnAnyDisplayInputChanged;
+        ShowFrameInput.Checked += OnAnyDisplayInputChanged;
+        ShowFrameInput.Unchecked += OnAnyDisplayInputChanged;
+        ShowExplodedFrameInput.Checked += OnAnyDisplayInputChanged;
+        ShowExplodedFrameInput.Unchecked += OnAnyDisplayInputChanged;
     }
 
     private void UnbindInputs()
@@ -57,6 +69,10 @@ public partial class MainWindow
         OnlyPaintingInput.Unchecked -= OnAnyDisplayInputChanged;
         ShowDebugLinesInput.Checked -= OnAnyDisplayInputChanged;
         ShowDebugLinesInput.Unchecked -= OnAnyDisplayInputChanged;
+        ShowFrameInput.Checked -= OnAnyDisplayInputChanged;
+        ShowFrameInput.Unchecked -= OnAnyDisplayInputChanged;
+        ShowExplodedFrameInput.Checked -= OnAnyDisplayInputChanged;
+        ShowExplodedFrameInput.Unchecked -= OnAnyDisplayInputChanged;
     }
 
 
@@ -101,6 +117,11 @@ public partial class MainWindow
         ApplyColorInputs();
     }
 
+    private void OnAnyFrameColorInputChanged(object sender, RoutedPropertyChangedEventArgs<Color?> changeArgs)
+    {
+        ApplyFrameColorInputs();
+    }
+
     private void OnAnyDimensionInputChanged(object sender, RoutedPropertyChangedEventArgs<object> changeArgs)
     {
         ApplyDimensionInputs();
@@ -109,6 +130,11 @@ public partial class MainWindow
     private void OnAnyDisplayInputChanged(object sender, RoutedEventArgs eventArgs)
     {
         ApplyDisplayInputs();
+    }
+
+    private void OnAnyFrameInputChanged(object sender, RoutedPropertyChangedEventArgs<object> changeArgs)
+    {
+        ApplyFrameSizeInputs();
     }
 
     private void ApplyColorInputs()
@@ -139,13 +165,39 @@ public partial class MainWindow
         ReDraw();
     }
 
+    private void ApplyFrameSizeInputs()
+    {
+        var defaults = FrameSizeSettings.Defaults;
+        _model.FrameSizeSettings = new FrameSizeSettings(
+            StructuralLayerSizeInput.Value ?? defaults.StructuralLayerWidth,
+            DecorativeLayer1SizeInput.Value ?? defaults.DecorativeLayer1Width,
+            DecorativeLayer2SizeInput.Value ?? defaults.DecorativeLayer2Width,
+            WiggleRoomInput.Value ?? defaults.WiggleRoom
+        );
+
+        ReDraw();
+    }
+    private void ApplyFrameColorInputs()
+    {
+        var defaults = FrameColorSettings.Defaults;
+        _model.FrameColorSettings = new FrameColorSettings(
+            StructuralLayerColorInput.SelectedColor ?? defaults.StructuralLayerColor,
+            DecorativeLayer1ColorInput.SelectedColor ?? defaults.DecorativeLayer1Color,
+            DecorativeLayer2ColorInput.SelectedColor ?? defaults.DecorativeLayer2Color
+        );
+
+        ReDraw();
+    }
+
     private void ApplyDisplayInputs()
     {
         var defaults = DisplaySettings.Defaults;
         _model.DisplaySettings = new DisplaySettings(
             ShowScalesInput.IsChecked ?? defaults.ShowScales,
             OnlyPaintingInput.IsChecked ?? defaults.OnlyPattern,
-            ShowDebugLinesInput.IsChecked ?? defaults.ShowDebugLines
+            ShowDebugLinesInput.IsChecked ?? defaults.ShowDebugLines,
+            ShowFrameInput.IsChecked ?? defaults.ShowFrame,
+            ShowExplodedFrameInput.IsChecked ?? defaults.ShowExplodedFrame
         );
 
         ReDraw();
@@ -177,6 +229,26 @@ public partial class MainWindow
         ShowScalesInput.IsChecked = displaySettings.ShowScales;
         OnlyPaintingInput.IsChecked = displaySettings.OnlyPattern;
         ShowDebugLinesInput.IsChecked = displaySettings.ShowDebugLines;
+        ShowFrameInput.IsChecked = displaySettings.ShowFrame;
+        ShowExplodedFrameInput.IsChecked = displaySettings.ShowExplodedFrame;
+    }
+
+    private void RefreshFrameSizeInputs()
+    {
+        var frameSizes = _model.FrameSizeSettings;
+        WiggleRoomInput.Value = frameSizes.WiggleRoom;
+        StructuralLayerSizeInput.Value = frameSizes.StructuralLayerWidth;
+        DecorativeLayer1SizeInput.Value = frameSizes.DecorativeLayer1Width;
+        DecorativeLayer2SizeInput.Value = frameSizes.DecorativeLayer2Width;
+        WiggleRoomInput.Value = frameSizes.WiggleRoom;
+    }
+
+    private void RefreshFrameColorInputs()
+    {
+        var frameColors = _model.FrameColorSettings;
+        StructuralLayerColorInput.SelectedColor = frameColors.StructuralLayerColor;
+        DecorativeLayer1ColorInput.SelectedColor = frameColors.DecorativeLayer1Color;
+        DecorativeLayer2ColorInput.SelectedColor = frameColors.DecorativeLayer2Color;
     }
 
     private void OnResetColorsButtonClicked(object sender, RoutedEventArgs e)
@@ -212,10 +284,9 @@ public partial class MainWindow
             return;
 
         UnbindInputs();
-        RefreshColorInputs();
-        RefreshSizeInputs();
-        RefreshDisplayInputs();
+        RefreshAllInputs();
         BindInputs();
+
         ReDraw();
     }
 
@@ -232,5 +303,17 @@ public partial class MainWindow
     private void OnSizePickerInputChanged(object sender, RoutedPropertyChangedEventArgs<IntPair> changeEvent)
     {
         ApplyDimensionInputs();
+    }
+
+    private void OnResetFrameColorsButtonClicked(object sender, RoutedEventArgs e)
+    {
+        _model.ResetFrameColors();
+        RefreshFrameColorInputs();
+    }
+
+    private void OnResetFrameSizesButtonClicked(object sender, RoutedEventArgs e)
+    {
+        _model.ResetFrameDimensions();
+        RefreshFrameSizeInputs();
     }
 }
