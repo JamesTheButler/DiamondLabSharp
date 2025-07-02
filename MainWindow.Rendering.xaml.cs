@@ -40,7 +40,7 @@ public partial class MainWindow
         if (_model.DisplaySettings.ShowScales)
             RenderScales(paintingOrigin);
 
-        _patternRenderer.Render(paintingOrigin);
+        _paintingRenderer.Render(paintingOrigin);
 
         if (_model.DisplaySettings.ShowFrame)
             _frameRenderer.Render(paintingOrigin);

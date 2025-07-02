@@ -9,7 +9,7 @@ using WindowStartupLocation = System.Windows.WindowStartupLocation;
 
 namespace Diamonds.Rendering;
 
-public sealed class PatternRenderer(ApplicationModel model, Canvas mainCanvas, Action onRenderDataChanged)
+public sealed class PaintingRenderer(ApplicationModel model, Canvas mainCanvas, Action onRenderDataChanged)
 {
     public void Render(Point paintingOrigin)
     {
@@ -54,7 +54,6 @@ public sealed class PatternRenderer(ApplicationModel model, Canvas mainCanvas, A
             Width = paintingSize.Width - 2 * rim,
             Height = paintingSize.Height - 2 * rim,
             Stroke = new SolidColorBrush(colorSettings.MountingRimColor),
-            StrokeThickness = 1
         };
         mainCanvas.Children.Add(mountingRimOutline.WithOrigin(origin.Add(rim)));
     }

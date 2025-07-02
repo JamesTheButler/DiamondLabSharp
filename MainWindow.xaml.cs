@@ -14,7 +14,7 @@ public partial class MainWindow
     private readonly ApplicationModel _model = Dependencies.Model;
     private readonly IFileManager _fileManager = Dependencies.FileManager;
     private readonly INotificationManager _notificationManager = Dependencies.NotificationManager;
-    private readonly PatternRenderer _patternRenderer;
+    private readonly PaintingRenderer _paintingRenderer;
     private readonly FrameRenderer _frameRenderer;
 
     private readonly Thickness _paintingMargin = new(40);
@@ -26,7 +26,7 @@ public partial class MainWindow
     public MainWindow(string? startupFilePath)
     {
         InitializeComponent();
-        _patternRenderer = new PatternRenderer(_model, MainCanvas, Render);
+        _paintingRenderer = new PaintingRenderer(_model, MainCanvas, Render);
         _frameRenderer = new FrameRenderer(_model, MainCanvas);
 
         SetUpUi();
