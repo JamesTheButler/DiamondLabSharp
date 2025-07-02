@@ -5,6 +5,7 @@ using System.Windows.Shapes;
 using Diamonds.Model;
 using Diamonds.Rendering;
 using Diamonds.Rendering.AxisScale;
+using Diamonds.Utilities;
 using Xceed.Wpf.Toolkit;
 using WindowStartupLocation = System.Windows.WindowStartupLocation;
 
@@ -28,8 +29,7 @@ public partial class MainWindow
                 Height = MainCanvas.ActualHeight,
                 Stroke = new SolidColorBrush(MyColors.Debug)
             };
-            Canvas.SetLeft(canvasOutline, 0);
-            Canvas.SetTop(canvasOutline, 0);
+            canvasOutline.WithOrigin(0, 0);
             MainCanvas.Children.Add(canvasOutline);
         }
 
@@ -63,8 +63,7 @@ public partial class MainWindow
             Fill = new SolidColorBrush(colorSettings.CanvasRimColor),
             Stroke = new SolidColorBrush(colorSettings.MountingRimColor)
         };
-        Canvas.SetLeft(canvasBackground, origin.X);
-        Canvas.SetTop(canvasBackground, origin.Y);
+        canvasBackground.WithOrigin(origin);
         MainCanvas.Children.Add(canvasBackground);
     }
 
@@ -107,21 +106,12 @@ public partial class MainWindow
             Ticks = horizontalTicks.ToArray()
         };
 
-        Canvas.SetLeft(horizontalBar, scaleTargetOrigin.X);
-        Canvas.SetTop(horizontalBar, scaleTargetOrigin.Y - InfoBarThickness - _paintingMargin.Top);
-
-        if (_model.DisplaySettings.ShowDebugLines)
+        var horizontalBarOrigin = scaleTargetOrigin with
         {
-            var horizontalOutline = new Rectangle
-            {
-                Width = scaleTargetSize.Width,
-                Height = InfoBarThickness,
-                Stroke = new SolidColorBrush(MyColors.Debug)
-            };
-            Canvas.SetLeft(horizontalOutline, scaleTargetOrigin.X);
-            Canvas.SetTop(horizontalOutline, scaleTargetOrigin.Y - InfoBarThickness - _paintingMargin.Top);
-            MainCanvas.Children.Add(horizontalOutline);
-        }
+            Y = scaleTargetOrigin.Y - InfoBarThickness - _paintingMargin.Top
+        };
+
+        horizontalBar.WithOrigin(horizontalBarOrigin);
 
         MainCanvas.Children.Add(horizontalBar);
 
@@ -144,23 +134,32 @@ public partial class MainWindow
             Ticks = verticalTicks.ToArray()
         };
 
-        Canvas.SetLeft(verticalBar, scaleTargetOrigin.X - InfoBarThickness - _paintingMargin.Left);
-        Canvas.SetTop(verticalBar, scaleTargetOrigin.Y);
-
-        if (_model.DisplaySettings.ShowDebugLines)
+        var verticalBarOrigin = scaleTargetOrigin with
         {
-            var verticalOutline = new Rectangle
-            {
-                Width = InfoBarThickness,
-                Height = scaleTargetSize.Height,
-                Stroke = new SolidColorBrush(MyColors.Debug)
-            };
-            Canvas.SetLeft(verticalOutline, scaleTargetOrigin.X - InfoBarThickness - _paintingMargin.Left);
-            Canvas.SetTop(verticalOutline, scaleTargetOrigin.Y);
-            MainCanvas.Children.Add(verticalOutline);
-        }
+            X = scaleTargetOrigin.X - InfoBarThickness - _paintingMargin.Left
+        };
 
-        MainCanvas.Children.Add(verticalBar);
+        MainCanvas.Children.Add(verticalBar.WithOrigin(verticalBarOrigin));
+
+
+        if (!_model.DisplaySettings.ShowDebugLines)
+            return;
+
+        var horizontalOutline = new Rectangle
+        {
+            Width = scaleTargetSize.Width,
+            Height = InfoBarThickness,
+            Stroke = new SolidColorBrush(MyColors.Debug)
+        };
+        MainCanvas.Children.Add(horizontalOutline.WithOrigin(horizontalBarOrigin, ZIndex.Debug));
+
+        var verticalOutline = new Rectangle
+        {
+            Width = InfoBarThickness,
+            Height = scaleTargetSize.Height,
+            Stroke = new SolidColorBrush(MyColors.Debug)
+        };
+        MainCanvas.Children.Add(verticalOutline.WithOrigin(verticalBarOrigin, ZIndex.Debug));
     }
 
     private void RenderMountingRim(Point origin)
@@ -191,9 +190,8 @@ public partial class MainWindow
             ],
             Fill = new SolidColorBrush(actualMountingRimColor)
         };
-        Canvas.SetLeft(mountingRim, origin.X);
-        Canvas.SetTop(mountingRim, origin.Y);
-        MainCanvas.Children.Add(mountingRim);
+
+        MainCanvas.Children.Add(mountingRim.WithOrigin(origin));
 
         var mountingRimOutline = new Rectangle
         {
@@ -202,9 +200,7 @@ public partial class MainWindow
             Stroke = new SolidColorBrush(colorSettings.MountingRimColor),
             StrokeThickness = 1
         };
-        Canvas.SetLeft(mountingRimOutline, origin.X + rim);
-        Canvas.SetTop(mountingRimOutline, origin.Y + rim);
-        MainCanvas.Children.Add(mountingRimOutline);
+        MainCanvas.Children.Add(mountingRimOutline.WithOrigin(origin.Add(rim)));
     }
 
     private void RenderPaintingBackground(Point origin)
@@ -219,9 +215,7 @@ public partial class MainWindow
             Height = sizeSettings.GridRows * sizeSettings.DiamondHeight,
             Fill = new SolidColorBrush(colorSettings.BackgroundColor)
         };
-        Canvas.SetLeft(paintedBackground, origin.X + offset);
-        Canvas.SetTop(paintedBackground, origin.Y + offset);
-        MainCanvas.Children.Add(paintedBackground);
+        MainCanvas.Children.Add(paintedBackground.WithOrigin(origin.Add(offset)));
     }
 
     private void RenderDiamondPattern(Point paintingOrigin)
@@ -369,26 +363,50 @@ public partial class MainWindow
         var paintingSize = _model.SizeSettings.PaintingSize;
         var wiggleRoom = _model.FrameSizeSettings.WiggleRoom;
 
+        var outerFramePerimeter = new Rect(
+            paintingOrigin.X - (structureWidth + wiggleRoom),
+            paintingOrigin.Y - (structureWidth + wiggleRoom),
+            paintingSize.Width +
+            2 * structureWidth +
+            2 * wiggleRoom,
+            paintingSize.Height +
+            2 * structureWidth +
+            2 * wiggleRoom
+        );
+
+        if (_model.DisplaySettings.ShowDebugLines)
+        {
+            var frameOutline = new Rectangle
+            {
+                Width = outerFramePerimeter.Width,
+                Height = outerFramePerimeter.Height,
+                Stroke = new SolidColorBrush(MyColors.Debug)
+            };
+
+            MainCanvas.Children.Add(frameOutline.WithOrigin(outerFramePerimeter.Location, ZIndex.Debug));
+        }
+
         var horizontalStructureTop = CreateStructuralHorizontalPiece();
         var horizontalStructureBottom = CreateStructuralHorizontalPiece();
 
-        Canvas.SetLeft(horizontalStructureTop, paintingOrigin.X - (structureWidth + wiggleRoom));
-        Canvas.SetTop(horizontalStructureTop, paintingOrigin.Y - (structureWidth + wiggleRoom));
-        MainCanvas.Children.Add(horizontalStructureTop);
+        MainCanvas.Children.Add(horizontalStructureTop.WithOrigin(outerFramePerimeter.Location));
 
-        Canvas.SetLeft(horizontalStructureBottom, paintingOrigin.X - (structureWidth + wiggleRoom));
-        Canvas.SetTop(horizontalStructureBottom, paintingOrigin.Y + paintingSize.Height + wiggleRoom);
+        horizontalStructureBottom.WithOrigin(
+            outerFramePerimeter.Left,
+            paintingOrigin.Y + paintingSize.Height + wiggleRoom);
         MainCanvas.Children.Add(horizontalStructureBottom);
 
         var verticalStructureLeft = CreateStructuralVerticalPiece();
         var verticalStructureRight = CreateStructuralVerticalPiece();
 
-        Canvas.SetLeft(verticalStructureLeft, paintingOrigin.X - (structureWidth + wiggleRoom));
-        Canvas.SetTop(verticalStructureLeft, paintingOrigin.Y - wiggleRoom);
+        verticalStructureLeft.WithOrigin(
+            outerFramePerimeter.Left,
+            paintingOrigin.Y - wiggleRoom);
         MainCanvas.Children.Add(verticalStructureLeft);
 
-        Canvas.SetLeft(verticalStructureRight, paintingOrigin.X + wiggleRoom + paintingSize.Width);
-        Canvas.SetTop(verticalStructureRight, paintingOrigin.Y - wiggleRoom);
+        verticalStructureRight.WithOrigin(
+            paintingOrigin.X + wiggleRoom + paintingSize.Width,
+            paintingOrigin.Y - wiggleRoom);
         MainCanvas.Children.Add(verticalStructureRight);
     }
 
@@ -404,7 +422,7 @@ public partial class MainWindow
                     2 * dimensions.StructuralLayerWidth +
                     2 * dimensions.WiggleRoom,
             Stroke = new SolidColorBrush(colors.StructuralLayerColor),
-            StrokeThickness = 3
+            StrokeThickness = 2
         };
     }
 

@@ -2,7 +2,7 @@ using System.Windows;
 
 namespace Diamonds.Utilities;
 
-public static class SizeExtensions
+public static class GeometryExtensions
 {
     public static Size Add(this Size size, Size size2)
     {
@@ -27,5 +27,10 @@ public static class SizeExtensions
     public static Vector AsOffset(this Size size)
     {
         return new Vector(size.Width, size.Height);
+    }
+
+    public static Point Add(this Point point, int addend)
+    {
+        return new Point(point.X + addend, point.Y + addend);
     }
 }
