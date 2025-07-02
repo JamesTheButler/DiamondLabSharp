@@ -119,33 +119,29 @@
                            ButtonClick="OnResetFrameSizesButtonClicked" />
                 
                 <TextBlock Text="Structural Wiggle Room (mm):" />
-                <toolkit:IntegerUpDown x:Name="WiggleRoomInput" Text="0" Minimum="0" Margin="0,0,0,10"
-                                       ValueChanged="OnAnyFrameInputChanged"/>
+                <toolkit:IntegerUpDown x:Name="WiggleRoomInput" Text="0" Minimum="0" Margin="0,0,0,10" />
                 
                 <TextBlock Text="Structural Layer Thickness (mm):" />
-                <toolkit:IntegerUpDown x:Name="StructuralLayerSizeInput" Text="0" Minimum="0" Margin="0,0,0,10"
-                                       ValueChanged="OnAnyFrameInputChanged" />
+                <toolkit:IntegerUpDown x:Name="StructuralLayerSizeInput" Text="0" Minimum="0" Margin="0,0,0,10" />
 
                 <TextBlock Text="Decorative Layer 1 Thickness (mm):" />
-                <toolkit:IntegerUpDown x:Name="DecorativeLayer1SizeInput" Text="0" Minimum="0" Margin="0,0,0,10"
-                                       ValueChanged="OnAnyFrameInputChanged" />
+                <toolkit:IntegerUpDown x:Name="DecorativeLayer1SizeInput" Text="0" Minimum="0" Margin="0,0,0,10" />
 
                 <TextBlock Text="Decorative Layer 2 Thickness (mm):" />
-                <toolkit:IntegerUpDown x:Name="DecorativeLayer2SizeInput" Text="0" Minimum="0" Margin="0,0,0,10"
-                                       ValueChanged="OnAnyFrameInputChanged" />
+                <toolkit:IntegerUpDown x:Name="DecorativeLayer2SizeInput" Text="0" Minimum="0" Margin="0,0,0,10" />
 
                 <ui:Header HeaderText="Frame Colors"
                            ButtonContent="↩"
                            ButtonClick="OnResetFrameColorsButtonClicked" />
                 
                 <TextBlock Text="Structural Layer Color:" />
-                <toolkit:ColorPicker x:Name="StructuralLayerColorInput" SelectedColorChanged="OnAnyFrameColorInputChanged"/>
+                <toolkit:ColorPicker x:Name="StructuralLayerColorInput" />
                 
                 <TextBlock Text="Decorative Layer 1 Color:" />
-                <toolkit:ColorPicker x:Name="DecorativeLayer1ColorInput" SelectedColorChanged="OnAnyFrameColorInputChanged" />
+                <toolkit:ColorPicker x:Name="DecorativeLayer1ColorInput" />
                 
                 <TextBlock Text="Decorative Layer 2 Color:" />
-                <toolkit:ColorPicker x:Name="DecorativeLayer2ColorInput" SelectedColorChanged="OnAnyFrameColorInputChanged" />
+                <toolkit:ColorPicker x:Name="DecorativeLayer2ColorInput" />
                 
             </StackPanel>
         </Border>

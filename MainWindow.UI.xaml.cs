@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
 using Diamonds.Model;
 using Diamonds.Operation;
 
@@ -49,6 +48,15 @@ public partial class MainWindow
         ShowFrameInput.Unchecked += OnAnyDisplayInputChanged;
         ShowExplodedFrameInput.Checked += OnAnyDisplayInputChanged;
         ShowExplodedFrameInput.Unchecked += OnAnyDisplayInputChanged;
+
+        StructuralLayerColorInput.SelectedColorChanged += OnAnyFrameColorInputChanged;
+        DecorativeLayer1ColorInput.SelectedColorChanged += OnAnyFrameColorInputChanged;
+        DecorativeLayer2ColorInput.SelectedColorChanged += OnAnyFrameColorInputChanged;
+
+        StructuralLayerSizeInput.ValueChanged += OnAnyFrameSizeInputChanged;
+        DecorativeLayer1SizeInput.ValueChanged += OnAnyFrameSizeInputChanged;
+        DecorativeLayer2SizeInput.ValueChanged += OnAnyFrameSizeInputChanged;
+        WiggleRoomInput.ValueChanged += OnAnyFrameSizeInputChanged;
     }
 
     private void UnbindInputs()
@@ -73,6 +81,15 @@ public partial class MainWindow
         ShowFrameInput.Unchecked -= OnAnyDisplayInputChanged;
         ShowExplodedFrameInput.Checked -= OnAnyDisplayInputChanged;
         ShowExplodedFrameInput.Unchecked -= OnAnyDisplayInputChanged;
+
+        StructuralLayerColorInput.SelectedColorChanged -= OnAnyFrameColorInputChanged;
+        DecorativeLayer1ColorInput.SelectedColorChanged -= OnAnyFrameColorInputChanged;
+        DecorativeLayer2ColorInput.SelectedColorChanged -= OnAnyFrameColorInputChanged;
+
+        StructuralLayerSizeInput.ValueChanged -= OnAnyFrameSizeInputChanged;
+        DecorativeLayer1SizeInput.ValueChanged -= OnAnyFrameSizeInputChanged;
+        DecorativeLayer2SizeInput.ValueChanged -= OnAnyFrameSizeInputChanged;
+        WiggleRoomInput.ValueChanged -= OnAnyFrameSizeInputChanged;
     }
 
 
@@ -132,7 +149,7 @@ public partial class MainWindow
         ApplyDisplayInputs();
     }
 
-    private void OnAnyFrameInputChanged(object sender, RoutedPropertyChangedEventArgs<object> changeArgs)
+    private void OnAnyFrameSizeInputChanged(object sender, RoutedPropertyChangedEventArgs<object> changeArgs)
     {
         ApplyFrameSizeInputs();
     }
@@ -177,6 +194,7 @@ public partial class MainWindow
 
         Render();
     }
+
     private void ApplyFrameColorInputs()
     {
         var defaults = FrameColorSettings.Defaults;
