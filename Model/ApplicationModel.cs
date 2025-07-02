@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text.Json;
+using System.Windows;
 
 namespace Diamonds.Model;
 
@@ -16,7 +17,6 @@ public sealed class ApplicationModel
         }
     }
 
-
     public string? ActiveFileName { get; private set; }
 
     public ColorSettings ColorSettings { get; set; }
@@ -25,6 +25,9 @@ public sealed class ApplicationModel
     public SizeSettings SizeSettings { get; set; }
     public FrameSizeSettings FrameSizeSettings { get; set; }
     public FrameColorSettings FrameColorSettings { get; set; }
+
+    public double[] HorizontalDiamondTicks => GetHorizontalDiamondTicks();
+    public double[] VerticalDiamondTicks => GetVerticalDiamondTicks();
 
     private string? _activeFilePath;
 
@@ -95,5 +98,47 @@ public sealed class ApplicationModel
 
         Directory.CreateDirectory(appDataPath);
         File.WriteAllText(settingsFile, JsonSerializer.Serialize(ActiveFilePath));
+    }
+
+    private double[] GetHorizontalDiamondTicks()
+    {
+        var displaySettings = DisplaySettings;
+        var size = SizeSettings;
+
+        var ticks = new double[size.GridColumns];
+
+        var offset = displaySettings.OnlyPattern
+            ? (Point)size.Offset
+            : new Point(
+                size.MountingRimSize + size.PaintingMargin + size.OffsetX,
+                size.MountingRimSize + size.PaintingMargin + size.OffsetY);
+
+        for (var col = 0; col < size.GridColumns; col++)
+        {
+            ticks[col] = offset.X + size.DiamondWidth * .5 + size.DiamondWidth * col;
+        }
+
+        return ticks;
+    }
+
+    private double[] GetVerticalDiamondTicks()
+    {
+        var size = SizeSettings;
+        var displaySettings = DisplaySettings;
+
+        var ticks = new double[size.GridRows];
+
+        var offset = displaySettings.OnlyPattern
+            ? (Point)size.Offset
+            : new Point(
+                size.MountingRimSize + size.PaintingMargin + size.OffsetX,
+                size.MountingRimSize + size.PaintingMargin + size.OffsetY);
+
+        for (var row = 0; row < size.GridRows; row++)
+        {
+            ticks[row] = offset.Y + size.DiamondHeight * .5 + size.DiamondHeight * row;
+        }
+
+        return ticks;
     }
 }

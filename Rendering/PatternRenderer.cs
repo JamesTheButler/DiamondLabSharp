@@ -133,30 +133,6 @@ public sealed class PatternRenderer(ApplicationModel model, Canvas mainCanvas, A
         highlightSettings.Highlights.RemoveAll(highlight => highlight.Position == new Point(row, col));
     }
 
-    public void GetDiamondTicks(SizeSettings size, out double[] horizontalTicks, out double[] verticalTicks)
-    {
-        var displaySettings = model.DisplaySettings;
-
-        verticalTicks = new double[size.GridRows];
-        horizontalTicks = new double[size.GridColumns];
-
-        var offset = displaySettings.OnlyPattern
-            ? (Point)size.Offset
-            : new Point(
-                size.MountingRimSize + size.PaintingMargin + size.OffsetX,
-                size.MountingRimSize + size.PaintingMargin + size.OffsetY);
-
-        for (var col = 0; col < size.GridColumns; col++)
-        {
-            horizontalTicks[col] = offset.X + size.DiamondWidth * .5 + size.DiamondWidth * col;
-        }
-
-        for (var row = 0; row < size.GridRows; row++)
-        {
-            verticalTicks[row] = offset.Y + size.DiamondHeight * .5 + size.DiamondHeight * row;
-        }
-    }
-
     private void OpenColorPicker(int highlightRow, int highlightCol, Color initialColor)
     {
         var highlightSettings = model.HighlightSettings;
@@ -192,7 +168,7 @@ public sealed class PatternRenderer(ApplicationModel model, Canvas mainCanvas, A
             highlightSettings.Highlights.RemoveAll(highlight => highlight.Position == position);
             var newHighlight = new Highlight(position, picker.SelectedColor ?? initialColor, false);
             highlightSettings.Highlights.Add(newHighlight);
-            onRenderDataChanged.Invoke();;
+            onRenderDataChanged.Invoke();
         };
 
         button.Click += (_, _) => { dialog.Close(); };

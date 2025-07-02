@@ -2,12 +2,9 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Diamonds.Model;
 using Diamonds.Rendering;
 using Diamonds.Rendering.AxisScale;
 using Diamonds.Utilities;
-using Xceed.Wpf.Toolkit;
-using WindowStartupLocation = System.Windows.WindowStartupLocation;
 
 namespace Diamonds;
 
@@ -70,10 +67,6 @@ public partial class MainWindow
         var sizeSettings = _model.SizeSettings;
         var displaySettings = _model.DisplaySettings;
 
-        _patternRenderer.GetDiamondTicks(sizeSettings,
-            out var horizontalTickPositions,
-            out var verticalTickPositions);
-
         var rim = sizeSettings.MountingRimSize;
         var totalMargin = rim + sizeSettings.PaintingMargin;
 
@@ -85,7 +78,7 @@ public partial class MainWindow
             ? sizeSettings.PatternSize
             : sizeSettings.PaintingSize;
 
-        var horizontalTicks = horizontalTickPositions
+        var horizontalTicks = _model.HorizontalDiamondTicks
             .Select(pos => new AxisScaleTick(pos, new FormatterLabel(p => $"[D]\n{p:0,#}")));
 
         if (!displaySettings.OnlyPattern)
@@ -113,7 +106,7 @@ public partial class MainWindow
 
         MainCanvas.Children.Add(horizontalBar);
 
-        var verticalTicks = verticalTickPositions
+        var verticalTicks = _model.VerticalDiamondTicks
             .Select(pos => new AxisScaleTick(pos, new FormatterLabel(p => $"[D]{p:0,#}")));
 
         if (!displaySettings.OnlyPattern)
@@ -159,5 +152,4 @@ public partial class MainWindow
         };
         MainCanvas.Children.Add(verticalOutline.WithOrigin(verticalBarOrigin, ZIndex.Debug));
     }
-
 }
