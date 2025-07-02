@@ -12,7 +12,7 @@ namespace Diamonds;
 
 public partial class MainWindow
 {
-    private void ReDraw()
+    private void Render()
     {
         MainCanvas.Children.Clear();
 
@@ -39,19 +39,19 @@ public partial class MainWindow
             canvasCenter.X - sizeSettings.PaintingSize.Width / 2,
             canvasCenter.Y - sizeSettings.PaintingSize.Height / 2);
 
-        DrawCanvasBackground(paintingOrigin);
+        RenderCanvasBackground(paintingOrigin);
         if (_model.DisplaySettings.ShowScales)
-            DrawScales(paintingOrigin);
+            RenderScales(paintingOrigin);
 
-        DrawMountingRim(paintingOrigin);
-        DrawPaintingBackground(paintingOrigin);
-        DrawDiamondPattern(paintingOrigin);
+        RenderMountingRim(paintingOrigin);
+        RenderPaintingBackground(paintingOrigin);
+        RenderDiamondPattern(paintingOrigin);
 
         if (_model.DisplaySettings.ShowFrame)
-            DrawFrame(paintingOrigin);
+            RenderFrame(paintingOrigin);
     }
 
-    private void DrawCanvasBackground(Point origin)
+    private void RenderCanvasBackground(Point origin)
     {
         var sizeSettings = _model.SizeSettings;
         var colorSettings = _model.ColorSettings;
@@ -68,7 +68,7 @@ public partial class MainWindow
         MainCanvas.Children.Add(canvasBackground);
     }
 
-    private void DrawScales(Point paintingOrigin)
+    private void RenderScales(Point paintingOrigin)
     {
         var sizeSettings = _model.SizeSettings;
         var displaySettings = _model.DisplaySettings;
@@ -163,7 +163,7 @@ public partial class MainWindow
         MainCanvas.Children.Add(verticalBar);
     }
 
-    private void DrawMountingRim(Point origin)
+    private void RenderMountingRim(Point origin)
     {
         var sizeSettings = _model.SizeSettings;
         var colorSettings = _model.ColorSettings;
@@ -207,7 +207,7 @@ public partial class MainWindow
         MainCanvas.Children.Add(mountingRimOutline);
     }
 
-    private void DrawPaintingBackground(Point origin)
+    private void RenderPaintingBackground(Point origin)
     {
         var sizeSettings = _model.SizeSettings;
         var colorSettings = _model.ColorSettings;
@@ -224,7 +224,7 @@ public partial class MainWindow
         MainCanvas.Children.Add(paintedBackground);
     }
 
-    private void DrawDiamondPattern(Point paintingOrigin)
+    private void RenderDiamondPattern(Point paintingOrigin)
     {
         var sizeSettings = _model.SizeSettings;
         var colorSettings = _model.ColorSettings;
@@ -268,7 +268,7 @@ public partial class MainWindow
                 diamond.RightClicked += () =>
                 {
                     RemoveHighlight(row1, col1);
-                    ReDraw();
+                    Render();
                 };
 
                 MainCanvas.Children.Add(diamond.Shape);
@@ -342,7 +342,7 @@ public partial class MainWindow
             highlightSettings.Highlights.RemoveAll(highlight => highlight.Position == position);
             var newHighlight = new Highlight(position, picker.SelectedColor ?? initialColor, false);
             highlightSettings.Highlights.Add(newHighlight);
-            ReDraw();
+            Render();
         };
 
         button.Click += (_, _) => { dialog.Close(); };
@@ -350,20 +350,20 @@ public partial class MainWindow
         dialog.Show();
     }
 
-    private void DrawFrame(Point paintingOrigin)
+    private void RenderFrame(Point paintingOrigin)
     {
         if (_model.DisplaySettings.ShowExplodedFrame)
-            DrawExplodedFrame(paintingOrigin);
+            RenderExplodedFrame(paintingOrigin);
         else
-            DrawCompleteFrame(paintingOrigin);
+            RenderCompleteFrame(paintingOrigin);
     }
 
-    private void DrawExplodedFrame(Point paintingOrigin)
+    private void RenderExplodedFrame(Point paintingOrigin)
     {
         MainCanvas.Children.Add(new Ellipse { Width = 50, Height = 50, Fill = new SolidColorBrush(Colors.Aqua) });
     }
 
-    private void DrawCompleteFrame(Point paintingOrigin)
+    private void RenderCompleteFrame(Point paintingOrigin)
     {
         var structureWidth = _model.FrameSizeSettings.StructuralLayerWidth;
         var paintingSize = _model.SizeSettings.PaintingSize;

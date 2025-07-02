@@ -15,7 +15,7 @@ public partial class MainWindow
 
         RefreshAllInputs();
 
-        MainCanvas.Loaded += (_, _) => { ReDraw(); };
+        MainCanvas.Loaded += (_, _) => { Render(); };
     }
 
     private void RefreshAllInputs()
@@ -146,7 +146,7 @@ public partial class MainWindow
             CanvasRimColorInput.SelectedColor ?? defaults.CanvasRimColor,
             MountingRimColorInput.SelectedColor ?? defaults.MountingRimColor);
 
-        ReDraw();
+        Render();
     }
 
     private void ApplyDimensionInputs()
@@ -162,7 +162,7 @@ public partial class MainWindow
             OffsetXInput.Value ?? defaults.OffsetX,
             OffsetYInput.Value ?? defaults.OffsetY);
 
-        ReDraw();
+        Render();
     }
 
     private void ApplyFrameSizeInputs()
@@ -175,7 +175,7 @@ public partial class MainWindow
             WiggleRoomInput.Value ?? defaults.WiggleRoom
         );
 
-        ReDraw();
+        Render();
     }
     private void ApplyFrameColorInputs()
     {
@@ -186,7 +186,7 @@ public partial class MainWindow
             DecorativeLayer2ColorInput.SelectedColor ?? defaults.DecorativeLayer2Color
         );
 
-        ReDraw();
+        Render();
     }
 
     private void ApplyDisplayInputs()
@@ -200,7 +200,7 @@ public partial class MainWindow
             ShowExplodedFrameInput.IsChecked ?? defaults.ShowExplodedFrame
         );
 
-        ReDraw();
+        Render();
     }
 
     private void RefreshColorInputs()
@@ -287,7 +287,7 @@ public partial class MainWindow
         RefreshAllInputs();
         BindInputs();
 
-        ReDraw();
+        Render();
     }
 
     private void OnShortcutSave(object sender, ExecutedRoutedEventArgs e)
