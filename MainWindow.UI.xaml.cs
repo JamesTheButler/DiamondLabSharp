@@ -168,28 +168,26 @@ public partial class MainWindow
 
     private void ApplyDimensionInputs()
     {
-        var defaults = SizeSettings.Defaults;
         _model.SizeSettings = new SizeSettings(
             DiamondSizeInput.Value.X,
             DiamondSizeInput.Value.Y,
             GridSizeInput.Value.X,
             GridSizeInput.Value.Y,
-            PaintingMarginInput.Value ?? defaults.PaintingMargin,
-            MountingRimSizeInput.Value ?? defaults.MountingRimSize,
-            OffsetXInput.Value ?? defaults.OffsetX,
-            OffsetYInput.Value ?? defaults.OffsetY);
+            PaintingMarginInput.Value,
+            MountingRimSizeInput.Value,
+            OffsetXInput.Value,
+            OffsetYInput.Value);
 
         Render();
     }
 
     private void ApplyFrameSizeInputs()
     {
-        var defaults = FrameSizeSettings.Defaults;
         _model.FrameSizeSettings = new FrameSizeSettings(
-            StructuralLayerSizeInput.Value ?? defaults.StructuralLayerWidth,
-            DecorativeLayer1SizeInput.Value ?? defaults.DecorativeLayer1Width,
-            DecorativeLayer2SizeInput.Value ?? defaults.DecorativeLayer2Width,
-            WiggleRoomInput.Value ?? defaults.WiggleRoom
+            StructuralLayerSizeInput.Value,
+            DecorativeLayer1SizeInput.Value,
+            DecorativeLayer2SizeInput.Value,
+            WiggleRoomInput.Value
         );
 
         Render();

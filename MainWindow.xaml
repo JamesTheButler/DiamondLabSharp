@@ -57,18 +57,33 @@
                     Unit=""
                     ValueChanged="OnSizePickerInputChanged"/>
                 
+                <ui:IntInput
+                    x:Name="PaintingMarginInput"
+                    Header="Painting Margin"
+                    Value="20"
+                    Min="0" Max="100"
+                    Unit="mm" />
                 
-                <TextBlock Text="Painting Margin Width (mm):" />
-                <toolkit:IntegerUpDown x:Name="PaintingMarginInput" Text="20" Minimum="0" Maximum="99" Margin="0,0,0,10" />
-
-                <TextBlock Text="Mounting Rim Width (mm):" />
-                <toolkit:IntegerUpDown x:Name="MountingRimSizeInput" Text="30" Minimum="0" Margin="0,0,0,10" />
-
-                <TextBlock Text="Offset X (mm):" />
-                <toolkit:IntegerUpDown x:Name="OffsetXInput" Text="0" Margin="0,0,0,10" />
-
-                <TextBlock Text="Offset Y (mm):" />
-                <toolkit:IntegerUpDown x:Name="OffsetYInput" Text="0" Margin="0,0,0,10" />
+                <ui:IntInput
+                    x:Name="MountingRimSizeInput"
+                    Header="Mounting Rim"
+                    Value="30"
+                    Min="0" Max="100"
+                    Unit="mm" />
+                
+                <ui:IntInput
+                    x:Name="OffsetXInput"
+                    Header="Offset X"
+                    Value="0"
+                    Min="-1000" Max="1000"
+                    Unit="mm" />
+                
+                <ui:IntInput
+                    x:Name="OffsetYInput"
+                    Header="Offset Y"
+                    Value="0"
+                    Min="-1000" Max="1000"
+                    Unit="mm" />
 
                 <ui:Header HeaderText="Colors"
                            ButtonContent="↩"
@@ -118,18 +133,31 @@
                            ButtonContent="↩"
                            ButtonClick="OnResetFrameSizesButtonClicked" />
                 
-                <TextBlock Text="Structural Wiggle Room (mm):" />
-                <toolkit:IntegerUpDown x:Name="WiggleRoomInput" Text="0" Minimum="0" Margin="0,0,0,10" />
+                <ui:IntInput
+                    x:Name="WiggleRoomInput"
+                    Header="Structural Wiggle Room"
+                    Value="0"
+                    Min="0" Max="1000"
+                    Unit="mm" />
+                <ui:IntInput
+                    x:Name="StructuralLayerSizeInput"
+                    Header="Structural Layer"
+                    Value="0"
+                    Min="0" Max="1000"
+                    Unit="mm" />
+                <ui:IntInput
+                    x:Name="DecorativeLayer1SizeInput"
+                    Header="Decorative Layer 1"
+                    Value="0"
+                    Min="0" Max="1000"
+                    Unit="mm" />
+                <ui:IntInput
+                    x:Name="DecorativeLayer2SizeInput"
+                    Header="Decorative Layer 2"
+                    Value="0"
+                    Min="0" Max="1000"
+                    Unit="mm" />
                 
-                <TextBlock Text="Structural Layer Thickness (mm):" />
-                <toolkit:IntegerUpDown x:Name="StructuralLayerSizeInput" Text="0" Minimum="0" Margin="0,0,0,10" />
-
-                <TextBlock Text="Decorative Layer 1 Thickness (mm):" />
-                <toolkit:IntegerUpDown x:Name="DecorativeLayer1SizeInput" Text="0" Minimum="0" Margin="0,0,0,10" />
-
-                <TextBlock Text="Decorative Layer 2 Thickness (mm):" />
-                <toolkit:IntegerUpDown x:Name="DecorativeLayer2SizeInput" Text="0" Minimum="0" Margin="0,0,0,10" />
-
                 <ui:Header HeaderText="Frame Colors"
                            ButtonContent="↩"
                            ButtonClick="OnResetFrameColorsButtonClicked" />
