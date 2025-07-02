@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -30,9 +31,8 @@ public sealed class FrameRenderer(ApplicationModel model, Canvas canvas)
 
     private void RenderCompleteFrame(Point paintingOrigin)
     {
-        var frameSizes = model.FrameSizeSettings;
-        var structureWidth = frameSizes.StructuralLayerWidth;
-        var wiggleRoom = frameSizes.WiggleRoom;
+        var structureWidth = model.FrameSizeSettings.StructuralLayerWidth;
+        var wiggleRoom = model.FrameSizeSettings.WiggleRoom;
         var paintingSize = model.SizeSettings.PaintingSize;
 
         var outerPerimeter = new Rect(
@@ -46,6 +46,13 @@ public sealed class FrameRenderer(ApplicationModel model, Canvas canvas)
             2 * wiggleRoom
         );
 
+        RenderStructure(outerPerimeter);
+        RenderDecorativeLayers(outerPerimeter);
+    }
+
+    private void RenderStructure(Rect outerPerimeter)
+    {
+        var structureWidth = model.FrameSizeSettings.StructuralLayerWidth;
         if (model.DisplaySettings.ShowDebugLines)
         {
             var frameOutline = new Rectangle
@@ -58,37 +65,47 @@ public sealed class FrameRenderer(ApplicationModel model, Canvas canvas)
             canvas.Children.Add(frameOutline.WithOrigin(outerPerimeter.Location, ZIndex.Debug));
         }
 
+        // horizontal top
         var horizontalStructureTop = CreateStructuralHorizontalPiece();
-        var horizontalStructureBottom = CreateStructuralHorizontalPiece();
-
         canvas.Children.Add(horizontalStructureTop.WithOrigin(outerPerimeter.Location, StructureZIndex));
 
+        // horizontal bottom
+        var horizontalStructureBottom = CreateStructuralHorizontalPiece();
         horizontalStructureBottom.WithOrigin(
-            outerPerimeter.Left,
-            paintingOrigin.Y + paintingSize.Height + wiggleRoom,
+            outerPerimeter.BottomLeft - new Vector(0, structureWidth),
             StructureZIndex);
         canvas.Children.Add(horizontalStructureBottom);
 
+        // vertical left
         var verticalStructureLeft = CreateStructuralVerticalPiece();
-        var verticalStructureRight = CreateStructuralVerticalPiece();
-
         verticalStructureLeft.WithOrigin(
-            outerPerimeter.Left,
-            paintingOrigin.Y - wiggleRoom,
+            outerPerimeter.TopLeft + new Vector(0, structureWidth),
             StructureZIndex);
         canvas.Children.Add(verticalStructureLeft);
 
+        // vertical right
+        var verticalStructureRight = CreateStructuralVerticalPiece();
         verticalStructureRight.WithOrigin(
-            paintingOrigin.X + wiggleRoom + paintingSize.Width,
-            paintingOrigin.Y - wiggleRoom,
+            outerPerimeter.TopRight + new Vector(-structureWidth, structureWidth),
             StructureZIndex);
         canvas.Children.Add(verticalStructureRight);
 
-        RenderDecorativeLayers(outerPerimeter);
+        var perimeterWidthLabel = new TextBlock
+        {
+            Text = outerPerimeter.Width.ToString(CultureInfo.InvariantCulture),
+            FontSize = 16,
+            Foreground = new SolidColorBrush(model.FrameColorSettings.StructuralLayerColor.Darken()),
+            Background = Brushes.Transparent
+        };
+        perimeterWidthLabel.WithOrigin(
+            outerPerimeter.TopLeft + new Vector(
+                outerPerimeter.Width / 2,
+                -(perimeterWidthLabel.FontSize + 5)));
+
+        canvas.Children.Add(perimeterWidthLabel);
     }
 
-
-    private Shape CreateStructuralHorizontalPiece()
+    private Rectangle CreateStructuralHorizontalPiece()
     {
         var dimensions = model.FrameSizeSettings;
         var colors = model.FrameColorSettings;
@@ -104,7 +121,7 @@ public sealed class FrameRenderer(ApplicationModel model, Canvas canvas)
         };
     }
 
-    private Shape CreateStructuralVerticalPiece()
+    private Rectangle CreateStructuralVerticalPiece()
     {
         var dimensions = model.FrameSizeSettings;
         var colors = model.FrameColorSettings;
@@ -135,7 +152,8 @@ public sealed class FrameRenderer(ApplicationModel model, Canvas canvas)
 
     private Polygon[] CreateDecorativeLayer(Rect outerPerimeter, int layerThickness, int zIndex, Color color)
     {
-        var layer = new Polygon[4];
+        if (layerThickness == 0)
+            return [];
 
         var top = new Polygon
         {
@@ -189,11 +207,13 @@ public sealed class FrameRenderer(ApplicationModel model, Canvas canvas)
             Stroke = new SolidColorBrush(color.Darken())
         }.WithOrigin(outerPerimeter.TopRight, zIndex);
 
-        layer[0] = top;
-        layer[1] = left;
-        layer[2] = bottom;
-        layer[3] = right;
 
-        return layer;
+        return
+        [
+            top,
+            left,
+            bottom,
+            right
+        ];
     }
 }

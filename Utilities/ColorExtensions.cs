@@ -4,7 +4,7 @@ namespace Diamonds.Utilities;
 
 public static class ColorExtensions
 {
-    public static Color Darken(this Color color, double factor = 0.8)
+    public static Color Darken(this Color color, double factor = 0.5)
     {
         return Color.FromArgb(
             color.A,
