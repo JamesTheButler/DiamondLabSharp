@@ -13,6 +13,7 @@ public sealed class FrameRenderer(ApplicationModel model, Canvas canvas)
     private const int StructureZIndex = 1;
     private const int Decorative1ZIndex = 2;
     private const int Decorative2ZIndex = 3;
+    private const int LabelMargin = 5;
 
     public void Render(Point paintingOrigin)
     {
@@ -48,6 +49,40 @@ public sealed class FrameRenderer(ApplicationModel model, Canvas canvas)
 
         RenderStructure(outerPerimeter);
         RenderDecorativeLayers(outerPerimeter);
+        RenderPerimeterSizeLabels(outerPerimeter);
+    }
+
+    private void RenderPerimeterSizeLabels(Rect outerPerimeter)
+    {
+        var widthLabel = new TextBlock
+        {
+            Text = outerPerimeter.Width.ToString(CultureInfo.InvariantCulture),
+            FontSize = 16,
+            Foreground = new SolidColorBrush(model.FrameColorSettings.StructuralLayerColor.Darken()),
+            Background = Brushes.Transparent
+        };
+
+        widthLabel.WithOrigin(
+            outerPerimeter.TopLeft + new Vector(
+                outerPerimeter.Width / 2,
+                -(widthLabel.FontSize + LabelMargin)));
+
+        canvas.Children.Add(widthLabel);
+
+        var heightLabel = new TextBlock
+        {
+            Text = outerPerimeter.Height.ToString(CultureInfo.InvariantCulture),
+            FontSize = 16,
+            Foreground = new SolidColorBrush(model.FrameColorSettings.StructuralLayerColor.Darken()),
+            Background = Brushes.Transparent
+        };
+
+        heightLabel.WithOrigin(
+            outerPerimeter.TopLeft + new Vector(
+                -(widthLabel.FontSize + 20),
+                outerPerimeter.Height / 2));
+
+        canvas.Children.Add(heightLabel);
     }
 
     private void RenderStructure(Rect outerPerimeter)
@@ -89,20 +124,6 @@ public sealed class FrameRenderer(ApplicationModel model, Canvas canvas)
             outerPerimeter.TopRight + new Vector(-structureWidth, structureWidth),
             StructureZIndex);
         canvas.Children.Add(verticalStructureRight);
-
-        var perimeterWidthLabel = new TextBlock
-        {
-            Text = outerPerimeter.Width.ToString(CultureInfo.InvariantCulture),
-            FontSize = 16,
-            Foreground = new SolidColorBrush(model.FrameColorSettings.StructuralLayerColor.Darken()),
-            Background = Brushes.Transparent
-        };
-        perimeterWidthLabel.WithOrigin(
-            outerPerimeter.TopLeft + new Vector(
-                outerPerimeter.Width / 2,
-                -(perimeterWidthLabel.FontSize + 5)));
-
-        canvas.Children.Add(perimeterWidthLabel);
     }
 
     private Rectangle CreateStructuralHorizontalPiece()
