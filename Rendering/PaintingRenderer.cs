@@ -47,7 +47,7 @@ public sealed class PaintingRenderer(ApplicationModel model, Canvas mainCanvas, 
             Fill = new SolidColorBrush(actualMountingRimColor)
         };
 
-        mainCanvas.Children.Add(mountingRim.WithOrigin(origin));
+        mainCanvas.Children.Add(mountingRim.WithOrigin(origin, 10));
 
         var mountingRimOutline = new Rectangle
         {

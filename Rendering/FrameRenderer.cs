@@ -32,19 +32,12 @@ public sealed class FrameRenderer(ApplicationModel model, Canvas canvas)
 
     private void RenderCompleteFrame(Point paintingOrigin)
     {
-        var structureWidth = model.FrameSizeSettings.StructuralLayerWidth;
-        var wiggleRoom = model.FrameSizeSettings.WiggleRoom;
-        var paintingSize = model.SizeSettings.PaintingSize;
+        var frameSizes = model.FrameSizeSettings;
+        var paintingSizes = model.SizeSettings;
 
         var outerPerimeter = new Rect(
-            paintingOrigin.X - (structureWidth + wiggleRoom),
-            paintingOrigin.Y - (structureWidth + wiggleRoom),
-            paintingSize.Width +
-            2 * structureWidth +
-            2 * wiggleRoom,
-            paintingSize.Height +
-            2 * structureWidth +
-            2 * wiggleRoom
+            paintingOrigin.Add(-frameSizes.DecorativeLayer1Width + paintingSizes.MountingRimSize),
+            paintingSizes.PaintingSize.Add(2 * (frameSizes.DecorativeLayer1Width - paintingSizes.MountingRimSize))
         );
 
         RenderStructure(outerPerimeter);
@@ -101,32 +94,32 @@ public sealed class FrameRenderer(ApplicationModel model, Canvas canvas)
         }
 
         // horizontal top
-        var horizontalStructureTop = CreateStructuralHorizontalPiece();
+        var horizontalStructureTop = CreateStructuralHorizontalPiece(outerPerimeter);
         canvas.Children.Add(horizontalStructureTop.WithOrigin(outerPerimeter.Location, StructureZIndex));
 
         // horizontal bottom
-        var horizontalStructureBottom = CreateStructuralHorizontalPiece();
+        var horizontalStructureBottom = CreateStructuralHorizontalPiece(outerPerimeter);
         horizontalStructureBottom.WithOrigin(
             outerPerimeter.BottomLeft - new Vector(0, structureWidth),
             StructureZIndex);
         canvas.Children.Add(horizontalStructureBottom);
 
         // vertical left
-        var verticalStructureLeft = CreateStructuralVerticalPiece();
+        var verticalStructureLeft = CreateStructuralVerticalPiece(outerPerimeter);
         verticalStructureLeft.WithOrigin(
             outerPerimeter.TopLeft + new Vector(0, structureWidth),
             StructureZIndex);
         canvas.Children.Add(verticalStructureLeft);
 
         // vertical right
-        var verticalStructureRight = CreateStructuralVerticalPiece();
+        var verticalStructureRight = CreateStructuralVerticalPiece(outerPerimeter);
         verticalStructureRight.WithOrigin(
             outerPerimeter.TopRight + new Vector(-structureWidth, structureWidth),
             StructureZIndex);
         canvas.Children.Add(verticalStructureRight);
     }
 
-    private Rectangle CreateStructuralHorizontalPiece()
+    private Rectangle CreateStructuralHorizontalPiece(Rect outerPerimeter)
     {
         var dimensions = model.FrameSizeSettings;
         var colors = model.FrameColorSettings;
@@ -134,23 +127,22 @@ public sealed class FrameRenderer(ApplicationModel model, Canvas canvas)
         return new Rectangle
         {
             Height = dimensions.StructuralLayerWidth,
-            Width = model.SizeSettings.PaintingSize.Width +
-                    2 * dimensions.StructuralLayerWidth +
-                    2 * dimensions.WiggleRoom,
+            Width = outerPerimeter.Width,
             Stroke = new SolidColorBrush(colors.StructuralLayerColor),
             StrokeThickness = 1
         };
     }
 
-    private Rectangle CreateStructuralVerticalPiece()
+    private Rectangle CreateStructuralVerticalPiece(Rect outerPerimeter)
     {
-        var dimensions = model.FrameSizeSettings;
+        var frameSizes = model.FrameSizeSettings;
+        var paintingSizes = model.FrameSizeSettings;
         var colors = model.FrameColorSettings;
 
         return new Rectangle
         {
-            Height = model.SizeSettings.PaintingSize.Height + 2 * dimensions.WiggleRoom,
-            Width = dimensions.StructuralLayerWidth,
+            Height = outerPerimeter.Height - 2 * paintingSizes.StructuralLayerWidth,
+            Width = paintingSizes.StructuralLayerWidth,
             Stroke = new SolidColorBrush(colors.StructuralLayerColor),
             StrokeThickness = 1
         };

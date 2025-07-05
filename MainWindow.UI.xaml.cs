@@ -56,7 +56,6 @@ public partial class MainWindow
         StructuralLayerSizeInput.ValueChanged += OnAnyFrameSizeInputChanged;
         DecorativeLayer1SizeInput.ValueChanged += OnAnyFrameSizeInputChanged;
         DecorativeLayer2SizeInput.ValueChanged += OnAnyFrameSizeInputChanged;
-        WiggleRoomInput.ValueChanged += OnAnyFrameSizeInputChanged;
     }
 
     private void UnbindInputs()
@@ -89,7 +88,6 @@ public partial class MainWindow
         StructuralLayerSizeInput.ValueChanged -= OnAnyFrameSizeInputChanged;
         DecorativeLayer1SizeInput.ValueChanged -= OnAnyFrameSizeInputChanged;
         DecorativeLayer2SizeInput.ValueChanged -= OnAnyFrameSizeInputChanged;
-        WiggleRoomInput.ValueChanged -= OnAnyFrameSizeInputChanged;
     }
 
 
@@ -186,8 +184,7 @@ public partial class MainWindow
         _model.FrameSizeSettings = new FrameSizeSettings(
             StructuralLayerSizeInput.Value,
             DecorativeLayer1SizeInput.Value,
-            DecorativeLayer2SizeInput.Value,
-            WiggleRoomInput.Value
+            DecorativeLayer2SizeInput.Value
         );
 
         Render();
@@ -252,11 +249,9 @@ public partial class MainWindow
     private void RefreshFrameSizeInputs()
     {
         var frameSizes = _model.FrameSizeSettings;
-        WiggleRoomInput.Value = frameSizes.WiggleRoom;
         StructuralLayerSizeInput.Value = frameSizes.StructuralLayerWidth;
         DecorativeLayer1SizeInput.Value = frameSizes.DecorativeLayer1Width;
         DecorativeLayer2SizeInput.Value = frameSizes.DecorativeLayer2Width;
-        WiggleRoomInput.Value = frameSizes.WiggleRoom;
     }
 
     private void RefreshFrameColorInputs()

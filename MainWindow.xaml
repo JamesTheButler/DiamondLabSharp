@@ -138,7 +138,9 @@
                     Header="Structural Wiggle Room"
                     Value="0"
                     Min="0" Max="1000"
-                    Unit="mm" />
+                    Unit="mm" 
+                    IsEnabled="false"/>
+                    
                 <ui:IntInput
                     x:Name="StructuralLayerSizeInput"
                     Header="Structural Layer"

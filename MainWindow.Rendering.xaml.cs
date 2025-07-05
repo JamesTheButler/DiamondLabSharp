@@ -44,6 +44,11 @@ public partial class MainWindow
 
         if (_model.DisplaySettings.ShowFrame)
             _frameRenderer.Render(paintingOrigin);
+
+        WiggleRoomInput.Value =
+            _model.FrameSizeSettings.DecorativeLayer1Width -
+            _model.FrameSizeSettings.StructuralLayerWidth -
+            _model.SizeSettings.MountingRimSize;
     }
 
     private void RenderCanvasBackground(Point origin)
