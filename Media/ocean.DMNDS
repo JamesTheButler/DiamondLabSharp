@@ -5,7 +5,7 @@
     "GridColumns": 7,
     "GridRows": 7,
     "PaintingMargin": 21,
-    "MountingRimSize": 7,
+    "MountingRimSize": 3,
     "OffsetX": 40,
     "OffsetY": 0,
     "DiamondSize": {
@@ -20,10 +20,10 @@
       "LengthSquared": 1600
     },
     "TotalMargin": {
-      "Left": 28,
-      "Top": 28,
-      "Right": 28,
-      "Bottom": 28
+      "Left": 24,
+      "Top": 24,
+      "Right": 24,
+      "Bottom": 24
     },
     "PatternSize": {
       "IsEmpty": false,
@@ -32,8 +32,8 @@
     },
     "PaintingSize": {
       "IsEmpty": false,
-      "Width": 616,
-      "Height": 826
+      "Width": 608,
+      "Height": 818
     }
   },
   "ColorSettings": {
@@ -83,7 +83,11 @@
     }
   },
   "DisplaySettings": {
-    "ShowScales": true
+    "ShowScales": true,
+    "OnlyPattern": false,
+    "ShowDebugLines": false,
+    "ShowFrame": true,
+    "ShowExplodedFrame": false
   },
   "HighlightSettings": {
     "Highlights": [
@@ -142,5 +146,45 @@
         "IsBackground": false
       }
     ]
+  },
+  "FrameSizeSettings": {
+    "StructuralLayerWidth": 2,
+    "DecorativeLayer1Width": 6,
+    "DecorativeLayer2Width": 0
+  },
+  "FrameColorSettings": {
+    "StructuralLayerColor": {
+      "ColorContext": null,
+      "A": 255,
+      "R": 240,
+      "G": 248,
+      "B": 255,
+      "ScA": 1,
+      "ScR": 0.8713671,
+      "ScG": 0.9386857,
+      "ScB": 1
+    },
+    "DecorativeLayer1Color": {
+      "ColorContext": null,
+      "A": 255,
+      "R": 230,
+      "G": 230,
+      "B": 250,
+      "ScA": 1,
+      "ScR": 0.791298,
+      "ScG": 0.791298,
+      "ScB": 0.9559733
+    },
+    "DecorativeLayer2Color": {
+      "ColorContext": null,
+      "A": 0,
+      "R": 0,
+      "G": 0,
+      "B": 0,
+      "ScA": 0,
+      "ScR": 0,
+      "ScG": 0,
+      "ScB": 0
+    }
   }
 }

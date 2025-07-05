@@ -4,26 +4,26 @@
     "DiamondHeight": 50,
     "GridColumns": 8,
     "GridRows": 4,
-    "PaintingMargin": 20,
-    "MountingRimSize": 20,
-    "OffsetX": -45,
-    "OffsetY": 1,
+    "PaintingMargin": 21,
+    "MountingRimSize": 3,
+    "OffsetX": 40,
+    "OffsetY": 0,
     "DiamondSize": {
       "IsEmpty": false,
       "Width": 50,
       "Height": 50
     },
     "Offset": {
-      "X": -45,
-      "Y": 1,
-      "Length": 45.0111097397076,
-      "LengthSquared": 2026
+      "X": 40,
+      "Y": 0,
+      "Length": 40,
+      "LengthSquared": 1600
     },
     "TotalMargin": {
-      "Left": 40,
-      "Top": 40,
-      "Right": 40,
-      "Bottom": 40
+      "Left": 24,
+      "Top": 24,
+      "Right": 24,
+      "Bottom": 24
     },
     "PatternSize": {
       "IsEmpty": false,
@@ -32,8 +32,8 @@
     },
     "PaintingSize": {
       "IsEmpty": false,
-      "Width": 480,
-      "Height": 280
+      "Width": 448,
+      "Height": 248
     }
   },
   "ColorSettings": {
@@ -73,110 +73,154 @@
     "MountingRimColor": {
       "ColorContext": null,
       "A": 255,
-      "R": 206,
-      "G": 168,
-      "B": 110,
+      "R": 0,
+      "G": 0,
+      "B": 0,
       "ScA": 1,
-      "ScR": 0.6172066,
-      "ScG": 0.3915725,
-      "ScB": 0.15592647
+      "ScR": 0,
+      "ScG": 0,
+      "ScB": 0
     }
   },
   "DisplaySettings": {
-    "ShowScales": true
+    "ShowScales": true,
+    "OnlyPattern": false,
+    "ShowDebugLines": false,
+    "ShowFrame": true,
+    "ShowExplodedFrame": false
   },
   "HighlightSettings": {
     "Highlights": [
       {
         "Position": {
-          "X": 0,
-          "Y": 2
-        },
-        "Color": {
-          "ColorContext": null,
-          "A": 255,
-          "R": 227,
-          "G": 84,
-          "B": 118,
-          "ScA": 1,
-          "ScR": 0.76815116,
-          "ScG": 0.08865559,
-          "ScB": 0.18116425
-        },
-        "IsBackground": false
-      },
-      {
-        "Position": {
-          "X": 3,
-          "Y": 2
-        },
-        "Color": {
-          "ColorContext": null,
-          "A": 255,
-          "R": 234,
-          "G": 192,
-          "B": 134,
-          "ScA": 1,
-          "ScR": 0.82278574,
-          "ScG": 0.52711517,
-          "ScB": 0.2383976
-        },
-        "IsBackground": false
-      },
-      {
-        "Position": {
           "X": 2,
-          "Y": 4
+          "Y": 3
         },
         "Color": {
           "ColorContext": null,
           "A": 255,
-          "R": 206,
-          "G": 171,
-          "B": 81,
+          "R": 255,
+          "G": 215,
+          "B": 0,
           "ScA": 1,
-          "ScR": 0.6172066,
-          "ScG": 0.40724024,
-          "ScB": 0.082282715
-        },
-        "IsBackground": false
-      },
-      {
-        "Position": {
-          "X": 0,
-          "Y": 7
-        },
-        "Color": {
-          "ColorContext": null,
-          "A": 255,
-          "R": 252,
-          "G": 211,
-          "B": 164,
-          "ScA": 1,
-          "ScR": 0.9734453,
-          "ScG": 0.65140563,
-          "ScB": 0.3712377
+          "ScR": 1,
+          "ScG": 0.6795425,
+          "ScB": 0
         },
         "IsBackground": false
       },
       {
         "Position": {
           "X": 3,
-          "Y": 7
+          "Y": 6
         },
         "Color": {
           "ColorContext": null,
           "A": 255,
-          "R": 224,
-          "G": 49,
-          "B": 49,
+          "R": 255,
+          "G": 69,
+          "B": 0,
           "ScA": 1,
-          "ScR": 0.74540424,
-          "ScG": 0.030713445,
-          "ScB": 0.030713445
+          "ScR": 1,
+          "ScG": 0.059511244,
+          "ScB": 0
+        },
+        "IsBackground": false
+      },
+      {
+        "Position": {
+          "X": 0,
+          "Y": 6
+        },
+        "Color": {
+          "ColorContext": null,
+          "A": 255,
+          "R": 255,
+          "G": 222,
+          "B": 173,
+          "ScA": 1,
+          "ScR": 1,
+          "ScG": 0.73046076,
+          "ScB": 0.4178851
+        },
+        "IsBackground": false
+      },
+      {
+        "Position": {
+          "X": 3,
+          "Y": 1
+        },
+        "Color": {
+          "ColorContext": null,
+          "A": 255,
+          "R": 255,
+          "G": 222,
+          "B": 173,
+          "ScA": 1,
+          "ScR": 1,
+          "ScG": 0.73046076,
+          "ScB": 0.4178851
+        },
+        "IsBackground": false
+      },
+      {
+        "Position": {
+          "X": 0,
+          "Y": 1
+        },
+        "Color": {
+          "ColorContext": null,
+          "A": 255,
+          "R": 255,
+          "G": 96,
+          "B": 96,
+          "ScA": 1,
+          "ScR": 1,
+          "ScG": 0.11697067,
+          "ScB": 0.11697067
         },
         "IsBackground": false
       }
     ]
+  },
+  "FrameSizeSettings": {
+    "StructuralLayerWidth": 8,
+    "DecorativeLayer1Width": 33,
+    "DecorativeLayer2Width": 0
+  },
+  "FrameColorSettings": {
+    "StructuralLayerColor": {
+      "ColorContext": null,
+      "A": 0,
+      "R": 0,
+      "G": 0,
+      "B": 0,
+      "ScA": 0,
+      "ScR": 0,
+      "ScG": 0,
+      "ScB": 0
+    },
+    "DecorativeLayer1Color": {
+      "ColorContext": null,
+      "A": 255,
+      "R": 255,
+      "G": 228,
+      "B": 196,
+      "ScA": 1,
+      "ScR": 1,
+      "ScG": 0.7758222,
+      "ScB": 0.55201143
+    },
+    "DecorativeLayer2Color": {
+      "ColorContext": null,
+      "A": 0,
+      "R": 0,
+      "G": 0,
+      "B": 0,
+      "ScA": 0,
+      "ScR": 0,
+      "ScG": 0,
+      "ScB": 0
+    }
   }
 }
