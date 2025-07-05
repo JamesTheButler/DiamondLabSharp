@@ -1,11 +1,11 @@
 ﻿using System.Windows;
-using Diamonds.Model;
-using Diamonds.Operation;
-using Diamonds.Operation.File;
-using Diamonds.Operation.Notification;
-using Diamonds.Rendering;
+using DiamondLab.Model;
+using DiamondLab.Operation;
+using DiamondLab.Operation.File;
+using DiamondLab.Operation.Notification;
+using DiamondLab.Rendering;
 
-namespace Diamonds;
+namespace DiamondLab;
 
 public partial class MainWindow
 {

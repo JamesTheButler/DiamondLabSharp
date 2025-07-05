@@ -1,10 +1,10 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using Diamonds.Model;
-using Diamonds.Operation;
+using DiamondLab.Model;
+using DiamondLab.Operation;
 
-namespace Diamonds;
+namespace DiamondLab;
 
 public partial class MainWindow
 {

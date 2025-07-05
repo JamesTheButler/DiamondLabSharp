@@ -1,8 +1,8 @@
-using Diamonds.Model;
-using Diamonds.Operation.File;
-using Diamonds.Operation.Notification;
+using DiamondLab.Model;
+using DiamondLab.Operation.File;
+using DiamondLab.Operation.Notification;
 
-namespace Diamonds.Operation;
+namespace DiamondLab.Operation;
 
 public static class Dependencies
 {

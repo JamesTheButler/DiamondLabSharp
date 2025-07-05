@@ -1,6 +1,6 @@
 using System.Windows.Media;
 
-namespace Diamonds.Utilities;
+namespace DiamondLab.Utilities;
 
 public static class ColorExtensions
 {

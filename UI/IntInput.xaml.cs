@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace Diamonds.UI;
+namespace DiamondLab.UI;
 
 public partial class IntInput
 {

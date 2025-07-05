@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace Diamonds.Operation.File;
+namespace DiamondLab.Operation.File;
 
 public static class FileManagementDefaults
 {

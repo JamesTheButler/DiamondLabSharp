@@ -2,12 +2,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Diamonds.Model;
-using Diamonds.Utilities;
+using DiamondLab.Model;
+using DiamondLab.Utilities;
 using Xceed.Wpf.Toolkit;
 using WindowStartupLocation = System.Windows.WindowStartupLocation;
 
-namespace Diamonds.Rendering;
+namespace DiamondLab.Rendering;
 
 public sealed class PaintingRenderer(ApplicationModel model, Canvas mainCanvas, Action onRenderDataChanged)
 {
@@ -53,7 +53,7 @@ public sealed class PaintingRenderer(ApplicationModel model, Canvas mainCanvas, 
         {
             Width = paintingSize.Width - 2 * rim,
             Height = paintingSize.Height - 2 * rim,
-            Stroke = new SolidColorBrush(colorSettings.MountingRimColor),
+            Stroke = new SolidColorBrush(colorSettings.MountingRimColor)
         };
         mainCanvas.Children.Add(mountingRimOutline.WithOrigin(origin.Add(rim)));
     }

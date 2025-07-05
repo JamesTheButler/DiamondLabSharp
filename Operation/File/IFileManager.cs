@@ -1,6 +1,6 @@
 using System.Windows.Controls;
 
-namespace Diamonds.Operation.File;
+namespace DiamondLab.Operation.File;
 
 public interface IFileManager
 {

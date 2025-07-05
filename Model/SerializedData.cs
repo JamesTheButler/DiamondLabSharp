@@ -1,4 +1,4 @@
-namespace Diamonds.Model;
+namespace DiamondLab.Model;
 
 public readonly record struct SerializedData(
     SizeSettings SizeSettings,

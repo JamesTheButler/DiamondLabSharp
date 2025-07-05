@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace Diamonds;
+namespace DiamondLab;
 
 public partial class App
 {

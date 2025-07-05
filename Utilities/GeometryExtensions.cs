@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace Diamonds.Utilities;
+namespace DiamondLab.Utilities;
 
 public static class GeometryExtensions
 {

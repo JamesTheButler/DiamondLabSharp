@@ -2,7 +2,7 @@ using System.IO;
 using System.Text.Json;
 using System.Windows;
 
-namespace Diamonds.Model;
+namespace DiamondLab.Model;
 
 public sealed class ApplicationModel
 {
@@ -77,7 +77,7 @@ public sealed class ApplicationModel
     {
         var appDataPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            nameof(Diamonds));
+            nameof(DiamondLab));
 
         var settingsFile = Path.Combine(appDataPath, "cache.json");
 
@@ -92,7 +92,7 @@ public sealed class ApplicationModel
     {
         var appDataPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            nameof(Diamonds));
+            nameof(DiamondLab));
 
         var settingsFile = Path.Combine(appDataPath, "cache.json");
 

@@ -1,15 +1,16 @@
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Diamonds.Rendering.AxisScale;
+namespace DiamondLab.Rendering.AxisScale;
 
 public sealed class AxisScale : UIElement
 {
     private const double LabelMargin = 4.0;
-    
+
     private readonly Typeface _typeface = new("Segoe UI");
-    
+
     public double Length { get; }
     public Orientation Orientation { get; }
     public AxisScaleTick[] Ticks { get; init; } = [];
@@ -24,20 +25,15 @@ public sealed class AxisScale : UIElement
         Length = length;
         Orientation = orientation;
     }
-    
+
     protected override void OnRender(DrawingContext drawingContext)
     {
         base.OnRender(drawingContext);
 
         if (Orientation == Orientation.Horizontal)
-        {
             RenderHorizontalScale(drawingContext);
-        }
         else
-        {
             RenderVerticalScale(drawingContext);
-        }
-        
     }
 
     private void RenderVerticalScale(DrawingContext drawingContext)
@@ -45,17 +41,17 @@ public sealed class AxisScale : UIElement
         var pen = new Pen(Stroke, StrokeThickness);
         // scale line
         drawingContext.DrawLine(pen, new Point(0, 0), new Point(0, Length));
-        
+
         foreach (var tick in Ticks.Union(EndTicks))
         {
             var (pos, label, sizeOverride) = tick;
-            
+
             var tickLength = sizeOverride ?? DefaultTickSize;
             drawingContext.DrawLine(pen, new Point(0, pos), new Point(tickLength, pos));
 
             var tickLabel = new FormattedText(
                 label.Render(tick),
-                System.Globalization.CultureInfo.InvariantCulture,
+                CultureInfo.InvariantCulture,
                 FlowDirection.LeftToRight,
                 _typeface,
                 FontSize,
@@ -72,32 +68,32 @@ public sealed class AxisScale : UIElement
         var pen = new Pen(Stroke, StrokeThickness);
         // scale line
         drawingContext.DrawLine(pen, new Point(0, 0), new Point(Length, 0));
-        
+
         foreach (var tick in Ticks.Union(EndTicks))
         {
             var (pos, label, sizeOverride) = tick;
-            
+
             var tickLength = sizeOverride ?? DefaultTickSize;
             drawingContext.DrawLine(pen, new Point(pos, 0), new Point(pos, tickLength));
-            
+
             var tickLabel = new FormattedText(
                 label.Render(tick),
-                System.Globalization.CultureInfo.InvariantCulture,
+                CultureInfo.InvariantCulture,
                 FlowDirection.LeftToRight,
                 _typeface,
                 FontSize,
                 Stroke,
                 VisualTreeHelper.GetDpi(this).PixelsPerDip
             );
-            
+
 
             drawingContext.DrawText(tickLabel, new Point(pos - tickLabel.Width / 2, tickLength + LabelMargin));
         }
     }
-    
+
     private AxisScaleTick[] EndTicks =>
     [
-        new (0, SizeOverride: EndTickSize),
-        new (Length, SizeOverride: EndTickSize)
+        new(0, SizeOverride: EndTickSize),
+        new(Length, SizeOverride: EndTickSize)
     ];
 }

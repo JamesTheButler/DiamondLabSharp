@@ -4,10 +4,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Diamonds.Model;
-using Diamonds.Operation.File;
+using DiamondLab.Model;
+using DiamondLab.Operation.File;
 
-namespace Diamonds.Utilities;
+namespace DiamondLab.Utilities;
 
 public static class FileOperations
 {

@@ -1,11 +1,11 @@
 using System.IO;
 using System.Windows.Controls;
-using Diamonds.Model;
-using Diamonds.Operation.Notification;
-using Diamonds.Utilities;
+using DiamondLab.Model;
+using DiamondLab.Operation.Notification;
+using DiamondLab.Utilities;
 using Microsoft.Win32;
 
-namespace Diamonds.Operation.File;
+namespace DiamondLab.Operation.File;
 
 public sealed class FileManager : IFileManager
 {

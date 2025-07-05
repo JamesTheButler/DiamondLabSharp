@@ -7,6 +7,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <UseWPF>true</UseWPF>
         <ApplicationIcon>Assets\icon256x256.ico</ApplicationIcon>
+        <AssemblyName>DiamondLab</AssemblyName>
+        <RootNamespace>DiamondLab</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -30,4 +32,11 @@
         </Page>
     </ItemGroup>
 
+    <Target Name="PostPublishCopy" AfterTargets="Publish">
+        <ItemGroup>
+            <PublishedExe Include="$(PublishDir)DiamondLab.exe" />
+        </ItemGroup>
+        <Copy SourceFiles="@(PublishedExe)" DestinationFolder="C:\Tools\DiamondLab" />
+    </Target>
+    
 </Project>

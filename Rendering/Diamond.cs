@@ -3,7 +3,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace Diamonds.Rendering;
+namespace DiamondLab.Rendering;
 
 public sealed class Diamond
 {
@@ -43,7 +43,7 @@ public sealed class Diamond
             ],
 
 
-            Fill = new SolidColorBrush(color),
+            Fill = new SolidColorBrush(color)
         };
 
         _shape.MouseEnter += (_, _) =>

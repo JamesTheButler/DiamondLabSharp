@@ -2,11 +2,11 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Diamonds.Rendering;
-using Diamonds.Rendering.AxisScale;
-using Diamonds.Utilities;
+using DiamondLab.Rendering;
+using DiamondLab.Rendering.AxisScale;
+using DiamondLab.Utilities;
 
-namespace Diamonds;
+namespace DiamondLab;
 
 public partial class MainWindow
 {

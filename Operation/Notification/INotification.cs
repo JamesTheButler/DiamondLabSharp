@@ -1,4 +1,4 @@
-namespace Diamonds.Operation.Notification;
+namespace DiamondLab.Operation.Notification;
 
 public interface INotification
 {

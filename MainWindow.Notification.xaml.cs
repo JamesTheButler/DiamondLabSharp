@@ -1,7 +1,7 @@
 ﻿using System.Windows.Threading;
-using Diamonds.Operation.Notification;
+using DiamondLab.Operation.Notification;
 
-namespace Diamonds;
+namespace DiamondLab;
 
 public partial class MainWindow
 {

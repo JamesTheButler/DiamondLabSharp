@@ -1,7 +1,7 @@
 using System.Windows;
-using Diamonds.Operation;
+using DiamondLab.Operation;
 
-namespace Diamonds.UI;
+namespace DiamondLab.UI;
 
 public partial class IntPairPicker
 {

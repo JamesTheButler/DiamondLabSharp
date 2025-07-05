@@ -1,4 +1,4 @@
-namespace Diamonds.Utilities;
+namespace DiamondLab.Utilities;
 
 public static class ZIndex
 {

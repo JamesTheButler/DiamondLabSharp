@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Diamonds.Utilities;
+namespace DiamondLab.Utilities;
 
 public static class UiElementExtension
 {

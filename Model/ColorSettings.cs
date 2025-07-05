@@ -1,7 +1,7 @@
 using System.Windows.Media;
-using Diamonds.Rendering;
+using DiamondLab.Rendering;
 
-namespace Diamonds.Model;
+namespace DiamondLab.Model;
 
 public readonly record struct ColorSettings(
     Color BackgroundColor,

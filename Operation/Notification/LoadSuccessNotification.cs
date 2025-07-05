@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace Diamonds.Operation.Notification;
+namespace DiamondLab.Operation.Notification;
 
 public readonly struct LoadSuccessNotification(string filePath) : INotification
 {
